@@ -14,7 +14,7 @@
 ## ライセンス
 
 - 本リポジトリはMITライセンスで提供されています。
-- ソースコードおよび関連ドキュメントの著作権は、ダイナミックマッププラットフォーム株式会社に帰属します（※[一部のAPI仕様](spatial-information-subsystem/openapi)を除く）。
+- [一部のOpenAPI定義（サブフォルダ「spatial-information-subsystem/openapi」以下）](spatial-information-subsystem/openapi)の著作権は、株式会社NTTデータに帰属します。その他のソースコードおよび関連ドキュメントの著作権は、ダイナミックマッププラットフォーム株式会社に帰属します。
 
 ## 免責事項
 
