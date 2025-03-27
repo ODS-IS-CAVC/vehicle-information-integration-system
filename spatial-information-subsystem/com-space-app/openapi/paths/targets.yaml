@@ -1,0 +1,33 @@
+targets:
+  get:
+    tags:
+    - target
+    summary: Search targets
+    operationId: searchTargets
+    parameters:
+      - in: query
+        required: true
+        name: targetStartDateTime
+        schema:
+          "$ref": "../components/schemas/common.yaml#/common/DateAndTime"
+      - in: query
+        required: true
+        name: targetEndDateTime
+        schema:
+          "$ref": "../components/schemas/common.yaml#/common/DateAndTime"
+      - in: query
+        required: true
+        name: spatialID
+        schema:
+          type: array
+          items:
+            "$ref": "../components/schemas/common.yaml#/common/SpatialID"
+    responses:
+      '200':
+        description: OK
+        content:
+          'application/json':
+            schema:
+              "$ref": "../components/schemas/targets.yaml#/targets/TargetInfo"
+      '500':
+        description: Failed to search targets

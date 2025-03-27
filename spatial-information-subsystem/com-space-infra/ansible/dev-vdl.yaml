@@ -1,0 +1,9 @@
+- hosts: dev-vdl
+  roles:
+    - yum
+    - aws-settings
+    - eks
+    - ebs-storageclass
+    - vdl-infra
+    - vdl
+    - vdl-ope

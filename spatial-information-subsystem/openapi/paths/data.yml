@@ -1,0 +1,608 @@
+data_{vdlPath}: 
+  summary: This API group is related to the actual data management function.(This groups of API require vdlPath to be specified as a request parameter.)
+  post:
+    tags:
+      - data
+    operationId: dataCreate
+    summary: Upload the actual data
+    description: |-
+      Upload and register the actual data.
+      <ul>
+        <li>When multiple uploads are requested to the same target,  the earliest request succeeds and later request fail (with 409 Conflict).</li>
+      </ul>
+      Request example: POST /api/v1/data//providerA/sourceX/file?writeType=ASYNC_THROUGH
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryWriteType'
+    requestBody:
+      required: true
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+    responses:      
+      '201':
+        description: Responds that the upload of actual data was successful.
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '409':
+        description: The uploaded actual data is already registered.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+  get:
+    tags:
+      - data
+    operationId: dataRead
+    summary: Download the actual data
+    description: |-
+      Download the actual data.(Partial download supported.)
+      <ul>
+        <li>Partial download is requested via Range header.</li>
+        <li>Multiple range requests in the Range header are not supported.</li>
+        <li>The status code of the response upon successful completion changes depending on whether the entire file was downloaded or a portion of the file was downloaded.</li>
+        <li>Allow the specification of cache-in method as a download option.</li>
+        <li>If a directory is specified as the VDL path for download, compress the contents under the VDL path and download it as a file.</li>
+        <li>Apply the ZIP compression algorithm.</li>
+      </ul>
+      Request example: GET /api/v1/data//providerA/sourceX/file?readType=CACHE
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryReadType'
+      - $ref: '../components/parameters/param.yml#/headerRange'
+    responses:
+      '200':
+        description: Returns actual data acquired by downloading an entire file.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      '206':
+        description: Returns actual data got by downloading a portion of the file.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      '400':
+        description: |-
+          If you can't open the resource.(For example, an incomplete file is specified.)<br>
+          The required parameters for the request do not exist, or the input format is invalid.
+          If the number of files/file size under the directory to be compressed exceeds the upper limit specified in the configuration.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '416':
+        description: Multiple range requests in the Range header (unsupported).
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Range for the resource is not available.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+  put:
+    tags:
+      - data
+    operationId: dataUpdate
+    summary: Update the actual data
+    description: |-
+      Update The actual data.
+      <ul>
+        <li>The process branches according to the action parameter of the request.</li>
+        <li>If action = rename, the file or directory renaming function is performed.</li>
+        <li>If action = persist, the function to make the cache persist in data source is executed.</li>
+        <li>If action is undefined, HTTP status code: 400 is responded.</li>
+      </ul>
+      Request example: PUT /api/v1/data/{vdlPath}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/data.yml#/schemaDataUpdateRequest'
+          examples: 
+            update_sample:
+              $ref: '../components/examples/data.yml#/data_update_sample'
+    responses:
+      '204':
+        description: Responds that the update process has been successfully completed.
+      '403':
+        description: |-
+          Data source of vdlPath and dst do not match.<br>
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+  delete:
+    tags:
+      - data
+    operationId: dataDelete
+    summary: Delete the actual data
+    description: |-
+      Delete the actual data.<br><br>
+      Request example: DELETE /api/v1/data/{vdlPath}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/data.yml#/schemaDataDeleteRequest'
+          examples: 
+            delete_sample:
+              $ref: '../components/examples/data.yml#/data_delete_sample'
+    responses:
+      '204':
+        description: Responds that the resource has been successfully deleted.
+      '403':
+        description: |-
+          If a non-empty directory is specified without recursive option.<br>
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+
+multipartUpload_{vdlPath}: 
+  summary: This API group is related to the actual data management function.(This groups of API require vdlPath to be specified as a request parameter.)
+  post:
+    tags:
+      - data
+    operationId: startMultipartUpload
+    summary: Start multipartUpload the actual data
+    description: |-
+      Start the multipart upload process for the actual data.<br><br>
+      Request example: POST /api/v1/multipartUpload//providerA/sourceX/file?writeType=ASYNC_THROUGH
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryWriteType'
+    responses:      
+      '200':
+        description: Responds that the upload of actual data was successful.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/data.yml#/schemaMultipartUpload'
+            example:
+              $ref: '../components/examples/data.yml#/multipartUpload_get_uploadId_sample'        
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '409':
+        description: The uploaded actual data is already registered.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+        
+  get:
+    tags:
+      - data
+    operationId: multipartUploadbyUploadId
+    summary: Retrieve list of completed parts for multipart upload.
+    description: |-
+      Retrieve the list of parts for a specific multipart upload.<br><br>
+      Request example: GET /api/v1/multipartUpload//providerA/sourceX/file?uploadId=11
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryUploadId'
+    responses:
+      '200':
+        description: Responds that list of multipart upload parts was successful.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/data.yml#/schemaMultipartUploadList'
+            example:
+              $ref: '../components/examples/data.yml#/multipartUpload_get_uploadIdList_sample'
+      '400':
+        description: |-
+          If you can't open the resource.(For example, if a directory is specified or an incomplete file is specified.)<br>
+          The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '416':
+        description: Multiple range requests in the Range header (unsupported).
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Range for the resource is not available.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+
+  put:
+    tags:
+      - data
+    operationId: dividDatamultipartUpload
+    summary: multipartUpload the divided actual data.
+    description: |-
+      Upload the divided actual data.
+      <ul>
+        <li>The process branches according to the action parameter of the request.</li>
+      </ul>
+      Request example: PUT /api/v1/multipartUpload//AAA/s32/Test1.txt?uploadId=6d3f1813-4ff6-4852-920c-c5d011f05d07&partNumber=1'  -T "/hoge/fuga/file.txt"
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryUploadId'
+      - $ref: '../components/parameters/param.yml#/queryPartNumber'
+      - $ref: '../components/parameters/param.yml#/queryWriteType'
+    requestBody:
+      required: true
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+    responses:
+      '204':
+        description: Responds that the upload process has been successfully completed.
+      '403':
+        description: |-
+          Data source of vdlPath and dst do not match.<br>
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+  delete:
+    tags:
+      - data
+    operationId: multipartUploadDelete
+    summary: Cancel multipart upload.
+    description: |-
+      Cancel the multipart upload process.<br><br>
+      Request example: DELETE /api/v1/multipartUpload//AAA/s32/?uploadId=1
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryUploadId'
+    responses:
+      '204':
+        description: Responds that the resource has been successfully deleted.
+      '403':
+        description: |-
+          If a non-empty directory is specified without recursive option.<br>
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+        
+multipartUploadIncompletedParts_{vdlPath}: 
+  summary: This API group is related to the actual data management function.(This groups of API require vdlPath to be specified as a request parameter.)
+  get:
+    tags:
+      - data
+    operationId: incompleteMultipartUploads.
+    summary: Retrieve incomplete multipart upload.
+    description: |-
+      Retrieve the list of incomplete multipart uploads.<br><br>
+      Request example: GET /api/v1/multipartUploadIncompletedParts//providerA/sourceX/file
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+    responses:
+      '200':
+        description: Retrieve the list of incomplete multipart uploads.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/data.yml#/schemaIncompleteMultipartUploadList'
+            example:
+              $ref: '../components/examples/data.yml#/incompleteUploadIdList_get_sample'
+      '400':
+        description: |-
+          If you can't open the resource.(For example, if a directory is specified or an incomplete file is specified.)<br>
+          The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+        
+multipartUploadComplete_{vdlPath}:
+  post:
+    tags:
+      - data
+    operationId: completeMultipartUpload
+    summary: Complete multipartUpload the actual data
+    description: |-
+      Complete the multipart upload process for the actual data.<br><br>
+      Request example: POST /api/v1/multipartUploadComplete//providerA/sourceX/file/?uploadId=11&writeType=ASYNC_THROUGH
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/data.yml#/schemaMultipartUploadCompleteRequest'
+          examples:
+            multipartUploadComplete_sample:
+              $ref: '../components/examples/data.yml#/multipartUploadComplete_sample'
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryUploadId'
+      - $ref: '../components/parameters/param.yml#/queryWriteType'
+    responses:      
+      '200':
+        description: Responds that the upload of actual data was successful.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/data.yml#/schemaMultipartVdlPath'
+            example:
+              $ref: '../components/examples/data.yml#/multipartUpload_get_vdlPath_sample'        
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '409':
+        description: The uploaded actual data is already registered.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '500':
+        description: An error occurred in the server's internal processing.

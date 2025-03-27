@@ -1,0 +1,18 @@
+health_get_sample: 
+  health: true
+  details:
+    governance: 
+      authz: true
+      registry: true
+      tracker: true
+      updater: true
+    database: true
+    federation:
+      master: true
+      workers: 2/5
+    discovery: true
+    stream:
+      kafka: true
+      kafkaConnect: true
+    connectors:
+      <connectorId>: true

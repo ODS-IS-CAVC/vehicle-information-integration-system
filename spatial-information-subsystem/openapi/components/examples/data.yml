@@ -1,0 +1,45 @@
+data_update_sample: 
+  summary: simple data create request
+  value:
+    action: rename
+    dst: /coopX/hdfs/dst/file
+    
+data_delete_sample: 
+  summary: simple data delete request
+  value:
+    recursive: false
+
+multipartUpload_get_uploadId_sample: 
+  uploadId: hogehogefugafuga
+
+multipartUpload_get_vdlPath_sample: 
+  vdlPath: /aa/bb/cc
+
+multipartUpload_get_uploadIdList_sample:
+  vdlPath: /aa/bb/cc
+  uploadId: hogehogefugafuga
+  part:
+    - partNumber: 1
+      size: 52428
+      lastModified: 2022-05-03T16:48:56.602Z
+    - partNumber: 2
+      size: 5242885
+      lastModified: 2024-11-11T16:48:56.602Z
+
+incompleteUploadIdList_get_sample:
+  vdlPath: /aa/bb/cc
+  upload:
+    - vdlPath: /aa/bb/cc
+      uploadId: 1
+      initiated: 2022-05-03T16:48:56.602Z
+    - vdlPath: /bb/cc/dd
+      uploadId: 2
+      initiated: 2022-05-03T16:48:56.602Z                     
+
+multipartUploadComplete_sample:
+  summary: MultipartUploadComplete Split Information File Information.
+  value:
+    parts:
+      - key: 1
+      - key: 2
+      - key: 3

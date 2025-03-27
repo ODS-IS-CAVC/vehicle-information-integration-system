@@ -1,0 +1,12 @@
+- hosts: dev-collection-halex
+  roles:
+    - apt
+    - aws-settings
+    - CollectionWeather-App
+
+- hosts: dev-collection-tier4
+  roles:
+    - apt
+    - aws-settings
+    - CollectionVehicle-App
+    - CollectionTarget-App

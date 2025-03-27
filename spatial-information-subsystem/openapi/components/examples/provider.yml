@@ -1,0 +1,43 @@
+provider_create_sample: 
+  summary: simple provider create request
+  value:
+    bindPoint: coopX
+    name: company
+    displayName: Enterprise X
+    description: The bind point for enterprise X.
+    topicPrefix: topicPrefixX
+    dataspaceCacheEnabled: false
+provider_update_sample: 
+  summary: simple provider update request
+  value:
+    displayName: Enterprise X
+    topicPrefix: topicPrefixX
+    description: The bind point for enterprise X.
+    soft_deleted: false
+    dataspaceCacheEnabled: false
+provider_get_sample: 
+  id: d6f2c41d-126d-4838-8be1-010d937fc9bf
+  bindPoint: coopX
+  name: company
+  topicPrefix: topicPrefixX
+  displayName: Enterprise X
+  description: The bind point for enterprise X.
+  soft_deleted: false
+  dataspaceCacheEnabled: false
+provider_list_sample: 
+  - id: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    bindPoint: coopX
+    name: company
+    topicPrefix: topicPrefixX
+    displayName: Enterprise X
+    description: The bind point for enterprise X.
+    soft_deleted: false
+    dataspaceCacheEnabled: false    
+  - id: a9138f3e-3f95-4bc5-ba54-affa32080d26
+    bindPoint: coopY
+    name: y
+    topicPrefix: topicPrefixX
+    displayName: Enterprise Y
+    description: The bind point for enterprise Y.
+    soft_deleted: false
+    dataspaceCacheEnabled: false

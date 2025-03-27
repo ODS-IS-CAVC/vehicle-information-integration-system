@@ -1,0 +1,9 @@
+- hosts: poc-vdl
+  roles:
+    - yum
+    - aws-settings
+    - eks
+    - ebs-storageclass
+    - vdl-infra
+    - vdl
+    - vdl-ope

@@ -1,0 +1,29 @@
+# Common
+*.tar
+*.tar.gz
+*.tgz
+*.log
+*.local
+*.testdata
+tmp/
+
+# eclipse
+.project
+.classpath
+.settings/
+
+# idea
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+# java
+target/
+dependency-reduced-pom.xml
+
+# project
+application-local.yml
+.gradle/
+build/

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Axispot zfxy mesh preview v2024/12/24</title>
+    <meta charset="utf-8"/>
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <style>
+        #map {
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            position: absolute;
+        }
+
+        #panel {
+            top: 0px;
+            left: 0px;
+            position: absolute;
+            z-index: 1000;
+            width: calc(100vw - 160px);
+            background-color: darkblue;
+            color: white;
+            padding-top: 8px;
+            padding-bottom: 6px;
+            padding-left: 80px;
+            padding-right: 80px;
+        }
+
+        #neon {
+            color: white;
+            font-size: 12px;
+            transition: 10s;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        #neon:hover {
+            animation: flicker 10s infinite alternate;
+            text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 20px #fff,
+            0 0 40px #b2ebf5, 0 0 80px #b2ebf5, 0 0 90px #b2ebf5;
+        }
+
+        @keyframes flicker {
+            18%,
+            22%,
+            25%,
+            53%,
+            57%,
+            88%,
+            100% {
+                text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa,
+                0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
+            }
+            0%,
+            20%,
+            24%,
+            55%,
+            85% {
+                text-shadow: none;
+            }
+        }
+
+        label {
+            margin-left: 12px;
+            white-space: nowrap;
+        }
+
+        textarea {
+            margin: 0px;
+
+        }
+
+        textarea.expanded {
+
+            position: absolute; /* 絶対位置で配置 */
+            top: 0; /* 上端を固定 */
+            left: 0; /* 左端を固定 */
+            width: 400px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+<div id="panel">
+    <a id="neon" href="">Axispot zfxy mesh preview</a>
+
+    <label>
+        lat,lon:
+        <input type="text" id="center" placeholder="lat,lon" size="40"/>
+    </label>
+
+    <label>
+        プリセット:
+        <select id="preset">
+            <option value="lat|lon|zoom|spatialids" selected>プリセット</option>
+            <option value="36.513051147496036|140.61952448346332|15|15/29183/12809,15/29183/12810,15/29184/12810,15/29184/12809">
+                JR大甕駅周辺（一般道）zoom15
+            </option>
+            <option value="35.154734066601165|138.80651278262138|11|11/1807/812,11/1808/812,11/1809/812,11/1810/812,11/1810/811,11/1811/811,11/1811/810,11/1812/810,11/1812/809,11/1813/810,11/1813/809">
+                新東名高速道路駿河沼津SA～浜松SA（高速道）zoom11
+            </option>
+            <option value="35.154734066601165|138.80651278262138|15|15/28921/12996,15/28921/12997,15/28922/12996,15/28922/12997,15/28923/12997,15/28923/12996,15/28924/12997,15/28925/12997,15/28926/12997,15/28927/12997,15/28928/12997,15/28929/12997,15/28929/12998,15/28930/12997,15/28930/12998,15/28931/12998,15/28932/12998,15/28933/12998,15/28934/12998,15/28935/12998,15/28936/12998,15/28937/12998,15/28937/12999,15/28938/12999,15/28938/12998,15/28939/12998,15/28939/12999,15/28940/12998,15/28941/12998,15/28941/12997,15/28942/12997,15/28943/12997,15/28944/12997,15/28944/12996,15/28945/12996,15/28946/12996,15/28947/12996,15/28947/12997,15/28948/12997,15/28948/12996,15/28949/12996,15/28949/12997,15/28950/12996,15/28951/12996,15/28952/12996,15/28953/12996,15/28954/12996,15/28955/12996,15/28956/12996,15/28956/12995,15/28957/12995,15/28958/12995,15/28958/12994,15/28959/12994,15/28959/12993,15/28960/12993,15/28961/12993,15/28961/12992,15/28962/12992,15/28963/12992,15/28964/12992,15/28964/12991,15/28965/12991,15/28966/12991,15/28966/12990,15/28967/12990,15/28967/12989,15/28968/12989,15/28968/12988,15/28969/12988,15/28969/12987,15/28970/12987,15/28970/12986,15/28970/12985,15/28970/12984,15/28971/12984,15/28971/12983,15/28971/12982,15/28971/12981,15/28971/12980,15/28972/12980,15/28972/12981,15/28972/12979,15/28973/12979,15/28973/12978,15/28974/12978,15/28974/12977,15/28975/12977,15/28976/12977,15/28976/12976,15/28977/12976,15/28977/12975,15/28978/12975,15/28978/12974,15/28979/12974,15/28980/12974,15/28981/12974,15/28982/12974,15/28982/12973,15/28983/12973,15/28983/12972,15/28984/12972,15/28985/12972,15/28984/12973,15/28986/12972,15/28986/12971,15/28985/12971,15/28986/12970,15/28987/12970,15/28987/12969,15/28988/12969,15/28988/12968,15/28988/12967,15/28989/12967,15/28989/12966,15/28989/12965,15/28990/12965,15/28991/12965,15/28991/12964,15/28991/12963,15/28992/12963,15/28992/12962,15/28993/12962,15/28994/12962,15/28994/12961,15/28995/12961,15/28996/12961,15/28997/12961,15/28998/12961,15/28998/12960,15/28999/12960,15/29000/12960,15/29000/12959,15/29000/12958,15/29001/12958,15/29002/12957,15/29002/12958,15/29003/12957,15/29004/12957,15/29004/12956,15/29005/12956,15/29006/12956,15/29007/12956,15/29007/12957,15/29008/12957,15/29009/12957,15/29009/12958,15/29010/12958,15/29010/12957,15/29011/12958,15/29011/12959,15/29012/12959,15/29012/12960,15/29013/12960,15/29014/12960,15/29014/12961,15/29013/12961,15/29015/12961,15/29016/12961,15/29016/12962,15/29017/12962,15/29017/12961,15/29018/12962,15/29019/12962">
+                新東名高速道路駿河沼津SA～浜松SA（高速道）zoom15
+            </option>
+
+
+        </select>
+    </label>
+
+    <span>操作: Ctrl+クリックで選択</span>
+    <label style="position: relative;">
+        <textarea id="incsv" rows="1" placeholder="CSVで入力"></textarea>
+    </label>
+    <input type="button" id="tocsv" value="CSVでコピー"/>
+    <input type="button" id="clear" value="選択全解除"/>
+    <label>
+        <input type="checkbox" id="zfxyFlag" value="zfxy" checked/>
+        <span class="checkmark"></span>
+        [z/f/x/y]
+    </label>
+</div>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+
+    const textArea = document.getElementById('incsv');
+
+    textArea.addEventListener('focus', () => {
+        textArea.classList.add('expanded'); // 入力中はテキストエリアを拡大
+    });
+
+    textArea.addEventListener('blur', () => {
+        textArea.classList.remove('expanded'); // 入力が終わったら元のサイズに戻す
+    });
+
+    // 地図の初期化
+    var map = L.map("map").setView([36.513051147496036, 140.61952448346332], 15);
+
+    // 基本のタイルレイヤーを追加
+    var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 28,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const selectedSpatialIdMap = new Map();
+    const clear = () => {
+        selectedSpatialIdMap.clear();
+        spatialIdGridLayer.redraw();
+    };
+
+    const drawTile = (spatialId, tile) => {
+        tile.width = 256;
+        tile.height = 256;
+        tile.style.pointerEvents = 'auto';
+        var ctx = tile.getContext("2d");
+
+        // タイル座標を描画
+        ctx.strokeRect(0, 0, 255, 255);
+        ctx.textAlign = "center";
+        ctx.font = "22px sans-serif";
+        ctx.fillStyle = "#f00";
+        ctx.strokeStyle = "#fff";
+        ctx.fillText(spatialId, 128, 128);
+        ctx.spatialId = spatialId;
+
+        if (selectedSpatialIdMap.has(spatialId)) {
+            ctx.fillStyle = "rgba(0,0,255,0.4)";
+            ctx.fillRect(0, 0, tile.width, tile.height);
+        }
+    };
+
+    // タイル座標を描画するグリッドレイヤー
+    var SpatialIdGridLayer = L.GridLayer.extend({
+        onAdd: function (map) {
+            L.GridLayer.prototype.onAdd.call(this, map);
+            this.addInteractiveTarget(this._container);
+        },
+        createTile: function (coords) {
+            var tile = document.createElement('canvas');
+            var spatialId = coords.z + "/" + coords.x + "/" + coords.y;
+            drawTile(spatialId, tile);
+
+            // クリックイベントリスナーを追加
+            L.DomEvent.on(tile, 'click', this._onTileClick, this);
+            L.DomEvent.on(tile, 'dblclick', this._onTileClick, this);
+
+
+            return tile;
+        },
+        _onTileClick: function (e) {
+            // ctrl+クリックで選択
+            if (e.ctrlKey) {
+                console.log(e.target.getContext("2d").spatialId);
+                L.DomEvent.stopPropagation(e); // イベントの伝搬を止める
+
+                var canvas = e.target;
+                var context = canvas.getContext("2d");
+                var spatialId = context.spatialId;
+
+                if (selectedSpatialIdMap.has(spatialId)) {
+                    selectedSpatialIdMap.delete(spatialId);
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    drawTile(spatialId, canvas);
+                } else {
+                    selectedSpatialIdMap.set(spatialId, spatialId);
+                    drawTile(spatialId, canvas)
+                }
+            }
+        }
+    });
+
+    var spatialIdGridLayer = new SpatialIdGridLayer({interactive: true});
+
+    spatialIdGridLayer.addTo(map);
+
+
+    function mapToCSV(map) {
+        const headers = [...map.keys()];
+        // zfxy
+        if (document.getElementById("zfxyFlag").checked) {
+            return headers.map(header => {
+                return header.replace(/^(\d+)(\/\d+\/\d+)$/, '$1/0$2');
+            }).join(',');
+        }
+        return headers.join(',');
+    }
+
+    document.getElementById("center").addEventListener("input", function () {
+        var latlong = document.getElementById("center").value;
+        console.log("center: input");
+        map.panTo(latlong.split(","), {animate: false});
+    });
+    //
+    document.getElementById("preset").addEventListener("change", function () {
+        var values = document.getElementById("preset").value.split("|");
+        console.log(values);
+        if (values[0] !== "lat" && values[1] !== "lon") {
+            document.getElementById("center").value = values[0] + "," + values[1];
+            map.panTo([values[0], values[1]], {animate: false});
+        }
+        if (values[2] !== "zoom") {
+            map.setZoom(parseInt(values[2]));
+        }
+        if (values[3] !== "spatialids") {
+            values[3].split(",").forEach((spatialId) => selectedSpatialIdMap.set(spatialId, spatialId));
+            spatialIdGridLayer.redraw();
+        }
+
+    });
+    document.getElementById("incsv").addEventListener("input", function (e) {
+        console.log(e);
+        // zfxy
+        if (document.getElementById("zfxyFlag").checked) {
+            e.target.value.split(",").forEach((spatialId) => {
+                const ids = spatialId.split('/');
+                console.log(ids);
+                if (ids.length === 3) {
+                    selectedSpatialIdMap.set(spatialId, spatialId);
+                } else {
+                    selectedSpatialIdMap.set(ids[0] + "/" + ids[2] + "/" + ids[3], spatialId);
+                }
+            });
+            spatialIdGridLayer.redraw();
+            return;
+        }
+        e.target.value.split(",").forEach((spatialId) => selectedSpatialIdMap.set(spatialId, spatialId));
+        spatialIdGridLayer.redraw();
+
+    });
+    document.getElementById("clear").addEventListener("click", function () {
+        console.log("clear");
+        clear();
+    });
+    document.getElementById("tocsv").addEventListener("click", function () {
+        console.log("tocsv");
+        var csv = mapToCSV(selectedSpatialIdMap);
+        console.log(csv);
+        navigator.clipboard.writeText(csv).then(() => {
+            alert('クリップボードにCSVをコピーしました。');
+        }).catch(err => {
+            console.error('コピー失敗:', err);
+        });
+    });
+</script>
+</body>
+</html>

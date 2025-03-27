@@ -1,0 +1,176 @@
+# 物標情報収集AP
+application:
+  # タイムゾーン
+  time-zone: "Asia/Tokyo"
+  # spring-scheduler
+  scheduler:
+    # 1分ごとに実行する場合
+    cron: "0 */1 * * * ?"
+    # 自動実行しない場合
+    # cron: "-"
+    # cronのタイムゾーン
+    zone: ${application.time-zone}
+
+# spring-boot
+spring:
+  application:
+    name: target-information-collector
+
+# spring-web
+server:
+  port: 8083
+
+# logging
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection.timespatialindexcreator: INFO
+    jp.co.ntt.sic: INFO
+    org.springframework.web: INFO
+  file:
+    name: ./logs/${spring.application.name}.log
+
+# spring-actuator
+# 本番環境では設定を見直すこと
+management:
+  server:
+    port: ${server.port}
+  endpoints:
+    web:
+      exposure:
+        # すべてを無効化する場合
+        include: ""
+        # すべてを許可する場合
+        # include: "*"
+
+# Prefix
+# 環境変数の競合を避けるため
+target:
+  # auth
+  auth-api:
+    login:
+      # keyはgit管理しないため、
+      # 環境変数「TARGET_AUTH_API_LOGIN_KEY」にて設定すること
+      key: ${TARGET_AUTH_API_LOGIN_KEY:}
+      request:
+        endpoint: https://[AUTH_API_HOST]/auth/login
+        parameters:
+          # operator-account-idはgit管理しないため、
+          # 環境変数「TARGET_AUTH_API_LOGIN_REQUEST_PARAMETERS_OPERATOR_ACCOUNT_ID」にて設定すること
+          operator-account-id: ${TARGET_AUTH_API_LOGIN_REQUEST_PARAMETERS_OPERATOR_ACCOUNT_ID:}
+          # account-passwordはgit管理しないため、
+          # 環境変数「TARGET_AUTH_API_LOGIN_REQUEST_PARAMETERS_ACCOUNT_PASSWORD」にて設定すること
+          account-password: ${TARGET_AUTH_API_LOGIN_REQUEST_PARAMETERS_ACCOUNT_PASSWORD:}
+        timeout: 10000
+  # Tier4
+  tier4:
+    target-info-api:
+      # keyはgit管理しないため、
+      # 環境変数「TARGET_TIER4_TARGET_INFO_API_KEY」にて設定すること
+      key: ${TARGET_TIER4_TARGET_INFO_API_KEY:}
+      target-info:
+        # time-zoneはレスポンス保存時のディレクトリ名とファイル名の日時に利用する
+        time-zone: "Asia/Tokyo"
+        request:
+          endpoint: https://[TARGET_INFO_API_HOST]/targetInfo
+          parameters:
+            # 地点名, サービス地点ID, 路側機ID
+            # N-2, 8202302, 136323842
+            - service-location-id: 8202302
+              roadside-unit-id: 136323842
+            # N-3, 8202303, 136323843
+            - service-location-id: 8202303
+              roadside-unit-id: 136323843
+            # N-4, 8202304, 136323844
+            - service-location-id: 8202304
+              roadside-unit-id: 136323844
+          # 1秒間のリクエスト数
+          per-second: 5
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          # 10秒(10000）
+          timeout: 10000
+          retry:
+            # リトライのタイムアウト（ミリ秒）
+            # 1分間隔のため59秒（59000）以内に終わらなければタイムアウト
+            timeout: 59000
+            # 失敗した後の待機時間（ミリ秒）
+            # 0.5秒(500)
+            fixed-backoff: 500
+        response:
+          save:
+            directory: ./data/tier4-targetinfoapi/targetinfo
+            masking:
+              # マスク処理
+              # false(無効）
+              enabled: false
+              # マスク処理として実行するjqクエリ
+              # マスク対象の条件と上書きする値を指定すること
+              # jqクエリについてはjqを参考にすること
+              #  https://jqlang.github.io/jq/
+              # 利用可能な機能についてはjackson-jqのImplementationStatusを参照すること
+              #  https://github.com/eiiches/jackson-jq/tree/1.2.0?tab=readme-ov-file#implementation-status
+              # 例) deviceIDとtargetIDを0にマスクする場合
+              # query: >
+              #  .attribute.deviceIndividualInfo[] |= (
+              #    .deviceID = 0 |
+              #    .targetIndividualInfo[] |= (
+              #      .targetID = 0
+              #    )
+              #  )
+              query: ""
+      # 認証システムが準備できていない場合の設定のため本番環境ではfalseにすること
+      debug-auth-skip: false
+
+  # Axispot
+  axispot:
+    geotemp:
+      # time-zoneを切り替えた場合はAxispotのデータをリセットすること
+      time-zone: "UTC"
+      config: ./config/axispot/geotempConfig-${spring.profiles.active}.properties
+      save:
+        retry:
+          # Axispot格納処理のタイムアウト（ミリ秒）
+          # 内部連携のため5分(300000)
+          timeout: 300000
+          # 失敗した後の待機時間（ミリ秒）
+          # 内部連携のため10秒（10000）
+          fixed-backoff: 10000
+
+  # VDL
+  vdl:
+    api:
+      token:
+        request:
+          endpoint: https://[VDL_HOST]:[VDL_PORT]/realms/vdl/protocol/openid-connect/token
+          parameters:
+            client-id: vdl_client
+            # client-secretはgit管理しないため、
+            # 環境変数「TARGET_VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET」にて設定すること
+            client-secret: ${TARGET_VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET:}
+            username: tier4-admin
+            # passwordはgit管理しないため、
+            # 環境変数「TARGET_VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD」にて設定すること
+            password: ${TARGET_VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD:}
+            grant-type: password
+            scope: openid
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          # 10秒(10000）
+          timeout: 10000
+          # 自己署名証明書を利用する場合は検証処理をスキップする必要があるためfalseとする
+          verify-ssl: false
+      data:
+        request:
+          endpoint: https://[VDL_HOST]:[VDL_PORT]/api/v1/data
+          vdl-path-prefix: /provider-tier4/target/target-information-collector/data/tier4-targetinfoapi/targetinfo
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          # 10秒(10000）
+          timeout: 10000
+          # 自己署名証明書を利用する場合は検証処理をスキップする必要があるためfalseとする
+          verify-ssl: false
+          retry:
+            # VDL格納処理のタイムアウト（ミリ秒）
+            # 内部連携のため5分(300000)
+            timeout: 300000
+            # 失敗した後の待機時間（ミリ秒）
+            # 内部連携のため10秒（10000）
+            fixed-backoff: 10000

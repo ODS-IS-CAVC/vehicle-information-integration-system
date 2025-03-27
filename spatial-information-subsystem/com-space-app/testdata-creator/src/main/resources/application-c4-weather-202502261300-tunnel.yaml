@@ -1,0 +1,42 @@
+# 2025/02/26にリクエストされるデータ群
+# 2025/02/26の13時リクエスト完了後にトンネル出口にデータを追加する
+testdata:
+  flushData: false
+  data: []
+  randomDataOutputDir: "./data/"
+  # 個別設定で上書きするため以下の2つは使われない
+  randomDataBaseTime: "2025-01-28T10:00:00+09:00"
+  randomDataDuration: 1h
+  # 2502260900-tunnel-exitで投入したデータを上書きするためupdatedAtOffsetは5hを指定
+  randomData:
+    # 遠隔監視のリクエストデータ
+    - id: "C4_202502261300_tunnel"
+      name: "気象情報:（2/26(火) 12:00-19:00のデータ）"
+      templateType: Weather
+      interval: 1h
+      baseTime: "2025-02-26T12:00:00+09:00"
+      duration: 8h
+      updatedAtOffset: 4h
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 助宗トンネル出口を含む空間IDの中央座標1
+            longitude: 138.2244873046875
+            latitude: 34.8904368176
+            altitude: 0.0
+        - boundingBoxes: []
+          coordinate:
+            # 助宗トンネル出口を含む空間IDの中央座標2
+            longitude: 138.2354736328125
+            latitude: 34.8904368176
+            altitude: 0.0
+        - boundingBoxes: []
+          coordinate:
+            # 助宗トンネル出口を含む空間IDの中央座標3
+            longitude: 138.2354736328125
+            latitude: 34.89944783
+            altitude: 0.0
+      staticAttributes:
+        weatherForecast: "300"
+        windSpeed: "40.0"
+        precipitation: "50.0"

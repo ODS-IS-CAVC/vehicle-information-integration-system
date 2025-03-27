@@ -1,0 +1,26 @@
+lineage_update_sample: 
+  summary: simple update lineage request
+  value: 
+    add: 
+      - upstream: 
+          id: dataset_6f60b1f2-c2d0-44a0-ae44-cb4c25ff61f7
+        downstream: 
+          id: datajob_99e82089-f655-4ebc-9bec-146d08ac8711
+    remove: 
+      - upstream: 
+          id: dataset_aaac25ff-c2d0-44a0-ae44-aaac25ff6bbb
+        downstream:
+          id: datajob_aaad08ac-f655-4ebc-9bec-aaad08ac8bbb
+lineage_search_sample: 
+  summary: simple search lineage request
+  value: 
+    direction: UPSTREAM
+    id: dataset_7a87fecc-8cf5-42bb-a975-c4d0648ce1e4
+
+lineage_list_sample: 
+  - id: dataset_6a977cf5-bbdb-4104-904d-8b697bcb2343
+    degree: 1
+    next: 
+      - id: dataset_cbe28e5d-1c43-42d6-b292-15d43e6ebffa
+  - id: dataset_cbe28e5d-1c43-42d6-b292-15d43e6ebffa
+    degree: 2

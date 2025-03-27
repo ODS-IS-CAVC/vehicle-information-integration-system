@@ -1,0 +1,256 @@
+- name: copy aws-digiline-com-keypair.pem
+  copy:
+    src: ~/aws-digiline-com-keypair.pem
+    dest: $HOME/
+    mode: 0600
+
+- name: copy vdl-2024-v1.0.1.zip
+  copy:
+    src: ~/vdl-2024-v1.0.1.zip
+    dest: $HOME/
+
+- name: unarchive vdl-2024-v1.0.1
+  unarchive:
+    src: $HOME/vdl-2024-v1.0.1.zip
+    dest: $HOME/
+    mode: '0775'
+    remote_src: yes
+
+- name: tar zxvf helmfile.tar.gz 
+  command:
+    cmd: 'tar xvfz helmfile.tar.gz'
+    chdir: $HOME/vdl-2024-v1.0.1
+
+- name: change mode download_alluxio_chart.sh
+  file:
+    path: $HOME/vdl-2024-v1.0.1/helmfile/alluxio/download_alluxio_chart.sh
+    mode: '+x'
+
+- name: exec download_alluxio_chart.sh
+  command:
+    cmd: 'bash download_alluxio_chart.sh'
+    chdir: $HOME/vdl-2024-v1.0.1/helmfile/alluxio/
+
+- name: set NODES
+  shell: |
+    kubectl get node -o wide | grep -v "NAME" | head -n 1 | awk '{ORS=" ";print $6}' | awk '{print substr($0, 1, length($0)-1)}'
+  args:
+    chdir: $HOME/
+  register: NODES
+
+- name: replace api-gw config.json
+  replace:
+    path: $HOME/vdl-2024-v1.0.1/helmfile/api-gw/charts/api-gw-info/files/config.json
+    regexp: "ip-172-31-28-17.ap-northeast-1.compute.internal"
+    replace: "{{ NODES.stdout }}"
+
+- name: replace api-gw reloadable_config.json
+  replace:
+    path: $HOME/vdl-2024-v1.0.1/helmfile/api-gw/charts/api-gw-info/files/reloadable_config.json
+    regexp: "keycloak.vdl.svc.cluster.local"
+    replace: "{{ NODES.stdout }}:31444"
+
+- name: replace quota /dev/shm
+  replace:
+    path: $HOME/vdl-2024-v1.0.1/helmfile/alluxio/charts/alluxio/values.yaml
+    regexp: "quota: 1Gi"
+    replace: "quota: 8Gi"
+
+- name: copy kubeconfig
+  copy: 
+    src: $HOME/.kube/config
+    dest: $HOME/vdl-2024-v1.0.1/helmfile/api-gw/charts/api-gw-info/files/kubeconfig
+    remote_src: yes
+
+- name: set NODES
+  shell: |
+    kubectl get node -o wide | grep -v "NAME" | awk '{ORS=" ";print $6}' | awk '{print substr($0, 1, length($0)-1)}'
+  args:
+    chdir: $HOME/
+  register: NODES
+
+- debug: msg="{{ NODES.stdout }}"
+
+- name: scp ~/vdl-2024-v1.0.1/helmfile/api-gw/charts/api-gw-info/tls/vdlCA.crt
+  shell: |
+    for ip in {{ NODES.stdout }}; do
+      scp -i ~/aws-digiline-com-keypair.pem -o StrictHostKeyChecking=no ~/vdl-2024-v1.0.1/helmfile/api-gw/charts/api-gw-info/tls/vdlCA.crt ubuntu@$ip:/tmp/
+    done
+  args:
+    chdir: $HOME/
+
+- name: mv /tmp/vdlCA.crt
+  shell: |
+    for ip in {{ NODES.stdout }}; do
+      ssh -i ~/aws-digiline-com-keypair.pem -o StrictHostKeyChecking=no ubuntu@$ip 'sudo mv /tmp/vdlCA.crt /usr/local/share/ca-certificates/'
+    done
+  args:
+    chdir: $HOME/
+
+- name: update-ca-certificates
+  shell: |
+    for ip in {{ NODES.stdout }}; do
+      ssh -i ~/aws-digiline-com-keypair.pem -o StrictHostKeyChecking=no ubuntu@$ip 'sudo update-ca-certificates'
+    done
+  args:
+    chdir: $HOME/
+
+- name: systemctl restart containerd
+  shell: |
+    for ip in {{ NODES.stdout }}; do
+      ssh -i ~/iia-digiline-com-keypair.pem -o StrictHostKeyChecking=no ubuntu@$ip 'sudo systemctl restart containerd'
+    done
+  args:
+    chdir: $HOME/
+
+- name: create k8s namespace
+  shell: |
+    kubectl create namespace vdl
+  args:
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: helmfile keycloak
+  command:
+    cmd: 'helmfile -f helmfile-idp.yaml -e vdl -n vdl apply'
+    chdir: $HOME/vdl-2024-v1.0.1/helmfile/
+
+- name: helmfile vault
+  command:
+    cmd: 'helmfile -f helmfile-vault.yaml -e vdl -n vdl apply'
+    chdir: $HOME/vdl-2024-v1.0.1/helmfile/
+
+- name: install yum-utils
+  yum:
+    name: yum-utils
+    state: latest
+  become: yes
+
+- name: yum-config-manager --add-repo 
+  command:
+    cmd: 'yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo'
+    chdir: $HOME/
+  become: yes
+
+- name: install vault
+  yum:
+    name: vault
+    state: latest
+  become: yes
+
+- name: set NODES
+  shell: |
+    kubectl get node -o wide | grep -v "NAME" | head -n 1 | awk '{ORS=" ";print $6}' | awk '{print substr($0, 1, length($0)-1)}'
+  args:
+    chdir: $HOME/
+  register: NODES
+
+- debug: msg="{{ NODES.stdout }}"
+
+- name: vault operator init
+  shell: |
+    export VAULT_ADDR=https://{{ NODES.stdout }}:30200
+    vault operator init -key-shares=3 -format="json" -tls-skip-verify
+  args:
+    chdir: $HOME/
+  register: vault_init
+
+- name: parse json
+  set_fact:
+    json_parsed: "{{ vault_init.stdout | from_json }}"
+
+- name: set unseal keys
+  shell: |
+    export VAULT_ADDR=https://{{ NODES.stdout }}:30200
+    vault operator unseal -tls-skip-verify {{ json_parsed['unseal_keys_b64'][0] }}
+    vault operator unseal -tls-skip-verify {{ json_parsed['unseal_keys_b64'][1] }}
+    vault operator unseal -tls-skip-verify {{ json_parsed['unseal_keys_b64'][2] }}
+  args:
+    chdir: $HOME/
+
+- name: set initial root token
+  shell: |
+    export VAULT_ADDR=https://{{ NODES.stdout }}:30200
+    vault login -tls-skip-verify {{ json_parsed['root_token'] }}
+  args:
+    chdir: $HOME/
+
+- name: vault secrets enable
+  shell: |
+    export VAULT_ADDR=https://{{ NODES.stdout }}:30200
+    vault secrets enable -tls-skip-verify -path=secret kv-v2
+  args:
+    chdir: $HOME/
+
+- name: vault kv put
+  shell: |
+    export VAULT_ADDR=https://{{ NODES.stdout }}:30200
+    openssl genrsa -out vdl-issuer-private.pem 4096
+    openssl rsa -pubout < vdl-issuer-private.pem > vdl-issuer-public.pem
+    openssl genrsa -out foreign-issuer-private.pem 4096
+    openssl rsa -pubout < foreign-issuer-private.pem > foreign-issuer-public.pem
+    vault kv put -tls-skip-verify -mount=secret vdl-issuer-key content=@vdl-issuer-private.pem
+    vault kv put -tls-skip-verify -mount=secret vdl-issuer-publickey content=@vdl-issuer-public.pem
+    vault kv put -tls-skip-verify -mount=secret foreign-issuer-key content=@foreign-issuer-private.pem
+    vault kv put -tls-skip-verify -mount=secret foreign-issuer-publickey content=@foreign-issuer-public.pem
+  args:
+    chdir: $HOME/
+
+- name: helmfile pre
+  command:
+    cmd: 'helmfile -f helmfile-pre.yaml -e vdl -n vdl apply'
+    chdir: $HOME/vdl-2024-v1.0.1/helmfile/
+
+- name: copy ondemand-consume.yaml
+  copy:
+    src: ../files/ondemand-consume.yaml
+    dest: $HOME/vdl-2024-v1.0.1/helmfile/ondemand-consume/environments/vdl/ondemand-consume.yaml
+
+- name: copy kafka.yaml
+  copy:
+    src: ../files/kafka.yaml
+    dest: $HOME/vdl-2024-v1.0.1/helmfile/kafka/environments/vdl/kafka.yaml
+
+- name: copy api-gw.yaml
+  copy:
+    src: ../files/api-gw.yaml
+    dest: $HOME/vdl-2024-v1.0.1/helmfile/api-gw/environments/vdl/api-gw.yaml
+
+- name: copy api-gw-info.yaml
+  copy:
+    src: ../files/api-gw-info.yaml
+    dest: $HOME/vdl-2024-v1.0.1/helmfile/api-gw/environments/vdl/api-gw-info.yaml
+
+- name: helmfile vdl
+  command:
+    cmd: 'helmfile -f helmfile-vdl.yaml -e vdl -n vdl apply'
+    chdir: $HOME/vdl-2024-v1.0.1/helmfile/
+
+- name: change mode build_bundle.sh
+  file:
+    path: $HOME/vdl-2024-v1.0.1/helmfile/policy/build_bundle.sh
+    mode: '+x'
+
+- name: exec build_bundle.sh
+  command:
+    cmd: 'bash build_bundle.sh'
+    chdir: $HOME/vdl-2024-v1.0.1/helmfile/policy/
+
+- name: copy authz_system.tar.gz
+  shell: |
+    kubectl cp authz_system.tar.gz vdl/$(kubectl -n vdl get pods -o json | jq -r ".items[] | select(.metadata.name | startswith(\"api-gw\")) | .metadata.name"):/etc/api-gateway/bundle/
+  args:
+    chdir: $HOME/vdl-2024-v1.0.1/helmfile/policy/target/
+
+- name: copy authz.tar.gz
+  shell: |
+    kubectl cp authz.tar.gz vdl/$(kubectl -n vdl get pods -o json | jq -r ".items[] | select(.metadata.name | startswith(\"api-gw\")) | .metadata.name"):/etc/api-gateway/bundle/
+  args:
+    chdir: $HOME/vdl-2024-v1.0.1/helmfile/policy/target/
+
+- name: add gitlab2-nginx-ingress-controller to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^gitlab2-nginx-ingress-controller'
+    line: '127.0.0.1 gitlab2-nginx-ingress-controller'
+  become: true

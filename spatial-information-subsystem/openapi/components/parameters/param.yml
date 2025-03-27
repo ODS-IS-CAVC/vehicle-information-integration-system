@@ -1,0 +1,519 @@
+pathProviderId:
+  name: providerId
+  in: path
+  required: true
+  description: The target data provider id
+  schema:
+    type: string
+    pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+pathStorageId:
+  name: storageId
+  in: path
+  required: true
+  description: The target data source id
+  schema:
+    type: string
+    pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+pathAction:
+  name: action
+  in: path
+  required: true
+  description: The bind action to execute
+  schema:
+    type: string
+    enum: [bind, rebind, unbind]
+queryWriteType:
+  name: writeType
+  in: query
+  required: false
+  description: Specify the cache-out method
+  schema:
+    type: string
+    enum: [ASYNC_THROUGH, CACHE_THROUGH, MUST_CACHE, THROUGH]    
+queryReadType:
+  name: readType
+  in: query
+  required: false
+  description: Specify the cache-out method
+  schema:
+    type: string
+    enum: [CACHE, NO_CACHE] 
+queryUnit:
+  name: unit
+  in: query
+  required: false
+  description: Timeout parameter time unit
+  schema:
+    type: string
+    enum: [nanos, millis, seconds] 
+    default: millis
+queryTimeout:
+  name: timeout
+  in: query
+  required: false
+  description: The maximum time this operation will block to retrieve topic metadata
+  schema:
+    type: integer 
+    format: int64
+queryTimeoutMs:
+  name: timeoutMs
+  in: query
+  required: false
+  description: Timeout duration for this operation (ms)
+  schema:
+    type: integer
+queryIncludeAuthorizedOperations:
+  name: includeAuthorizedOperations
+  in: query
+  required: false
+  description: Whether to include authorized operations
+  schema:
+    type: boolean       
+queryIncludeSynonyms:
+  name: includeSynonyms
+  in: query
+  required: false
+  description: Synonym configuration
+  schema:
+    type: boolean
+queryIncludeDocumentation:
+  name: includeDocumentation
+  in: query
+  required: false
+  description: config documentation
+  schema:
+    type: boolean
+querySearchConnector:
+  name: searchConnector
+  in: query
+  required: false
+  description: If this parameter is true, the search will include catalogs from other data platforms
+  schema:
+    type: boolean
+    default: false
+queryTopicName_eq:
+  name: topicName_eq
+  in: query
+  required: false
+  description: If the query string matches the topic name
+  schema:
+    type: string
+queryTopicName_contain:
+  name: topicName_contain
+  in: query
+  required: false
+  description: If the query string is contained in the topic name
+  schema:
+    type: string
+pathTopicName_eq:
+  name: topicName_eq
+  in: path
+  required: false
+  description: If the query string matches the topic name
+  schema:
+    type: string
+pathTopicName_contain:
+  name: topicName_contain
+  in: path
+  required: false
+  description: If the query string is contained in the topic name
+  schema:
+    type: string                          
+pathTopicName:
+  name: topicName
+  in: path
+  required: true
+  description: |-
+    Topic name.
+  schema:
+    type: string
+    pattern: '^[a-zA-Z0-9][a-zA-Z0-9\\-]{0,35}_[a-zA-Z0-9][a-zA-Z0-9\\-]{0,30}\\.[a-zA-Z0-9\\._\\-]{1,186}$'
+pathVdlPath:
+  name: vdlPath
+  in: path
+  required: true
+  description: |-
+    The target vdl path.
+    <ul>
+      <li>The first part (directory) of the VDL path is the bind point.</li>
+      <li>The second part (directory) of the VDL path is the data source name.</li>
+      <li>VDL path should be absolute (Starts with '/'): If the VDL path is "/providerA/sourceX/file", API request becomes "GET /api/v1/data//providerA/sourceX/file", for example.</li>
+    </ul>
+  schema:
+    type: string
+    pattern: '^/[a-zA-Z0-9][a-zA-Z0-9._-]{1,31}/[a-zA-Z0-9][a-zA-Z0-9._-]{1,31}/.{0,960}[^/]$'
+  allowReserved: true
+pathMetadataVdlPath:
+  name: vdlPath
+  in: path
+  required: true
+  description: |-
+    The target vdl path.
+    <ul>
+      <li>The first part (directory) of the VDL path is the bind point.</li>
+      <li>The second part (directory) of the VDL path is the data source name.</li>
+      <li>VDL path should be absolute (Starts with '/'): If the VDL path is "/providerA/sourceX/file", API request becomes "GET /api/v1/data//providerA/sourceX/file", for example.</li>
+    </ul>
+  schema:
+    type: string
+    pattern: '^/[a-zA-Z0-9][a-zA-Z0-9._-]{1,31}/[a-zA-Z0-9][a-zA-Z0-9._-]{1,31}/.{0,960}$'
+  allowReserved: true  
+pathDatasetId:
+  name: datasetId
+  in: path
+  required: true
+  description: The target dataset id
+  schema:
+    type: string
+    pattern: '^(dataset)_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+pathTagId:
+  name: tagId
+  in: path
+  required: true
+  description: The target tag id
+  schema:
+    type: string
+    pattern: '^.+_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+pathTermName:
+  name: termName
+  in: path
+  required: true
+  description: The target term name
+  schema:
+    type: string
+pathJobId:
+  name: jobId
+  in: path
+  required: true
+  schema:
+    type: string
+    pattern: '^(datajob)_^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+pathAction_dataset:
+  name: action
+  in: path
+  required: true
+  description: |-
+    Action to be applied
+    <ul>
+      <li>When action is applyPathConf, vdlSpec.pathOption in the dataset is applied to the vdlPath</li>
+      <li>When action is applySync, vdlSpec.activeSync in the dataset is applied to the vdlPath</li>
+    </ul>
+  schema:
+    type: string
+    enum: [applyPathConf , applySync]
+queryName_eq:
+  name: name_eq
+  in: query
+  required: false
+  description: Condition that name equals to the given string
+  schema:
+    type: string
+queryName_contain:
+  name: name_contain
+  in: query
+  required: false
+  description: Condition that name contains the given string
+  schema:
+    type: string
+queryBindPoint_eq:
+  name: bindPoint_eq
+  in: query
+  required: false
+  description: Condition that bind point equals to the given string
+  schema:
+    type: string
+queryBindPoint_contain:
+  name: bindPoint_contain
+  in: query
+  required: false
+  description: Condition that bind point contains the given string
+  schema:
+    type: string
+topicPrefix_eq:
+  name: topicPrefix_eq
+  in: query
+  required: false
+  description: Condition that topic prefix equals to the given string
+  schema:
+    type: string
+topicPrefix_contain:
+  name: topicPrefix_contain
+  in: query
+  required: false
+  description: Condition that topic prefix contains the given string
+  schema:
+    type: string
+queryDisplayName_eq:
+  name: displayName_eq
+  in: query
+  required: false
+  description: Condition that displayname equals to the given string
+  schema:
+    type: string
+queryDisplayName_contain:
+  name: displayName_contain
+  in: query
+  required: false
+  description: Condition that displayname contains the given string
+  schema:
+    type: string
+queryStatus_eq:
+  name: status_eq
+  in: query
+  required: false
+  description: Condition that status equals to the given string
+  schema:
+    type: string
+    enum: [NotBound, Bound]
+queryProviderId_eq:
+  name: providerId_eq
+  in: query
+  required: false
+  description: Condition that provider id equals to the given string
+  schema:
+    type: string
+headerRange:
+  name: Range
+  in: header
+  required: false
+  description: |-
+    Specify if you want to download part of the file.
+    <ul>
+      <li>Multiple range requests in the Range header are not supported.(Error with 416 Range Not Satisfiable.)</li>
+      <li>If the format of the Range header is incorrect, ignore the Range header and download the entire file.</li>
+    </ul>
+  schema:
+    type: string
+    pattern: '^bytes= *[0-9]*-[0-9]*$'
+  example: "bytes=100-"
+queryPath_regex:
+  name: path_regex
+  in: query
+  required: false
+  description: Only results whose resource matches the specified regular expression are included in the response.
+  schema:
+    type: string
+queryLast_modified_dt_ge:
+  name: last_modified_dt_ge
+  in: query
+  required: false
+  description: |-
+    Only resources whose last modified time are greater than or equal to the specified time are included in the response.
+    <ul>
+      <li>Specify in epoch milliseconds.</li>
+      <li>This is the value corresponding to the value of lastModificationTimeMs in the technical metadata.</li>
+    </ul>
+  schema:
+    type: integer 
+    format: int64
+queryLast_modified_dt_lt:
+  name: last_modified_dt_lt
+  in: query
+  required: false
+  description: |-
+    Only resources whose last modified time are less than the specified time are included in the response.
+    <ul>
+      <li>Specify in epoch milliseconds.</li>
+      <li>This is the value corresponding to the value of lastModificationTimeMs in the technical metadata.</li>
+    </ul>
+  schema:
+    type: integer 
+    format: int64
+querySize_ge:
+  name: size_ge
+  in: query
+  required: false
+  description: |-
+    Only resources whose file size is greater than or equal to the specified size are included in the response.
+    <ul>
+      <li>Specify the number of bytes.</li>
+      <li>This is the value corresponding to the value of length in the technical metadata.</li>
+    </ul>
+  schema:
+    type: integer 
+    format: int64
+querySize_lt:
+  name: size_lt
+  in: query
+  required: false
+  description: |-
+    Only resources whose file size is less than the specified size are included in the response.
+    <ul>
+      <li>Specify the number of bytes.</li>
+      <li>This is the value corresponding to the value of length in the technical metadata.</li>
+    </ul>
+  schema:
+    type: integer 
+    format: int64
+queryRecursive:
+  name: recursive
+  in: query
+  required: false
+  description: Process recursively under the directory.
+  schema:
+    type: boolean
+    default: false
+queryLoad_metadata_type:
+  name: load_metadata_type
+  in: query
+  required: false
+  description: Metadata retrieval method.
+  schema:
+    type: string
+    enum: [NEVER , ONCE, ALWAYS]    
+querySyncInterval_ms:
+  name: syncInterval_ms
+  in: query
+  required: false
+  description: Synchronization interval.
+  schema:
+    type: integer 
+    format: int64
+queryDescription_contain:
+  name: description_contain
+  in: query
+  required: false
+  description: Condition that description contains the given string
+  schema:
+    type: string 
+queryCustomPropertyKey_eq:
+  name: customPropertyKey_eq
+  in: query
+  required: false
+  description: Condition that customProperties Key equals to the given string
+  schema:
+    type: string 
+queryCustomPropertyValue_eq:
+  name: customPropertyValue_eq
+  in: query
+  required: false
+  description: Condition that customProperties Value equals to the given string
+  schema:
+    type: string 
+queryCustomPropertyValue_contain:
+  name: customPropertyValue_contain
+  in: query
+  required: false
+  description: Condition that customProperties Value contains the given string
+  schema:
+    type: string 
+queryVdlPath_eq:
+  name: vdlPath_eq
+  in: query
+  required: false
+  description: Condition that vdlPath equals to the given string
+  schema:
+    type: string 
+queryVdlPath_upward:
+  name: vdlPath_upward
+  in: query
+  required: false
+  description: Condition that the vdlPath of the target dataset is a partial path (from the root) of the given string (e.g., "/a" or "/a/b" when vdlPath_upward="/a/b")
+  schema:
+    type: string
+queryVdlPath_downward:
+  name: vdlPath_downward
+  in: query
+  required: false
+  description: Conditions that the vdlPath of the target dataset is a directory under (or equals to) the given string (e.g., "/a/b" or "/a/b/c" when vdlPath_downward="/a/b")
+  schema:
+    type: string 
+queryTagname_eq:
+  name: tagname_eq
+  in: query
+  required: false
+  description: Condition that tag name equals to the given string
+  schema:
+    type: string 
+queryTagname_contain:
+  name: tagname_contain
+  in: query
+  required: false
+  description: Condition that tag name contains the given string
+  schema:
+    type: string 
+queryTermname_eq:
+  name: termname_eq
+  in: query
+  required: false
+  description: Condition that term name equals to the given string
+  schema:
+    type: string 
+queryTermname_contain:
+  name: termname_contain
+  in: query
+  required: false
+  description: Condition that term name contains the given string
+  schema:
+    type: string 
+queryOwner_eq:
+  name: owner_eq
+  in: query
+  required: false
+  description: Condition that owner equals to the given string
+  schema:
+    type: string 
+queryAdditionalInfo:
+  name: additionalInfo
+  in: query
+  required: false
+  description: Flag for whether to obtain additional information (vdlStatus object)
+  schema:
+    type: boolean
+    default: false
+pathRuleId:
+  name: ruleId
+  in: path
+  required: true
+  description: the target of authorization rule id
+  schema:
+    type: string
+    format: uuid
+    pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' 
+pathParticipantId:
+  name: participantId
+  in: path
+  required: true
+  description: The target participant id
+  schema:
+    type: string
+    pattern: '^[a-zA-Z0-9][a-zA-Z0-9._-]{1,36}$'
+pathStreamId:
+  name: streamId
+  in: path
+  required: true
+  description: The target stream data source id
+  schema:
+    type: string
+    pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+pathDatasetIdOrDatajobId:
+  name: datasetIdOrDatajobId
+  in: path
+  required: true
+  description: The target datasetId Or datajobId
+  schema:
+    type: string
+    pattern: '^(dataset|datajob)" + "_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+queryDirection:
+  name: direction
+  in: query
+  required: false
+  description: direction
+  schema:
+    type: string
+    enum: [UPSTREAM , DOWNSTREAM]    
+queryUploadId:
+  name: uploadId
+  in: query
+  required: true
+  description: uploadId
+  schema:
+    type: string
+queryPartNumber:
+  name: partNumber
+  in: query
+  required: true
+  description: partNumber
+  schema:
+    type: string    
+

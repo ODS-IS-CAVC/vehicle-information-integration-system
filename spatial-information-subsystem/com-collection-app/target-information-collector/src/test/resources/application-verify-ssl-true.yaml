@@ -1,0 +1,11 @@
+# verify-sslをtrueにする
+target:
+  vdl:
+    api:
+      token:
+        request:
+          verify-ssl: true
+      data:
+        request:
+          verify-ssl: true
+

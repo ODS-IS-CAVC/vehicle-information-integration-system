@@ -1,0 +1,47 @@
+schemaTag:
+  type: object
+  properties:
+    id:
+      type: string
+      description: tag ID
+      example: TestTag_e13a4776-b39d-f016-1365-a2113a11023f
+    name:
+      type: string
+      description: tag name
+      example: weather
+    description:
+      type: string
+      description: Description of tag
+      example: tag for Data X
+    owner:
+      type: string
+      description: Tag owner information (Data provider ID)
+      example: e13a4776-b39d-f016-1365-a2113a11023f
+
+schemaCreateTagRequest:
+  type: object
+  required: 
+    - name
+    - owner
+  properties:
+    name:
+      type: string
+      description: Tag name
+      example: weather
+    description:
+      type: string
+      description: Description of Tag
+      example: The Tag for Data X
+    owner:
+      type: string
+      description: Tag owner information (Data provider ID)
+      pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      example: e13a4776-b39d-f016-1365-a2113a11023f
+
+schemaUpdateTagRequest:
+  type: object
+  properties:
+    description:
+      type: string
+      description: Description of Tag
+      example: The Tag for Data X

@@ -1,0 +1,194 @@
+dataset_create_batch_sample: 
+  summary: simple dataset create request for batch
+  value:
+    name: DatasetNo1
+    description: The Dataset for Data X
+    customProperties: 
+      key1: value1
+    dataType: batch
+    tags: 
+      - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: sensitive
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+    vdlSpec: 
+      vdlPath: /providerA/sourceX/file
+      isReady: true
+      activeSync: true
+      pathOption: 
+        alluxio.user.file.metadata.load.type: ONCE
+
+dataset_create_stream_sample: 
+  summary: simple dataset create request for stream
+  value:
+    name: DatasetNo1
+    description: The Dataset for Data X
+    customProperties: 
+      key1: value1
+    dataType: stream
+    tags: 
+      - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: sensitive
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+    vdlSpec: 
+      topic: topicName1
+      isReady: false
+      activeSync: false
+      pathOption: 
+        alluxio.user.file.metadata.load.type: ONCE
+dataset_update_sample: 
+  summary: simple dataset update request
+  value:
+    description: changedDescription
+    customProperties: 
+      key2: value2
+    tags: 
+      - id: changedweather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: termName
+    vdlSpec: 
+      isReady: true
+      activeSync: false
+      pathOption: 
+        alluxio.user.file.metadata.load.type: ALWAYS
+        
+dataset_get_stream_sample: 
+  summary: simple dataset get sample for stream
+  value:
+    id: dataset_c0efdd45-e4b5-48c7-b27f-ee676181befc
+    name: DatasetNo1
+    description: The Dataset for Data X
+    customProperties: 
+      key1: value1
+    dataType: stream     
+    tags: 
+      - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+        name: weather
+        description: tag for Data X
+        owner: e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: sensitive
+        description: term for Data X
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+    vdlSpec: 
+      topic: companyA_datasourceA.topicA
+      isReady: false
+      activeSync: false
+      pathOption: 
+        alluxio.user.file.metadata.load.type: ONCE
+
+dataset_get_batch_sample: 
+  summary: simple dataset get sample for batch
+  value:
+    id: dataset_c0efdd45-e4b5-48c7-b27f-ee676181befc
+    name: DatasetNo1
+    description: The Dataset for Data X
+    customProperties: 
+      key1: value1
+    dataType: stream     
+    tags: 
+      - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+        name: weather
+        description: tag for Data X
+        owner: e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: sensitive
+        description: term for Data X
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+    vdlSpec: 
+      isReady: true
+      activeSync: true
+      pathOption: 
+        alluxio.user.file.metadata.load.type: ONCE
+
+dataset_get_sample_with_additionalInfo: 
+  summary: dataset get sample with additionalInfo
+  value:
+    id: dataset_c0efdd45-e4b5-48c7-b27f-ee676181befc
+    name: DatasetNo1
+    description: The Dataset for Data X
+    customProperties: 
+      key1: value1
+    dataType: batch      
+    tags: 
+      - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+        name: weather
+        description: tag for Data X
+        owner: e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: sensitive
+        description: term for Data X
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+    vdlSpec: 
+      vdlPath: /providerA/sourceX/file
+      isReady: true
+      activeSync: true
+      pathOption: 
+        alluxio.user.file.metadata.load.type: ONCE
+    vdlStatus: 
+      isOK: true
+      activeSync: true
+      pathOption: 
+        alluxio.user.file.metadata.load.type: ONCE
+      pathOptionUnified: 
+        alluxio.user.file.metadata.load.type: ONCE
+
+
+dataset_stream_list_sample: 
+  summary: simple dataset list sample
+  value:
+    - id: dataset_c0efdd45-e4b5-48c7-b27f-ee676181befc
+      name: DatasetNo1
+      description: The Dataset for Data X
+      customProperties: 
+        key1: value1
+      dataType: stream
+      tags: 
+        - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+          name: weather
+          description: tag for Data X
+          owner: e13a4776-b39d-f016-1365-a2113a11023f
+      terms: 
+        - name: sensitive
+          description: term for Data X
+      owner: e13a4776-b39d-f016-1365-a2113a11023f
+      vdlSpec: 
+        topic: companyA_datasourceA.topicA
+        isReady: false
+        activeSync: false
+        pathOption: 
+          alluxio.user.file.metadata.load.type: ONCE
+
+dataset_list_sample_with_additionalInfo: 
+  summary: dataset list sample with additionalInfo
+  value:
+    - id: dataset_c0efdd45-e4b5-48c7-b27f-ee676181befc
+      name: DatasetNo1
+      description: The Dataset for Data X
+      customProperties: 
+        key1: value1
+      dataType: batch
+      tags: 
+        - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+          name: weather
+          description: tag for Data X
+          owner: e13a4776-b39d-f016-1365-a2113a11023f
+      terms: 
+        - name: sensitive
+          description: term for Data X
+      owner: e13a4776-b39d-f016-1365-a2113a11023f
+      vdlSpec: 
+        vdlPath: /providerA/sourceX/file
+        isReady: true
+        activeSync: true
+        pathOption: 
+          alluxio.user.file.metadata.load.type: ONCE
+      vdlStatus: 
+        isOK: true
+        activeSync: true
+        pathOption: 
+          alluxio.user.file.metadata.load.type: ONCE
+        pathOptionUnified: 
+          alluxio.user.file.metadata.load.type: ONCE
+        

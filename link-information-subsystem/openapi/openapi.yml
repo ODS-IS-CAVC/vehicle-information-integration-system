@@ -1,0 +1,3696 @@
+openapi: 3.0.0
+paths:
+  /v1/3dObject:
+    get:
+      operationId: get3dObjectList
+      summary: C-2-2[B] 3Dオブジェクト一覧取得
+      description: 3Dオブジェクト一覧を取得します。
+      parameters: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Object3dResponseDTO"
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/3dObjectUpUrl:
+    get:
+      operationId: get3dObjectUpUrl
+      summary: 3Dオブジェクトアップロード用URL取得
+      description: 3Dオブジェクトアップロード用URLを取得します。
+      parameters:
+        - name: filename
+          required: true
+          in: query
+          description: ファイル名
+          schema:
+            format: sting
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetResult3dObjectUpUrlResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "409":
+          description: 競合が発生しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/objectOperation:
+    get:
+      operationId: getObjectOperationList
+      summary: C-2-2[B] 3Dオブジェクト操作結果一覧取得
+      description: 3Dオブジェクト操作結果一覧を取得します。
+      parameters:
+        - name: pointCloudUniqueId
+          required: true
+          in: query
+          description: 点群ID
+          schema:
+            format: int32
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ObjectOperationResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+    put:
+      operationId: put3dOperation
+      summary: C-2-2[B] 3Dオブジェクト操作結果登録
+      description: 3Dオブジェクト操作結果を登録します。
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutObjectOperationBodyDto"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PutResultObjectOperationResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "409":
+          description: 競合が発生しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+    delete:
+      operationId: delete3dOperation
+      summary: 3Dオブジェクト操作結果削除
+      description: 3Dオブジェクト操作結果を削除します。
+      parameters:
+        - name: operationId
+          required: true
+          in: query
+          description: 操作結果ID
+          schema:
+            format: int32
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResultObjectOperationResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/objectOperationTitle:
+    put:
+      operationId: put3dOperationTitle
+      summary: 3Dオブジェクト操作結果タイトル変更
+      description: 3Dオブジェクト操作結果のタイトルを変更します。
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutObjectOperationTitleBodyDto"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PutResultObjectOperationTitleResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "409":
+          description: 競合が発生しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/hdlanecenter:
+    get:
+      operationId: getHdLaneCenterGeoJSON
+      summary: C-2-2[B] HD地図車線中心線・交通規制情報データモデル取得
+      description: HD地図車線中心線・静的交通規制情報データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+        - name: reg
+          required: false
+          in: query
+          description: |+
+            C-2-2[B] 絞り込み対象の交通規制情報データモデル。絞り込みをしない場合は指定しないこと。
+
+            ・SPEED: 速度制限
+
+            ・NOPASS: 通行禁止
+
+            ・ONEWAY: 一方通行
+
+            ・NOTURN: 指定方向外進入禁止
+
+            ・ZONE30: ゾーン30
+
+          example: SPEED
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadHdLaneCenterGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/hdlaneline:
+    get:
+      operationId: getHdLaneLineGeoJSON
+      summary: C-2-2[B] HD地図区画線データモデル取得
+      description: HD地図区画線データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadHdLaneLineGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/hdroadedge:
+    get:
+      operationId: getHdRoadEdgeGeoJSON
+      summary: C-2-2[B] HD地図道路縁データモデル取得
+      description: HD地図道路縁データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadHdRoadEdgeGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/hdintersection:
+    get:
+      operationId: getHdIntersectionLineGeoJSON
+      summary: C-2-2[B] HD地図交差点データモデル取得
+      description: HD地図交差点データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadHdIntersectionLineGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/hdpavementmarking:
+    get:
+      operationId: getHdPavementMarkingGeoJSON
+      summary: C-2-2[B] HD地図路面標識データモデル取得
+      description: HD地図路面標識データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadHdPavementMarkingGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/hdsign:
+    get:
+      operationId: getHdSignGeoJSON
+      summary: C-2-2[B] HD地図道路標識データモデル取得
+      description: HD地図道路標識データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadHdSignGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/traffic:
+    get:
+      operationId: getHdTrafficGeoJSON
+      summary: C-2-2[B] HD地図交通渋滞・規制情報データモデル取得
+      description: 交通渋滞・規制情報データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadHdTrafficGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/traffic/{roadSegmentId}:
+    get:
+      operationId: getHdExtraTrafficGeoJSON
+      summary: C-2-2[B] HD地図交通渋滞・規制情報データモデル取得
+      description: 交通渋滞・規制情報データモデルのデータを取得します。
+      parameters:
+        - name: roadSegmentId
+          required: true
+          in: path
+          description: HDロードセグメントID
+          schema:
+            format: int32
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadHdTrafficGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/triptime:
+    get:
+      operationId: getTripTimeGeoJSON
+      summary: C-2-2[B] 旅行時間情報データモデル取得
+      description: 旅行時間情報データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadTripTimeGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/constructionevent:
+    get:
+      operationId: getConstructionEventGeoJSON
+      summary: C-2-2[B] 工事行事予定情報データモデル取得
+      description: 工事行事予定情報データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+        - name: startTimestamp
+          required: false
+          in: query
+          description: >-
+            検索対象期間（開始日時（包含））。startTimestamp指定時はendTimestampの指定が必須。timestampの指定不可。）。検索対象期間と規制対象期間（規制開始日時～規制解除予定日時）の積が空でないデータを取得する。検索対象期間・timestampともに省略された時は日時によるフィルタリングを行わない。
+          example: "2024-01-23T15:00:00Z"
+          schema:
+            type: string
+        - name: endTimestamp
+          required: false
+          in: query
+          description: >-
+            検索対象期間（終了日時（排他））。endTimestamp指定時はstartTimestampの指定が必須。timestampの指定不可。）。検索対象期間と規制対象期間（規制開始日時～規制解除予定日時）の積が空でないデータを取得する。検索対象期間・timestampともに省略された時は日時によるフィルタリングを行わない。
+          example: "2024-01-23T18:00:00Z"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadConstructionEventGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/winterclosure:
+    get:
+      operationId: getWinterClosureGeoJSON
+      summary: C-2-2[B] 冬季閉鎖情報データモデル取得
+      description: 冬季閉鎖情報データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+        - name: startTimestamp
+          required: false
+          in: query
+          description: >-
+            検索対象期間（開始日時（包含））。startTimestamp指定時はendTimestampの指定が必須。timestampの指定不可。）。検索対象期間と規制対象期間（規制開始日時～規制解除予定日時）の積が空でないデータを取得する。検索対象期間・timestampともに省略された時は日時によるフィルタリングを行わない。
+          example: "2024-01-23T15:00:00Z"
+          schema:
+            type: string
+        - name: endTimestamp
+          required: false
+          in: query
+          description: >-
+            検索対象期間（終了日時（排他））。endTimestamp指定時はstartTimestampの指定が必須。timestampの指定不可。）。検索対象期間と規制対象期間（規制開始日時～規制解除予定日時）の積が空でないデータを取得する。検索対象期間・timestampともに省略された時は日時によるフィルタリングを行わない。
+          example: "2024-01-23T18:00:00Z"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadWinterClosureGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/entryexit:
+    get:
+      operationId: getEntryExitGeoJSON
+      summary: C-2-2[B] 入口出口閉鎖情報データモデル取得
+      description: 入口出口閉鎖情報データモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル。SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoadEntryExitGetResponse"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/map/{sourceId}/{z}/{x}/{y}.pbf:
+    get:
+      operationId: getPBF
+      summary: C-2-2[B] 道路情報PBF取得
+      description: 道路情報PBFを取得します。
+      parameters:
+        - name: sourceId
+          required: true
+          in: path
+          description: 取得データ種別
+          schema:
+            type: string
+        - name: z
+          required: true
+          in: path
+          description: ズームレベル(Z)
+          example: "13"
+          schema:
+            format: int32
+            type: number
+        - name: x
+          required: true
+          in: path
+          description: Xタイル番号
+          example: "7273"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: true
+          in: path
+          description: Yタイル番号
+          example: "3229"
+          schema:
+            format: int32
+            type: number
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。（もしあれば）指定タイムスタンプより古いデータの中から最も新しいデータを取得する。省略時は最新版。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/resources:
+    put:
+      operationId: putSharedResources
+      summary: C-2-2[B] 共有資源状態データモデル設定
+      description: 共有資源状態データモデルのデータを設定します。指定カテゴリの共有資源状態を設定します。
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SharedResourcesPutBodyDTO"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SharedResourcesPutResponseDTO"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム
+    delete:
+      operationId: deleteSharedResources
+      summary: C-2-2[B] 共有資源状態データモデル削除
+      description: 共有資源状態データモデルのデータを削除します。
+      parameters:
+        - name: keyFilter
+          required: false
+          in: query
+          description: キャンセルする予約ID
+          example: A0JYEyM3-21453354856
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SharedResourcesDeleteResponseDTO"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム
+  /v1/voxels:
+    get:
+      operationId: getVoxels
+      summary: C-2-2[B] 空間ID列データモデル取得
+      description: 対応する空間ID列を取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: C-2-2[B] バウンディングボックス（矩形領域座標)データ。「SW(経度), SW(緯度), NE(経度), NE(緯度)」
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: mesh
+          required: false
+          in: query
+          description: >-
+            C-2-2[B] メッシュコード データモデル 1st-mesh=4digits, 2nd-mesh=6digits,
+            3rd-mesh=8digits
+          example: "123456"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            format: int32
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能
+          example: ""
+          schema:
+            type: string
+        - name: zoomLevel
+          required: false
+          in: query
+          description: ズームレベル
+          example: 23
+          schema:
+            format: int32
+            default: 25
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/voxelsResponseDTO"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/coordinates:
+    get:
+      operationId: getCoordinates
+      summary: C-2-2[B] 座標列(LineString)データモデル取得
+      description: 対応する座標列(LineString)を取得します。
+      parameters:
+        - name: startX
+          required: false
+          in: query
+          description: startVoxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: startY
+          required: false
+          in: query
+          description: startVoxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: startZ
+          required: false
+          in: query
+          description: startVoxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: startF
+          required: false
+          in: query
+          description: startVoxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: endX
+          required: false
+          in: query
+          description: endVoxel x（東西方向）インデックス
+          example: "22"
+          schema:
+            format: int32
+            type: number
+        - name: endY
+          required: false
+          in: query
+          description: endVoxel y（南北方向）インデックス
+          example: "33"
+          schema:
+            format: int32
+            type: number
+        - name: endZ
+          required: false
+          in: query
+          description: startVoxel ズームレベル
+          example: "25"
+          schema:
+            format: int32
+            type: number
+        - name: endF
+          required: false
+          in: query
+          description: startVoxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能
+          schema:
+            type: string
+        - name: geodetic
+          required: false
+          in: query
+          description: 測地系
+          example: EPSG4326
+          schema:
+            default: JGD2011
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LineStringsResponseDTO"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/bbox:
+    get:
+      operationId: getBBox
+      summary: C-2-2[B] バウンディングボックス（矩形領域座標)データモデル取得。
+      description: 対応するバウンディングボックスを取得します。
+      parameters:
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: mesh
+          required: false
+          in: query
+          description: C-2-2[B] メッシュコード データモデル
+          example: "1223456"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: C-2-2[B] 行政区画コード データモデル
+          example: "1203"
+          schema:
+            format: int32
+            type: string
+        - name: geodetic
+          required: false
+          in: query
+          description: 測地系
+          example: EPSG4326
+          schema:
+            default: JGD2011
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BBoxResponseDTO"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/pointCloudList:
+    get:
+      operationId: getPointcloudList
+      summary: C-2-2[B] 点群データ一覧取得
+      description: 点群データ一覧を取得します。
+      parameters:
+        - name: lat
+          required: false
+          in: query
+          description: 緯度
+          example: "35.50676814"
+          schema:
+            format: double
+            type: number
+        - name: lon
+          required: false
+          in: query
+          description: 経度
+          example: "139.681994465"
+          schema:
+            format: double
+            type: number
+        - name: bbox
+          required: false
+          in: query
+          description: |-
+            バウンディングボックス（矩形領域座標)データモデル
+
+            SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: city
+          required: false
+          in: query
+          description: 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: |-
+            メッシュコード データモデル
+
+            1st-mesh=4digits, 2nd-mesh=6digits, 3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetResultPointCloudListResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/pointCloudSplitStatus:
+    get:
+      operationId: getPointcloudSplitStatus
+      summary: C-2-2[B] 点群データ分割(切出)処理状況取得
+      description: 点群データ分割(切出)処理状況を取得します。
+      parameters: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: >-
+                    #/components/schemas/GetResultPointCloudSplitStatusResponseDto
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/pointCloudDlUrl:
+    get:
+      operationId: getPointcloudDlUrl
+      summary: C-2-2[B] 分割済み点群データダウンロードURL取得
+      description: 分割済み点群データダウンロードURLを取得します。
+      parameters:
+        - name: requestId
+          required: true
+          in: query
+          description: 分割申請ID
+          schema:
+            format: int32
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetResultPointCloudDlUrlResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "404":
+          description: データが存在しない
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/pointCloudSplit:
+    put:
+      operationId: putPointCloudSplit
+      summary: C-2-2[B] 点群データ分割(切出)申請
+      description: 点群データ分割(切出)申請を行います。
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutPointCloudSplitBodyDto"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PutResultPointCloudSplitResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "404":
+          description: データが存在しない
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/pointCloudSplitFile:
+    delete:
+      operationId: deletePointcloudSplitFile
+      summary: 分割後点群データ削除
+      description: 分割後点群データを削除します。
+      parameters:
+        - name: requestId
+          required: true
+          in: query
+          description: 分割申請ID
+          schema:
+            format: int32
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResultPointCloudSplitResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "404":
+          description: データが存在しない
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/login:
+    post:
+      operationId: login
+      summary: C-2-2[B] ログイン認証
+      description: ID/パスワードによりログイン処理を行います。データ流通システムのログインAPIとは異なるC-2-2[B]独自API
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthLoginRequest"
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "404":
+          description: データが存在しない
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+    get:
+      operationId: reLogin
+      summary: トークン再取得
+      parameters: []
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthRefreshResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "404":
+          description: データが存在しない
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+  /v1/fileattributes:
+    get:
+      operationId: getFileAttributes
+      summary: C-2-2[B] ファイル属性データモデル取得
+      description: ファイル属性データモデルのデータを取得します。
+      parameters:
+        - name: fileName
+          required: true
+          in: query
+          description: ファイル名
+          schema:
+            format: string
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetResultFileAttributesResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "404":
+          description: データが存在しない
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム
+  /v1/facade:
+    get:
+      operationId: facade
+      summary: C-2-2[B] 直接アクセス・ポイント情報取得
+      description: 直接アクセス・ポイント情報データモデルのデータを取得します。
+      parameters: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FacadeResponseDto"
+        "401":
+          description: 認証に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム
+  /v1/weatherrisk:
+    get:
+      operationId: getWeatherRisk
+      summary: C-2-2[B] 気象リスクデータモデル取得
+      description: 気象リスクデータモデルのデータを取得します。
+      parameters:
+        - name: bbox
+          required: false
+          in: query
+          description: |-
+            バウンディングボックス（矩形領域座標)データモデル
+
+            SW(経度), SW(緯度), NE(経度), NE(緯度)
+          example: "[139.681994465,35.50676814,139.681985082,35.506773265]"
+          schema:
+            format: double
+            type: array
+            items:
+              type: number
+        - name: x
+          required: false
+          in: query
+          description: voxel x（東西方向）インデックス
+          example: "12"
+          schema:
+            format: int32
+            type: number
+        - name: "y"
+          required: false
+          in: query
+          description: voxel y（南北方向）インデックス
+          example: "23"
+          schema:
+            format: int32
+            type: number
+        - name: z
+          required: false
+          in: query
+          description: voxel ズームレベル
+          example: "24"
+          schema:
+            format: int32
+            type: number
+        - name: f
+          required: false
+          in: query
+          description: voxel 鉛直方向インデックス
+          example: "0"
+          schema:
+            format: int32
+            type: number
+        - name: city
+          required: false
+          in: query
+          description: 行政区画コード データモデル
+          example: "1203"
+          schema:
+            type: int32
+        - name: mesh
+          required: false
+          in: query
+          description: |-
+            メッシュコード データモデル
+
+            1st-mesh=4digits, 2nd-mesh=6digits, 3rd-mesh=8digits
+          example: "123456"
+          schema:
+            type: int32
+        - name: timestamp
+          required: false
+          in: query
+          description: タイムスタンプ。指定された日時でシミュレーションを実行する。
+          example: "2024-01-23T11:22:33Z"
+          schema:
+            type: string
+        - name: roadName
+          required: false
+          in: query
+          description: 道路名称。道路名称絞り込み対象の場合に指定可能。
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GetWeatherRiskResponseDto"
+        "400":
+          description: リクエストデータが不正
+        "401":
+          description: 認証に失敗
+        "422":
+          description: 範囲指定の解析に失敗しました。
+        "500":
+          description: データの取得に失敗
+      tags:
+        - C-2-2[B] 車両情報連携システム（データ流通システム取扱対象外）
+info:
+  title: DMP_DIGI_LINE
+  description: TODO
+  version: 0.0.1
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    Object3dResponseDTO:
+      type: object
+      properties:
+        object3dId:
+          type: number
+          description: 3DオブジェクトID
+          format: int32
+        fileName:
+          type: string
+          description: ファイル名
+          format: string
+        url:
+          type: string
+          description: ダウンロード用URL情報
+          format: string
+      required:
+        - object3dId
+        - fileName
+        - url
+    GetResult3dObjectUpUrlResponseDto:
+      type: object
+      properties:
+        url:
+          type: string
+          description: 3Dオブジェクトアップロード用の署名付きURL情報
+          format: string
+      required:
+        - url
+    ObjectOperationResponseDto:
+      type: object
+      properties:
+        operationId:
+          type: number
+          description: 操作結果ID
+          format: int32
+        title:
+          type: string
+          description: 操作結果タイトル
+          format: string
+        pointCloudUniqueId:
+          type: number
+          description: 点群ID
+          format: int32
+        object3dId:
+          type: number
+          description: 3DオブジェクトID
+          format: int32
+        url:
+          type: string
+          description: 3Dオブジェクトのダウンロード用URL情報
+          format: string
+        putCoordinates:
+          description: potree座標情報[x,y,z]
+          type: array
+          items:
+            type: string
+            format: "[double,double,double]"
+        xRotation:
+          type: number
+          description: x方向の回転量
+          format: double
+        yRotation:
+          type: number
+          description: y方向の回転量
+          format: double
+        zRotation:
+          type: number
+          description: z方向の回転量
+          format: double
+        scale:
+          type: number
+          description: 拡大・縮小倍率
+          format: double
+      required:
+        - operationId
+        - title
+        - pointCloudUniqueId
+        - object3dId
+        - url
+        - putCoordinates
+        - xRotation
+        - yRotation
+        - zRotation
+        - scale
+    PutObjectOperationBodyDto:
+      type: object
+      properties:
+        operationId:
+          type: number
+          description: 操作結果ID
+          format: int32
+        title:
+          type: string
+          description: 操作結果タイトル
+          format: string
+        pointCloudUniqueId:
+          type: number
+          description: 点群ID
+          format: int32
+        object3dId:
+          type: number
+          description: 3DオブジェクトID
+          format: int32
+        putCoordinates:
+          description: potree座標情報[x,y,z]
+          type: array
+          items:
+            type: string
+            format: "[double,double,double]"
+        xRotation:
+          type: number
+          description: x方向の回転量
+          format: double
+        yRotation:
+          type: number
+          description: y方向の回転量
+          format: double
+        zRotation:
+          type: number
+          description: z方向の回転量
+          format: double
+        scale:
+          type: number
+          description: 拡大・縮小倍率
+          format: double
+      required:
+        - title
+        - pointCloudUniqueId
+        - object3dId
+        - putCoordinates
+        - xRotation
+        - yRotation
+        - zRotation
+        - scale
+    PutResultObjectOperationResponseDto:
+      type: object
+      properties:
+        result:
+          type: string
+          description: 3Dオブジェクト操作結果登録の結果 SUCCESSまたはERROR
+          format: string
+        operationId:
+          type: number
+          description: 操作結果ID　新規登録時は払い出しされた番号を設定、更新時はリクエスト内容をそのまま設定
+          format: int32
+      required:
+        - result
+        - operationId
+    PutObjectOperationTitleBodyDto:
+      type: object
+      properties:
+        operationId:
+          type: number
+          description: 操作結果ID
+          format: int32
+        title:
+          type: string
+          description: 操作結果タイトル
+          format: string
+      required:
+        - operationId
+        - title
+    PutResultObjectOperationTitleResponseDto:
+      type: object
+      properties:
+        result:
+          type: string
+          description: 3Dオブジェクト操作結果タイトル変更の結果 SUCCESSまたはERROR
+          format: string
+      required:
+        - result
+    DeleteResultObjectOperationResponseDto:
+      type: object
+      properties:
+        result:
+          type: string
+          description: 3Dオブジェクト操作結果の削除結果 SUCCESSまたはERROR
+          format: string
+      required:
+        - result
+    CRSDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: name
+        properties:
+          type: object
+          description: properties(EPSGコード)
+      required:
+        - type
+        - properties
+    GeometryDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: ジオメトリ形式
+        crs:
+          description: CRS
+          allOf:
+            - $ref: "#/components/schemas/CRSDto"
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: C-2-2[B] 座標列(LineString)データモデル
+      required:
+        - type
+        - crs
+        - coordinates
+    RoadHdLaneCenterProperties:
+      type: object
+      properties:
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        laneNumber:
+          type: number
+          description: HDレーン番号
+          format: int32
+        minSeq:
+          type: number
+          description: HDシーケンス番号最小値
+          format: int32
+        maxSeq:
+          type: number
+          description: HDシーケンス番号最大値
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        classCode:
+          type: number
+          description: 道路種別コード。SDマップと関連がない場合は-1。
+          format: int32
+        nameCode:
+          type: number
+          description: 路線名称コード。SDマップと関連がない、またはSD道路名が紐づいていない場合は-1。
+          format: int32
+        hasNopass:
+          type: number
+          description: 通行禁止。SDマップと関連があり、かつ規制対象の場合は1。そうでない場合は0。
+          format: int32
+        hasNoturn:
+          type: number
+          description: 指定外進入禁止対象。SDマップと関連があり、かつ規制対象の場合は1。そうでない場合は0。
+          format: int32
+        hasOneway:
+          type: number
+          description: 一方通行対象。SDマップと関連があり、かつ規制対象の場合は1。そうでない場合は0。
+          format: int32
+        hasSpeed:
+          type: number
+          description: 速度制限対象。SDマップと関連があり、かつ規制対象の場合は1。そうでない場合は0。
+          format: int32
+        hasZone30:
+          type: number
+          description: ゾーン30対象。SDマップと関連があり、かつ規制対象の場合は1。そうでない場合は0。
+          format: int32
+    RoadHdLaneCenterFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadHdLaneCenterProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadHdLaneCenterGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadHdLaneCenterFeatures"
+      required:
+        - type
+        - features
+    RoadHdLaneLineProperties:
+      type: object
+      properties:
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        ordinalId:
+          type: number
+          description: HD区画線番号
+          format: int32
+        minSeq:
+          type: number
+          description: HDシーケンス番号最小値
+          format: int32
+        maxSeq:
+          type: number
+          description: HDシーケンス番号最大値
+          format: int32
+        color:
+          type: number
+          description: 線色
+          format: int32
+        type:
+          type: number
+          description: 線種
+          format: int32
+        width:
+          type: number
+          description: 線幅
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        classCode:
+          type: number
+          description: 道路種別コード。SDマップと関連がない場合は-1。
+          format: int32
+        nameCode:
+          type: number
+          description: 路線名称コード。SDマップと関連がない、またはSD道路名が紐づいていない場合は-1。
+          format: int32
+    RoadHdLaneLineFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadHdLaneLineProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadHdLaneLineGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadHdLaneLineFeatures"
+      required:
+        - type
+        - features
+    RoadHdRoadEdgeProperties:
+      type: object
+      properties:
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        isRoadEdgeRight:
+          type: number
+          description: 左右フラグ
+          format: int32
+        minSeq:
+          type: number
+          description: HDシーケンス番号最小値
+          format: int32
+        maxSeq:
+          type: number
+          description: HDシーケンス番号最大値
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        classCode:
+          type: number
+          description: 道路種別コード。SDマップと関連がない場合は-1。
+          format: int32
+        nameCode:
+          type: number
+          description: 路線名称コード。SDマップと関連がない、またはSD道路名が紐づいていない場合は-1。
+          format: int32
+    RoadHdRoadEdgeFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadHdRoadEdgeProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadHdRoadEdgeGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadHdRoadEdgeFeatures"
+      required:
+        - type
+        - features
+    RoadHdIIntersectionProperties:
+      type: object
+      properties:
+        id:
+          type: number
+          description: HD交差点ID
+          format: int32
+        roadSegmentIds:
+          description: HD道路セグメントID配列。SDマップと関連がない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+            format: int32
+        classCodes:
+          description: 道路種別コード一覧。アンダースコア（_）繋ぎ(例："1")。SDマップと関連がない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+        nameCodes:
+          description: 路線名称コード配列。SDマップと関連がない、またはSD道路名が紐づいていない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+            format: int32
+    RoadHdIntersectionLineFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadHdIIntersectionProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadHdIntersectionLineGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadHdIntersectionLineFeatures"
+      required:
+        - type
+        - features
+    RoadHdPavementMarkingProperties:
+      type: object
+      properties:
+        id:
+          type: number
+          description: 路面標識ID
+          format: int32
+        type:
+          type: number
+          description: 道路標識種別
+          format: int32
+        roadSegmentIds:
+          description: HD道路セグメントID配列。SDマップと関連がない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+            format: int32
+        classCodes:
+          description: 道路種別コード一覧。アンダースコア（_）繋ぎ(例："1")。SDマップと関連がない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+        nameCodes:
+          description: 路線名称コード配列。SDマップと関連がない、またはSD道路名が紐づいていない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+            format: int32
+    RoadHdPavementMarkingFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadHdPavementMarkingProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadHdPavementMarkingGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadHdPavementMarkingFeatures"
+      required:
+        - type
+        - features
+    RoadHdSignProperties:
+      type: object
+      properties:
+        id:
+          type: number
+          description: 道路標識ID
+          format: int32
+        shape:
+          type: number
+          description: 道路標識形状
+          format: int32
+        type:
+          type: number
+          description: 道路標識種別
+          format: int32
+        roadSegmentIds:
+          description: HD道路セグメントID配列。SDマップと関連がない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+            format: int32
+        classCodes:
+          description: 道路種別コード一覧。アンダースコア（_）繋ぎ(例："1")。SDマップと関連がない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+        nameCodes:
+          description: 路線名称コード配列。SDマップと関連がない、またはSD道路名が紐づいていない場合は空配列（[]）。
+          type: array
+          items:
+            type: string
+            format: int32
+    RoadHdSignFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadHdSignProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadHdSignGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadHdSignFeatures"
+      required:
+        - type
+        - features
+    RoadTrafficProperties:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: 情報取得日時
+          format: date-time
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        laneNumber:
+          type: number
+          description: HDレーン番号
+          format: int32
+        minSeq:
+          type: number
+          description: HDシーケンス番号最小値
+          format: int32
+        maxSeq:
+          type: number
+          description: HDシーケンス番号最大値
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        classCode:
+          type: number
+          description: 道路種別コード。SDマップと関連がない場合は-1。
+          format: int32
+        nameCode:
+          type: number
+          description: 路線名称コード。SDマップと関連がない、またはSD道路名が紐づいていない場合は-1。
+          format: int32
+        routeName:
+          type: string
+          description: 路線名称。（電文フォーマット【P21-4】ただし情報源がリンク情報である場合は省略）
+        directionName:
+          type: string
+          description: 方向名称。（電文フォーマット【P21-5】ただし情報源がリンク情報である場合は省略）
+        cause:
+          type: string
+          description: 事象の原因。提供名称か詳細名称のいずれか。（電文フォーマット【P21-14】ただし情報源がリンク情報である場合は【P15-5】）
+        regulation:
+          type: string
+          description: 規制内容。提供名称か詳細名称のいずれか。（電文フォーマット【P21-17】ただし情報源がリンク情報である場合は【P15-6】）
+        severity:
+          type: number
+          description: >-
+            渋滞度。渋滞＝1,混雑＝2,対象外(渋滞情報ではない場合)=0。（渋滞長が正数の場合に1、それ以外の場合は0。ただし情報源がリンク情報である場合は電文フォーマット【P15-7】。リンク情報の場合のみ値2が設定される場合がある。）
+          format: int32
+        length:
+          type: number
+          description: >-
+            渋滞長(m)。本事象が渋滞情報の場合に渋滞長を設定。（電文フォーマット【P21-21】ただし情報源がリンク情報である場合は【P15-10】）
+          format: int32
+        downstreamKP:
+          type: number
+          description: 下流位置KP情報。10mを1単位として格納。（電文フォーマット【P22-22】ただし情報源がリンク情報である場合は省略）
+          format: int32
+        downstream:
+          description: C-2-2[B] 座標（緯度経度高度）データモデル
+          type: array
+          items:
+            type: number
+            format: double
+        downstreamDistance:
+          type: number
+          description: （VICSリンク内で）事象下流までの距離(m)。（電文フォーマット【P22-23】ただし情報源がリンク情報である場合は【P15-9】）
+          format: int32
+        upstreamKP:
+          type: number
+          description: 上流位置KP情報。10mを1単位として格納。（（電文フォーマット【P22-24】ただし情報源がリンク情報である場合は省略）
+          format: int32
+        upstream:
+          description: C-2-2[B] 座標（緯度経度高度）データモデル
+          type: array
+          items:
+            type: number
+            format: double
+        upstreamDistance:
+          type: number
+          description: （VICSリンク内で）事象下流までの距離(m)。（電文フォーマット【P22-23】ただし情報源がリンク情報である場合は【P15-9】）
+          format: int32
+        laneCategory:
+          type: string
+          enum:
+            - main
+            - entry
+            - exit
+            - junction
+          description: 本線区分。（電文フォーマット【P23-39】ただし情報源がリンク情報である場合はmain固定）
+        plannedEndTimestamp:
+          type: string
+          description: 規制解除予定日時。（電文フォーマット【P23-40】ただし情報源がリンク情報である場合は省略）
+          format: date-time
+        causeVehicleName1:
+          type: string
+          description: 原因車両名1。（電文フォーマット【P23-46】ただし情報源がリンク情報である場合は省略）
+        causeVehicleNumber1:
+          type: number
+          description: 原因車両数1。（電文フォーマット【P23-47】ただし情報源がリンク情報である場合は省略）
+          format: int32
+        causeVehicleName2:
+          type: string
+          description: 原因車両名2。（電文フォーマット【P23-46】ただし情報源がリンク情報である場合は省略）
+        causeVehicleNumber2:
+          type: number
+          description: 原因車両数2。（電文フォーマット【P23-47】ただし情報源がリンク情報である場合は省略）
+          format: int32
+        causeVehicleName3:
+          type: string
+          description: 原因車両名3。（電文フォーマット【P23-46】ただし情報源がリンク情報である場合は省略）
+        causeVehicleNumber3:
+          type: number
+          description: 原因車両数3。（電文フォーマット【P23-47】ただし情報源がリンク情報である場合は省略）
+          format: int32
+        handlingStatus:
+          type: string
+          enum:
+            - investigating
+            - rescuing
+            - handling
+            - towing
+            - maneuvering
+            - cleaning
+            - deoiling
+            - inspecting
+            - deregulating
+            - other
+            - noinfo
+            - nodata
+          description: 障害処理状況。（電文フォーマット【P23-57】ただし情報源がリンク情報である場合は省略）
+        prediction:
+          type: string
+          enum:
+            - nochange
+            - extend
+            - shrink
+            - noinfo
+            - nodata
+          description: 予測。（電文フォーマット【P23-58】ただし情報源がリンク情報である場合は省略）
+        plannedResumeTimestamp:
+          type: string
+          description: 復旧予定日時。（電文フォーマット【P23-60】ただし情報源がリンク情報である場合は省略）
+          format: date-time
+    RoadHdTrafficFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadTrafficProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadHdTrafficGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadHdTrafficFeatures"
+      required:
+        - type
+        - features
+    RoadTripTimeProperties:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: 情報取得日時
+          format: date-time
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        laneNumber:
+          type: number
+          description: HDレーン番号
+          format: int32
+        minSeq:
+          type: number
+          description: HDシーケンス番号最小値
+          format: int32
+        maxSeq:
+          type: number
+          description: HDシーケンス番号最大値
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        classCode:
+          type: number
+          description: 道路種別コード。SDマップと関連がない場合は-1。
+          format: int32
+        nameCode:
+          type: number
+          description: 路線名称コード。SDマップと関連がない、またはSD道路名が紐づいていない場合は-1。
+          format: int32
+        time:
+          type: number
+          description: 所要時間(秒)。（電文フォーマットP67-16】を距離比例配分した値。※【P6】利用上の注意に留意
+    RoadTripTimeFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadTripTimeProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadTripTimeGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadTripTimeFeatures"
+      required:
+        - type
+        - features
+    RoadConstructionEventProperties:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: 情報取得日時
+          format: date-time
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        laneNumber:
+          type: number
+          description: HDレーン番号
+          format: int32
+        minSeq:
+          type: number
+          description: HDシーケンス番号最小値
+          format: int32
+        maxSeq:
+          type: number
+          description: HDシーケンス番号最大値
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        classCode:
+          type: number
+          description: 道路種別コード。SDマップと関連がない場合は-1。
+          format: int32
+        nameCode:
+          type: number
+          description: 路線名称コード。SDマップと関連がない、またはSD道路名が紐づいていない場合は-1。
+          format: int32
+        routeName:
+          type: string
+          description: 路線名称。（電文フォーマット【P38-4】）
+        directionName:
+          type: string
+          description: 方向名称。（電文フォーマット【P38-5】）
+        cause:
+          type: string
+          description: 事象の原因。提供名称か詳細名称のいずれか。（電文フォーマット【P38-14】）
+        regulation:
+          type: string
+          description: 規制内容。提供名称か詳細名称のいずれか。（電文フォーマット【P38-17】）
+        downstreamKP:
+          type: number
+          description: 下流位置KP情報。10mを1単位として格納。（電文フォーマット【P39-23】）
+          format: int32
+        downstream:
+          description: C-2-2[B] 座標（緯度経度高度）データモデル
+          type: array
+          items:
+            type: number
+            format: double
+        downstreamDistance:
+          type: number
+          description: （VICSリンク内で）事象下流までの距離(m)。（電文フォーマット【P39-24】）
+          format: int32
+        upstreamKP:
+          type: number
+          description: 上流位置KP情報。10mを1単位として格納。（（電文フォーマット【P39-25】）
+          format: int32
+        upstream:
+          description: C-2-2[B] 座標（緯度経度高度）データモデル
+          type: array
+          items:
+            type: number
+            format: double
+        upstreamDistance:
+          type: number
+          description: （VICSリンク内で）事象上流までの距離(m)。（電文フォーマット【P39-26】）
+          format: int32
+        laneCategory:
+          type: string
+          enum:
+            - main
+            - entry
+            - exit
+            - junction
+          description: 本線区分。（電文フォーマット【P23-39】ただし情報源がリンク情報である場合はmain固定）
+        plannedStartTimestamp:
+          type: string
+          description: 規制開始予定日時。（電文フォーマット【P40-41】）
+          format: date-time
+        plannedEndTimestamp:
+          type: string
+          description: 規制解除予定日時。（電文フォーマット【P40-46】）
+          format: date-time
+        endTimestamp:
+          type: string
+          description: 規制解除日時。（電文フォーマット【P40-51】）
+          format: date-time
+        detour1:
+          type: string
+          description: 迂回路1。（電文フォーマット【P40-56】）
+        detour2:
+          type: string
+          description: 迂回路2。（電文フォーマット【P40-57】）
+        isCurrentStatus:
+          type: number
+          description: 現況フラグ。0=現況以外、1=現況。（電文フォーマット【P40-58】を反転）
+          format: int32
+    RoadConstructionEventFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadConstructionEventProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadConstructionEventGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadConstructionEventFeatures"
+      required:
+        - type
+        - features
+    RoadWinterClosureProperties:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: 情報取得日時
+          format: date-time
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        laneNumber:
+          type: number
+          description: HDレーン番号
+          format: int32
+        minSeq:
+          type: number
+          description: HDシーケンス番号最小値
+          format: int32
+        maxSeq:
+          type: number
+          description: HDシーケンス番号最大値
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        classCode:
+          type: number
+          description: 道路種別コード。SDマップと関連がない場合は-1。
+          format: int32
+        nameCode:
+          type: number
+          description: 路線名称コード。SDマップと関連がない、またはSD道路名が紐づいていない場合は-1。
+          format: int32
+        routeName:
+          type: string
+          description: 路線名称。（電文フォーマット【P52-4】）
+        directionName:
+          type: string
+          description: 方向名称。（電文フォーマット【P52-5】）
+        cause:
+          type: string
+          description: 事象の原因。提供名称か詳細名称のいずれか。（電文フォーマット【P52-14】）
+        regulation:
+          type: string
+          description: 規制内容。提供名称か詳細名称のいずれか。（電文フォーマット【P52-17】】）
+        downstream:
+          description: C-2-2[B] 座標（緯度経度高度）データモデル
+          type: array
+          items:
+            type: number
+            format: double
+        downstreamDistance:
+          type: number
+          description: （VICSリンク内で）事象下流までの距離(m)。（電文フォーマット【P52-21】）
+          format: int32
+        upstream:
+          description: C-2-2[B] 座標（緯度経度高度）データモデル
+          type: array
+          items:
+            type: number
+            format: double
+        upstreamDistance:
+          type: number
+          description: （VICSリンク内で）事象下流までの距離(m)。（電文フォーマット【P52-22】）
+          format: int32
+        laneCategory:
+          type: string
+          enum:
+            - main
+            - entry
+            - exit
+            - junction
+          description: 本線区分。（電文フォーマット【P53-35】）
+        plannedStartTimestamp:
+          type: string
+          description: 規制開始予定日時。（電文フォーマット【P53-36】）
+          format: date-time
+        plannedEndTimestamp:
+          type: string
+          description: 規制解除予定日時。（電文フォーマット【P23-41】）
+          format: date-time
+        endTimestamp:
+          type: string
+          description: 規制解除日時。（電文フォーマット【P53-46】）
+          format: date-time
+        detour1:
+          type: string
+          description: 迂回路1。（電文フォーマット【P53-51】）
+        detour2:
+          type: string
+          description: 迂回路2。（電文フォーマット【P53-52】）
+        isCurrentStatus:
+          type: number
+          description: 現況フラグ。0=現況以外、1=現況。（電文フォーマット【P53-53】を反転。解除済み(2)は取り扱い対象外）
+          format: int32
+    RoadWinterClosureFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadWinterClosureProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadWinterClosureGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadWinterClosureFeatures"
+      required:
+        - type
+        - features
+    RoadEntryExitProperties:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: 情報取得日時
+          format: date-time
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        laneNumber:
+          type: number
+          description: HDレーン番号
+          format: int32
+        minSeq:
+          type: number
+          description: HDシーケンス番号最小値
+          format: int32
+        maxSeq:
+          type: number
+          description: HDシーケンス番号最大値
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        classCode:
+          type: number
+          description: 道路種別コード。SDマップと関連がない場合は-1。
+          format: int32
+        nameCode:
+          type: number
+          description: 路線名称コード。SDマップと関連がない、またはSD道路名が紐づいていない場合は-1。
+          format: int32
+        routeName:
+          type: string
+          description: 路線名称。（電文フォーマット【P21-4】ただし情報源がリンク情報である場合は省略）
+        directionName:
+          type: string
+          description: 方向名称。（電文フォーマット【P21-5】ただし情報源がリンク情報である場合は省略）
+        name:
+          type: string
+          description: 入口出口名称。（電文フォーマット【P78-5】）
+        location:
+          description: C-2-2[B] 座標（緯度経度高度）データモデル
+          type: array
+          items:
+            type: number
+            format: double
+        isEntrance:
+          type: number
+          description: 入口出口識別子。1=入口、2=出口。（電文フォーマット【P78-10】を反転）
+          format: int32
+    RoadEntryExitFeatures:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/GeometryDto"
+        properties:
+          $ref: "#/components/schemas/RoadEntryExitProperties"
+      required:
+        - type
+        - geometry
+        - properties
+    RoadEntryExitGetResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/RoadEntryExitFeatures"
+      required:
+        - type
+        - features
+    PutBodyStatusDTO:
+      type: object
+      properties:
+        value:
+          type: string
+          description: |-
+            MH予約に必要な全ての属性情報（ただし予約希望時刻・期間を除く）を
+
+            JSON形式に整形したものをBASE64エンコードした文字列。
+          example: base64-mh-reservation-props
+        validFrom:
+          type: string
+          description: 予約開始希望時刻（包含）。（予約開始希望時刻）
+          example: "2024-10-21T09:00:00.000Z"
+        validUntil:
+          type: string
+          description: |-
+            予約終了希望時刻（排他）。
+
+            予約終了希望時刻の指定が無い場合、予約開始希望時刻から
+
+            一時間後が自動登録される。有効期限切れデータは自動消去される。
+          example: "2024-10-21T10:00:00.000Z"
+      required:
+        - value
+        - validFrom
+    PutBodyAttributeDTO:
+      type: object
+      properties:
+        category:
+          type: string
+          enum:
+            - evacuation
+            - mobilityhub
+          description: 共有資源カテゴリ名
+        statuses:
+          description: 共有資源状態配列
+          type: array
+          items:
+            $ref: "#/components/schemas/PutBodyStatusDTO"
+      required:
+        - category
+        - statuses
+    SharedResourcesPutBodyDTO:
+      type: object
+      properties:
+        dataModelType:
+          type: string
+          enum:
+            - test1
+            - test2
+          description: 'Enum: "test1" "test2"'
+        attribute:
+          $ref: "#/components/schemas/PutBodyAttributeDTO"
+      required:
+        - dataModelType
+        - attribute
+    PutResponseStatusDTO:
+      type: object
+      properties:
+        key:
+          type: string
+          description: |-
+            MH予約ID。文字クラス[-_A-Za-z]の文字列で、「システム予約識別子」と
+
+            「駐車マス識別子」を、文字「-」で繋いだ文字列。
+          example: A0JYEyM3-21453354856
+        value:
+          type: string
+          description: |-
+            MH予約に必要な全ての属性情報（ただし予約希望時刻・期間を除く）を
+
+            JSON形式に整形したものをBASE64エンコードした文字列。
+          example: base64-mh-reservation-props
+        validFrom:
+          type: string
+          description: 予約開始希望時刻（包含）。（予約開始希望時刻）
+          example: "2024-10-21T09:00:00.000Z"
+        validUntil:
+          type: string
+          description: |-
+            予約終了希望時刻（排他）。
+
+            予約終了希望時刻の指定が無い場合、予約開始希望時刻から
+
+            一時間後が自動登録される。有効期限切れデータは自動消去される。
+          example: "2024-10-21T10:00:00.000Z"
+      required:
+        - key
+        - value
+        - validFrom
+        - validUntil
+    PutResponseAttributeDTO:
+      type: object
+      properties:
+        category:
+          type: string
+          enum:
+            - evacuation
+            - mobilityhub
+          description: 共有資源カテゴリ名
+        statuses:
+          description: 共有資源状態配列
+          type: array
+          items:
+            $ref: "#/components/schemas/PutResponseStatusDTO"
+      required:
+        - category
+        - statuses
+    SharedResourcesPutResponseDTO:
+      type: object
+      properties:
+        dataModelType:
+          type: string
+          enum:
+            - test1
+            - test2
+          description: 'Enum: "test1" "test2"'
+        attribute:
+          $ref: "#/components/schemas/PutResponseAttributeDTO"
+      required:
+        - dataModelType
+        - attribute
+    SharedResourcesDeleteResponseDTO:
+      type: object
+      properties:
+        result:
+          type: string
+          description: 共有資源状態削除結果
+          example: SUCCESS
+      required:
+        - result
+    VoxelInfo:
+      type: object
+      properties:
+        x:
+          type: number
+          description: x(東西方向)インデックス
+        "y":
+          type: number
+          description: y(南北方向)インデックス
+        z:
+          type: number
+          description: ズームレベル
+        f:
+          type: number
+          description: f(鉛直方向)インデックス
+      required:
+        - x
+        - "y"
+        - z
+    voxelsResponseDTO:
+      type: object
+      properties:
+        voxels:
+          description: 空間ID
+          type: array
+          items:
+            $ref: "#/components/schemas/VoxelInfo"
+    PointInfo:
+      type: object
+      properties:
+        lat:
+          type: number
+          description: 緯度
+        lon:
+          type: number
+          description: 経度
+    LineInfo:
+      type: object
+      properties:
+        "":
+          description: LineStrings
+          type: array
+          items:
+            $ref: "#/components/schemas/PointInfo"
+    LineStringsResponseDTO:
+      type: object
+      properties:
+        lines:
+          description: LineString
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/PointInfo"
+              - $ref: "#/components/schemas/LineInfo"
+    BBoxResponseDTO:
+      type: object
+      properties:
+        bbox:
+          description: バウンディングボックス
+          type: array
+          items:
+            type: number
+    PointCloudGeometryDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: ジオメトリ形式
+        crs:
+          description: CRS
+          allOf:
+            - $ref: "#/components/schemas/CRSDto"
+        coordinates:
+          description: MultiLineStringデータモデル
+          type: array
+          items:
+            type: string
+      required:
+        - type
+        - crs
+        - coordinates
+    PointCloudProperty:
+      type: object
+      properties:
+        pointCloundUniqueId:
+          type: number
+          description: 点群ID
+          format: int32
+        url:
+          type: string
+          description: metadata.jsonの格納場所を示すURL情報
+          format: string
+        sceneName:
+          type: string
+          description: シーン名
+          format: string
+        acquisitionDate:
+          type: string
+          description: 取得日時
+          format: string
+        tags:
+          description: タグ情報
+          type: array
+          items:
+            type: string
+            format: string
+    PointCloud:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/PointCloudGeometryDto"
+        properties:
+          $ref: "#/components/schemas/PointCloudProperty"
+      required:
+        - type
+        - geometry
+        - properties
+    GetResultPointCloudListResponseDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/PointCloud"
+      required:
+        - type
+        - features
+    GetResultPointCloudSplitStatusResponseDto:
+      type: object
+      properties:
+        splitStatusList:
+          description: 点群ファイル分割状況配列
+          type: array
+          items:
+            type: string
+            format: Array
+      required:
+        - splitStatusList
+    GetResultPointCloudDlUrlResponseDto:
+      type: object
+      properties:
+        url:
+          type: string
+          description: 分割済み点群データダウンロードURL
+          format: string
+      required:
+        - url
+    PutPointCloudSplitBodyDto:
+      type: object
+      properties:
+        startPoint:
+          type: object
+          description: 始点
+          format: PointObject
+        endPoint:
+          type: object
+          description: 終点
+          format: PointObject
+        pointCloudUniqueId:
+          type: number
+          description: 点群ID
+          format: int32
+      required:
+        - startPoint
+        - endPoint
+        - pointCloudUniqueId
+    PutResultPointCloudSplitResponseDto:
+      type: object
+      properties:
+        result:
+          type: string
+          description: 点群データ分割(切出)申請登録 SUCCESSまたはERROR
+          format: string
+      required:
+        - result
+    DeleteResultPointCloudSplitResponseDto:
+      type: object
+      properties:
+        result:
+          type: string
+          description: 分割後点群データ削除結果 SUCCESSまたはERROR
+          format: string
+      required:
+        - result
+    AuthLoginRequest:
+      type: object
+      properties:
+        loginId:
+          type: string
+          description: ログインID
+          format: string
+        password:
+          type: string
+          description: パスワード
+          format: string
+      required:
+        - loginId
+        - password
+    AuthResponseDto:
+      type: object
+      properties:
+        token:
+          type: string
+          description: アクセストークン
+          format: string
+      required:
+        - token
+    AuthRefreshResponseDto:
+      type: object
+      properties:
+        loginId:
+          type: string
+          description: ログインID
+          format: string
+        token:
+          type: string
+          description: アクセストークン
+          format: string
+      required:
+        - loginId
+        - token
+    FileAttributes:
+      type: object
+      properties:
+        fileName:
+          type: string
+          description: ファイル名
+          format: string
+        type:
+          type: string
+          description: ファイル種別 potreeまたはlazを設定
+          format: string
+        size:
+          type: number
+          description: ファイルサイズ（バイト）
+          format: int32
+        created:
+          type: string
+          description: 作成日時 2024-10-21T00:42:00.000Z
+          format: string
+        coordinates:
+          type: array
+          description: ジオメトリ情報
+          items:
+            type: array
+            items:
+              type: number
+    GetResultFileAttributesResponseDto:
+      type: object
+      properties:
+        dataModelType:
+          type: string
+          description: dataModelType test1固定値を設定
+          format: string
+        attribute:
+          description: attribute
+          format: ファイル属性オブジェクト
+          allOf:
+            - $ref: "#/components/schemas/FileAttributes"
+      required:
+        - dataModelType
+        - attribute
+    Facade:
+      type: object
+      properties:
+        url:
+          type: string
+          description: URL
+          format: string
+      required:
+        - url
+    FacadeResponseDto:
+      type: object
+      properties:
+        dataModelType:
+          type: string
+          description: dataModelType test1固定値を設定
+          format: string
+        attribute:
+          description: attribute
+          format: 直接アクセス・ポイント情報
+          allOf:
+            - $ref: "#/components/schemas/Facade"
+      required:
+        - dataModelType
+        - attribute
+    WeatherGeometryDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: ジオメトリ形式
+        coordinates:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+          description: C-2-2[B] 座標列(LineString)データモデル
+    WaterFilmThicknessProps:
+      type: object
+      properties:
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        laneNumber:
+          type: number
+          description: HDレーン番号
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        waterfilms:
+          type: number
+          description: 水膜厚(mm)
+          format: int32
+    WindProps:
+      type: object
+      properties:
+        roadSegmentId:
+          type: number
+          description: HDロードセグメントID
+          format: int32
+        linkId:
+          type: number
+          description: SD道路リンクID。SDマップと関連がない場合は-1。
+          format: int32
+        direction:
+          type: number
+          description: SD道路リンク方向。SDマップと関連がない場合は-1。1=正方向、2=逆方向
+          format: int32
+        windSpeed:
+          type: number
+          description: 風速(m/s)
+          format: int32
+        windDirection:
+          type: number
+          description: 風向。北=0度,東=90度,南=180度,西=270度。
+          format: int32
+    WeatherRisk:
+      type: object
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: "#/components/schemas/WeatherGeometryDto"
+        properties:
+          oneOf:
+            - $ref: "#/components/schemas/WaterFilmThicknessProps"
+            - $ref: "#/components/schemas/WindProps"
+    GetWeatherRiskResponseDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: フィーチャID
+        features:
+          description: フィーチャ配列
+          type: array
+          items:
+            $ref: "#/components/schemas/WeatherRisk"
+      required:
+        - type
+        - features

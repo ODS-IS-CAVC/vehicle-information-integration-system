@@ -1,0 +1,56 @@
+job_create_sample: 
+  summary: simple Job create request
+  value:
+    name: JobNo1
+    description: The Job for Data X
+    customProperties: 
+      key1: value1
+    tags: 
+      - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: sensitive
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+    externalUrl: http://externallinkexample.com/
+job_update_sample: 
+  summary: simple Job update request
+  value:
+    description: changedDescription
+    customProperties: 
+      key2: value2
+    tags: 
+      - id: changedweather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: termName
+
+job_get_sample: 
+  id: job_c0efdd45-e4b5-48c7-b27f-ee676181befc
+  name: JobNo1
+  description: The Job for Data X
+  customProperties: 
+    key1: value1
+  tags: 
+    - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+      name: weather
+      description: tag for Data X
+      owner: e13a4776-b39d-f016-1365-a2113a11023f
+  terms: 
+    - name: sensitive
+      description: term for Data X
+  owner: e13a4776-b39d-f016-1365-a2113a11023f
+  externalUrl: http://externallinkexample.com/
+job_list_sample:
+  - id: job_c0efdd45-e4b5-48c7-b27f-ee676181befc
+    name: JobNo1
+    description: The Job for Data X
+    customProperties: 
+      key1: value1
+    tags: 
+      - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+        name: weather
+        description: tag for Data X
+        owner: e13a4776-b39d-f016-1365-a2113a11023f
+    terms: 
+      - name: sensitive
+        description: term for Data X
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+    externalUrl: http://externallinkexample.com/

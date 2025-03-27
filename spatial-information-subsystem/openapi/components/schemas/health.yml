@@ -1,0 +1,52 @@
+schemaHealth:
+  type: object
+  properties:
+    health:
+      type: boolean
+      description: Health check result
+    details: 
+      type: object
+      description: Health check result for each component
+      properties:
+        governance:
+          type: object
+          description: Health check result of the VDL governance management component
+          properties:
+            authz:
+              type: boolean
+              description: Authentication engine (opa) health check result
+        database:
+          type: boolean
+          description: Health check result of the VDL database
+        federation:
+          type: object
+          description: Health check result of the VDL federation component
+          properties:
+            master:
+              type: boolean
+              description: Health check result of master node
+            workers:
+              type: string
+              description: Health check result of worker node
+              example: 2/5
+        discovery:
+          type: boolean
+          description: Health check result of the VDL search and discovery component
+        stream:
+          type: object
+          description: Health check result of the VDL kafka component
+          properties:
+            kafka:
+              type: boolean
+              description: Health check result of kafka node
+            kafkaConnect:
+              type: boolean
+              description: Health check result of kafkaConnect node
+              example: true
+        connector:
+          type: object
+          description: Health check result of the VDL connector component
+          properties:
+            <connectorId>:
+              type: boolean
+              description: Health check results for each connector ID

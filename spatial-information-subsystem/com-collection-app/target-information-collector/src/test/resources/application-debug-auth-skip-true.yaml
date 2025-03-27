@@ -1,0 +1,2 @@
+# debug-auth-skipをtrueにする
+target.tier4.target-info-api.debug-auth-skip: true

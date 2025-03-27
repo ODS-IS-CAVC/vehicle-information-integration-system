@@ -1,0 +1,45 @@
+{
+  "attribute": {
+    "serviceLocationID": 4294967295,
+    "roadsideUnitID": 4294967295,
+    "formatVersion": 1,
+    "updateTimeInfo": "2018-01-24T01:25:26.678Z",
+    "deviceNum": 4,
+    "deviceIndividualInfo": [
+      {
+        "deviceID": 1111111,
+        "targetNum": 2,
+        "targetIndividualInfo": [
+          {
+            "commonServiceStandardID": 1,
+            "targetMessageID": 1,
+            "targetIndividualVersionInfo": 1,
+            "targetID": 11111111,
+            "targetIndividualIncrementCounter": 123,
+            "dataLength": 123,
+            "leapSecondCorrectionInfo": true,
+            "time": "2018-01-29T01:23:45.678+09:00",
+            "latitude": 123456789,
+            "longitude": 1234567891,
+            "elevation": 123,
+            "positionConf": 1,
+            "elevationConf": 2,
+            "speed": 1234,
+            "heading": 14400,
+            "acceleration": 123,
+            "speedConf": 1,
+            "headingConf": 1,
+            "forwardRearAccelerationConf": 1,
+            "transmissionState": 1,
+            "steeringWheelAngle": 1235,
+            "sizeClassification": 2,
+            "roleClassification": 1,
+            "vehicleWidth": 140,
+            "vehicleLength": 180
+          }
+        ]
+      }
+    ]
+  }
+}
+

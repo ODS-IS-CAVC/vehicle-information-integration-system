@@ -1,0 +1,35 @@
+testdata:
+  flushData: false
+  data:
+    # 15/0/29183/12809の中心座標
+    - key:
+        time: "2024-11-12T10:00:00+09:00"
+        longitude: 140.6195068359375
+        latitude: 36.5140511994
+        altitude: 0
+        movingObjectId: "testdata-weather1"
+      attributes:
+        spatialId: "15/0/29183/12809"
+        temperature: "20.0"
+        precipitation: "0.0"
+        humidity: "80.0"
+        weatherForecast: "200"
+        windDirection: "180.0"
+        windSpeed: "2.0"
+        updatedAt: "2024-11-12T10:00:00+09:00"
+    # 15/0/29183/12810の中心座標
+    - key:
+        time: "2024-11-12T10:00:00+09:00"
+        longitude: 140.6195068359375
+        latitude: 36.5052208633
+        altitude: 0
+        movingObjectId: "testdata-weather2"
+      attributes:
+        spatialId: "15/0/29183/12810"
+        temperature: "20.0"
+        precipitation: "0.0"
+        humidity: "80.0"
+        weatherForecast: "200"
+        windDirection: "180.0"
+        windSpeed: "2.0"
+        updatedAt: "2024-11-12T10:00:00+09:00"

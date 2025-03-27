@@ -1,0 +1,233 @@
+- name: create user digiline
+  user:
+    name: digiline
+    create_home: false
+    shell: /sbin/nologin
+  become: yes
+
+- name: remove com-space-app
+  file:
+    path: /tmp/com-space-app
+    state: absent
+
+- name: git clone com-space-app
+  command:
+    cmd: 'git clone https://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/com-space-app'
+    chdir: /tmp/
+
+- name: build for com-space-app
+  command:
+    cmd: './gradlew clean bootJar -x test'
+    chdir: /tmp/com-space-app/
+
+# vehicle
+- name: mkdir /opt/search-vehicle-api directory
+  file:
+    path: /opt/search-vehicle-api
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: mkdir /opt/search-vehicle-api/bin directory
+  file:
+    path: /opt/search-vehicle-api/bin
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: copy bootstrap.sh
+  copy:
+    src: /tmp/com-space-app/search-vehicle-api/config/bin/bootstrap.sh
+    dest: /opt/search-vehicle-api/bin/
+    owner: digiline
+    group: digiline
+    mode: '0755'
+    remote_src: yes
+  become: yes
+
+- name: replace bootstrap.sh
+  replace:
+    path: /opt/search-vehicle-api/bin/bootstrap.sh
+    regexp: "dev"
+    replace: "{{ env }}"
+  become: yes
+
+- name: mkdir /opt/search-vehicle-api/config directory
+  file:
+    path: /opt/search-vehicle-api/config
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: find application.yaml
+  find:
+    paths: "/tmp/com-space-app/search-vehicle-api/build/resources/main"
+    patterns: "application*.yaml"
+    recurse: yes
+  register: vehicle_application_setting
+
+- name: copy application.yaml
+  copy:
+    src: "{{ item.path }}"
+    dest: /opt/search-vehicle-api/config/
+    owner: digiline
+    group: digiline
+    mode: '0644'
+    remote_src: yes
+  with_items: "{{ vehicle_application_setting.files }}"
+  become: yes
+
+- name: mkdir /opt/search-vehicle-api/lib directory
+  file:
+    path: /opt/search-vehicle-api/lib
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: copy search-vehicle-api-1.0-SNAPSHOT.jar
+  copy:
+    src: /tmp/com-space-app/search-vehicle-api/build/libs/search-vehicle-api-1.0-SNAPSHOT.jar
+    dest: /opt/search-vehicle-api/lib/
+    owner: digiline
+    group: digiline
+    remote_src: yes
+  become: yes
+
+- name: copy search-vehicle-api.service
+  copy:
+    src: /tmp/com-space-app/search-vehicle-api/config/systemd/search-vehicle-api.service
+    dest: /etc/systemd/system/
+    remote_src: yes
+  become: yes
+
+- name: systemctl daemon-reload
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: systemctl stop search-vehicle-api
+  systemd:
+    name: search-vehicle-api
+    state: stopped
+  become: yes
+
+- name: systemctl start search-vehicle-api
+  systemd:
+    name: search-vehicle-api
+    state: started
+    enabled: yes
+  become: yes
+
+# weather
+- name: mkdir /opt/search-weather-api directory
+  file:
+    path: /opt/search-weather-api
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: mkdir /opt/search-weather-api/bin directory
+  file:
+    path: /opt/search-weather-api/bin
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: copy bootstrap.sh
+  copy:
+    src: /tmp/com-space-app/search-weather-api/config/bin/bootstrap.sh
+    dest: /opt/search-weather-api/bin/
+    owner: digiline
+    group: digiline
+    mode: '0755'
+    remote_src: yes
+  become: yes
+
+- name: replace bootstrap.sh
+  replace:
+    path: /opt/search-weather-api/bin/bootstrap.sh
+    regexp: "dev"
+    replace: "{{ env }}"
+  become: yes
+
+- name: mkdir /opt/search-weather-api/config directory
+  file:
+    path: /opt/search-weather-api/config
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: find application.yaml
+  find:
+    paths: "/tmp/com-space-app/search-weather-api/build/resources/main"
+    patterns: "application*.yaml"
+    recurse: yes
+  register: weather_application_setting
+
+- name: copy application.yaml
+  copy:
+    src: "{{ item.path }}"
+    dest: /opt/search-weather-api/config/
+    owner: digiline
+    group: digiline
+    mode: '0644'
+    remote_src: yes
+  with_items: "{{ weather_application_setting.files }}"
+  become: yes
+
+- name: mkdir /opt/search-weather-api/lib directory
+  file:
+    path: /opt/search-weather-api/lib
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: copy search-weather-api-1.0-SNAPSHOT.jar
+  copy:
+    src: /tmp/com-space-app/search-weather-api/build/libs/search-weather-api-1.0-SNAPSHOT.jar
+    dest: /opt/search-weather-api/lib/
+    owner: digiline
+    group: digiline
+    remote_src: yes
+  become: yes
+
+- name: copy search-weather-api.service
+  copy:
+    src: /tmp/com-space-app/search-weather-api/config/systemd/search-weather-api.service
+    dest: /etc/systemd/system/
+    remote_src: yes
+  become: yes
+
+- name: systemctl daemon-reload
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: systemctl stop search-weather-api
+  systemd:
+    name: search-weather-api
+    state: stopped
+  become: yes
+
+- name: systemctl start search-weather-api
+  systemd:
+    name: search-weather-api
+    state: started
+    enabled: yes
+  become: yes

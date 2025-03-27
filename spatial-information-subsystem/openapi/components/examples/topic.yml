@@ -1,0 +1,25 @@
+topic_list_sample: 
+  - name: companyA_datasourceA.topicA
+    partitions:
+      - partition: 1
+        leader: 1
+        replicas: [1,2,3]
+        inSyncReplica: [1,2]
+  - name: companyB_datasourceB.topicB
+    partitions:
+      - partition: 2
+        leader: 1
+        replicas: [1,2,3]
+        inSyncReplica: [1,2]
+
+topic_get_sample: 
+  name: companyA_datasourceA.topicA
+  partitions:
+    - partition: 1
+      leader: 1
+      replicas: [1,2,3]
+      inSyncReplica: [1,2]
+
+setTopic_get_sample:
+  compression.type: "gzip"
+  cleanup.policy": ["compact", "delete"]

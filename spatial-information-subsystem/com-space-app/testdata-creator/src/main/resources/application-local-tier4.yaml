@@ -1,0 +1,8 @@
+spring:
+  main:
+    web-application-type: none
+
+axispot:
+  storeNodeInfo: "localhost:16379"
+  bitPattern: "tttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:52:ZFXY"
+  cacheTtl: 259200 # 3day

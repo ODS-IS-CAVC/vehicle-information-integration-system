@@ -1,0 +1,5 @@
+- hosts: poc-space-SpatialIdSearch
+  roles:
+    - apt
+    - aws-settings
+    - SpatialIdSearch-App

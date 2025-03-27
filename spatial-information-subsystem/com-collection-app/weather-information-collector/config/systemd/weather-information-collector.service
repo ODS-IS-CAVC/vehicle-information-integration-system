@@ -1,0 +1,12 @@
+[Unit]
+Description=weather-information-collector
+After=network.target
+
+[Service]
+User=digiline
+ExecStart=/opt/weather-information-collector/bin/bootstrap.sh
+SuccessExitStatus=143
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

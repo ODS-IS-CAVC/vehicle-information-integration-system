@@ -1,0 +1,239 @@
+targets:
+  TargetID:
+    type: integer
+    format: int64
+    description: "前回送信時と同一物標かどうかを識別できるように路側機が付与するID情報"
+    minimum: 0
+    maximum: 4294967295
+    example: 1234567890
+  Time:
+    type: string
+    description: "物標情報が生成された時刻[ミリ秒まで](JST)"
+    minimum: 0
+    maximum: 255
+    example: "2024-01-23T01:23:45.678+09:00"
+  Latitude:
+    type: integer
+    format: int32
+    description: "物標の緯度情報．計測系はWGS84．北緯をプラス, 南緯をマイナスで表現(分解能: 0.0000001度)"
+    minimum: -2147483648
+    maximum: 900000000
+    example: 123456789
+  Longitude:
+    type: integer
+    format: int32
+    description: "物標の経度情報．計測系はWGS84．東経をプラス, 西経をマイナスで表現(分解能: 0.0000001度)"
+    minimum: -2147483648
+    maximum: 1800000000
+    example: 1234567891
+  Elevation:
+    type: integer
+    format: int32
+    description: "物標の基準面からの高さ情報(分解能: 0.1m)"
+    minimum: -4095
+    maximum: 61440
+    example: 123
+  PositionConf:
+    type: integer
+    format: int32
+    description: "緯度・経度の信頼度を示す情報"
+    minimum: 0
+    maximum: 15
+    example: 1
+  ElevationConf:
+    type: integer
+    format: int32
+    description: "高度の信頼度を示す情報"
+    minimum: 0
+    maximum: 15
+    example: 2
+  Speed:
+    type: integer
+    format: int32
+    description: "物標の速度(単位: m/s)．(分解能: 0.01m/s)"
+    minimum: 0
+    maximum: 65535
+    example: 1234
+  Heading:
+    type: integer
+    format: int32
+    description: "物標の進行方位角情報．北を0度とし，時計回りの角度値をセットする．(分解能: 0.0125度)"
+    minimum: 0
+    maximum: 65535
+    example: 14400
+  Acceleration:
+    type: integer
+    format: int32
+    description: "物標の前後方向の加速度(単位：m/s^2)．(分解能: 0.01m/s^2)"
+    minimum: -2000
+    maximum: 2000
+    example: 123
+  SpeedConf:
+    type: integer
+    format: int32
+    description: "物標の速度の信頼度を示す情報"
+    minimum: 0
+    maximum: 7
+    example: 1
+  HeadingConf:
+    type: integer
+    format: int32
+    description: "物標の方位角の信頼度を示す情報"
+    minimum: 0
+    maximum: 7
+    example: 1
+  ForwardRearAccelerationConf:
+    type: integer
+    format: int32
+    description: "物標の前後方向加速度の信頼度を示す情報"
+    minimum: 0
+    maximum: 7
+    example: 1
+  SizeClassification:
+    type: integer
+    format: int32
+    description: "物標の種別"
+    minimum: 0
+    maximum: 15
+    example: 2
+  RoleClassification:
+    type: integer
+    format: int32
+    description: "物標が車両の場合の用途種別．車両以外の場合15(その他)とする"
+    minimum: 0
+    maximum: 15
+    example: 1
+  VehicleWidth:
+    type: integer
+    format: int32
+    description: "自車両の全幅情報(単位：m). (分解能: 0.01m)"
+    minimum: 1
+    maximum: 1023
+    example: 140
+  VehicleLength:
+    type: integer
+    format: int32
+    description: "自車両の全長情報(単位：m)．(分解能: 0.01m)"
+    minimum: 1
+    maximum: 16383
+    example: 180
+  SemiMajorAxisOfPositionalErrorEllipse:
+    type: integer
+    format: int32
+    description: "GPSにより取得した位置情報の信頼度指標である水平方向の誤差楕円（2σ）の長半径情報(単位:m) (分解能: 0.5m)"
+    minimum: 0
+    maximum: 255
+    example: 15
+  SemiMinorAxisOfPositionalErrorEllipse:
+    type: integer
+    format: int32
+    description: "GPSにより取得した位置情報の信頼度指標である水平方向の誤差楕円（2σ）の短半径情報(単位:m) (分解能: 0.5m)"
+    minimum: 0
+    maximum: 255
+    example: 15
+  SemiMajorAxisOrientationOfPositionalErrorEllipse:
+    type: integer
+    format: int32
+    description: "GPSにより取得した位置情報の信頼度指標である水平方向の誤差楕円（2σ）の回転角情報．楕円長軸の角度として、北を0度とし時計回りの角度値をセットする. (分解能: 0.0125度)"
+    minimum: 0
+    maximum: 65535
+    example: 7200
+  GPSPositioningMode:
+    type: integer
+    format: int32
+    description: "GPSにより取得した位置情報が、どのような測位モードで測位されたものかを示す情報"
+    minimum: 0
+    maximum: 3
+    example: 1
+  GPSPDOP:
+    type: integer
+    format: int32
+    description: "GPSにより取得した位置情報が、衛星の幾何学的配置によりどれくらい位置精度へ影響を受けた状態で取得したものかを示す情報. (分解能: 0.2)"
+    minimum: 0
+    maximum: 63
+    example: 12
+  RestingState:
+    type: integer
+    format: int32
+    description: "物標が停止してからの経過時間(単位:秒)"
+    minimum: 0
+    maximum: 3602
+    example: 12
+
+  TargetInfo:
+    type: object
+    required:
+      - targetStartDateTime
+      - targetEndDateTime
+      - spaces
+    properties:
+      targetStartDateTime:
+        "$ref": "./common.yaml#/common/DateAndTime"
+      targetEndDateTime:
+        "$ref": "./common.yaml#/common/DateAndTime"
+      spaces:
+        type: array
+        items:
+          "$ref": "#/targets/TargetSpaceDetail"
+  TargetSpaceDetail:
+    type: object
+    required:
+      - spatialID
+      - targets
+    properties:
+      spatialID:
+        "$ref": "./common.yaml#/common/SpatialID"
+      targets:
+        type: array
+        "$ref": "#/targets/TargetDetail"
+  TargetDetail:
+    type: object
+    properties:
+      targetID:
+        "$ref": "#/targets/TargetID"
+      time:
+        "$ref": "#/targets/Time"
+      spatialID:
+        "$ref": "./common.yaml#/common/SpatialID"
+      latitude:
+        "$ref": "#/targets/Latitude"
+      longitude:
+        "$ref": "#/targets/Longitude"
+      elevation:
+        "$ref": "#/targets/Elevation"
+      positionConf:
+        "$ref": "#/targets/PositionConf"
+      elevationConf:
+        "$ref": "#/targets/ElevationConf"
+      speed:
+        "$ref": "#/targets/Speed"
+      heading:
+        "$ref": "#/targets/Heading"
+      acceleration:
+        "$ref": "#/targets/Acceleration"
+      speedConf:
+        "$ref": "#/targets/SpeedConf"
+      headingConf:
+        "$ref": "#/targets/HeadingConf"
+      forwardRearAccelerationConf:
+        "$ref": "#/targets/ForwardRearAccelerationConf"
+      sizeClassification:
+        "$ref": "#/targets/SizeClassification"
+      roleClassification:
+        "$ref": "#/targets/RoleClassification"
+      vehicleWidth:
+        "$ref": "#/targets/VehicleWidth"
+      vehicleLength:
+        "$ref": "#/targets/VehicleLength"
+      semiMajorAxisOfPositionalErrorEllipse:
+        "$ref": "#/targets/SemiMajorAxisOfPositionalErrorEllipse"
+      semiMinorAxisOfPositionalErrorEllipse:
+        "$ref": "#/targets/SemiMinorAxisOfPositionalErrorEllipse"
+      semiMajorAxisOrientationOfPositionalErrorEllipse:
+        "$ref": "#/targets/SemiMajorAxisOrientationOfPositionalErrorEllipse"
+      GPSPositioningMode:
+        "$ref": "#/targets/GPSPositioningMode"
+      GPSPDOP:
+        "$ref": "#/targets/GPSPDOP"
+      restingState:
+        "$ref": "#/targets/RestingState"

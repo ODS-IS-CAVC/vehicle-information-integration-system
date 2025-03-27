@@ -1,0 +1,148 @@
+# 物標情報収集AP
+application:
+  # タイムゾーン
+  time-zone: "Asia/Tokyo"
+  # spring-scheduler
+  scheduler:
+    # 1分ごとに実行する場合
+    # cron: "0 */1 * * * ?"
+    # 自動実行しない場合
+    cron: "-"
+    # cronのタイムゾーン
+    zone: ${application.time-zone}
+
+# spring-boot
+spring:
+  application:
+    name: target-information-collector
+
+# spring-web
+server:
+  port: 8083
+
+# logging
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection: DEBUG
+    jp.co.ntt.sic: INFO
+    org.springframework.web: INFO
+#  file:
+#     name: ./logs/${spring.application.name}.log
+
+# spring-actuator
+# 本番環境では設定を見直すこと
+management:
+  server:
+    port: ${server.port}
+  endpoints:
+    web:
+      exposure:
+        # すべてを無効化する場合
+        # include: ""
+        # すべてを許可する場合
+        include: "*"
+
+
+# Prefix
+# 環境変数の競合を避けるため
+target:
+  # auth
+  auth-api:
+    login:
+      # keyはgit管理しないため、
+      # 環境変数「TARGET_AUTH_API_LOGIN_KEY」にて設定すること
+      key: ${TARGET_AUTH_API_LOGIN_KEY:}
+      request:
+        endpoint: https://[AUTH_API_HOST]/auth/login
+        parameters:
+          # operator-account-idはgit管理しないため、
+          # 環境変数「TARGET_AUTH_API_LOGIN_REQUEST_PARAMETERS_OPERATOR_ACCOUNT_ID」にて設定すること
+          operator-account-id: ${TARGET_AUTH_API_LOGIN_REQUEST_PARAMETERS_OPERATOR_ACCOUNT_ID:}
+          # account-passwordはgit管理しないため、
+          # 環境変数「TARGET_AUTH_API_LOGIN_REQUEST_PARAMETERS_ACCOUNT_PASSWORD」にて設定すること
+          account-password: ${TARGET_AUTH_API_LOGIN_REQUEST_PARAMETERS_ACCOUNT_PASSWORD:}
+        timeout: 10000
+  # Tier4
+  tier4:
+    target-info-api:
+      # keyはgit管理しないため、
+      # 環境変数「TARGET_TIER4_TARGET_INFO_API_KEY」にて設定すること
+      key: ${TARGET_TIER4_TARGET_INFO_API_KEY:}
+      target-info:
+        # time-zoneはレスポンス保存時のディレクトリ名とファイル名の日時に利用する
+        time-zone: "Asia/Tokyo"
+        request:
+          endpoint: https://[TARGET_INFO_API_HOST]/targetInfo
+          parameters:
+            - service-location-id: 16777215
+              roadside-unit-id: 12345678
+            - service-location-id: 0
+              roadside-unit-id: 22222222
+            - service-location-id: 1
+              roadside-unit-id: 33333333
+          # 1秒間のリクエスト数
+          per-second: 5
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          timeout: 1000
+          retry:
+            # リトライのタイムアウト（ミリ秒）
+            timeout: 4000
+            # 失敗した後の待機時間（ミリ秒）
+            fixed-backoff: 1000
+        response:
+          save:
+            directory: build/tmp/data/tier4-targetinfoapi/targetinfo
+            masking:
+              enabled: false
+              query: ""
+      # 認証システムが準備できていない場合の設定のため本番環境ではfalseにすること
+      debug-auth-skip: false
+
+  # Axispot
+  axispot:
+    geotemp:
+      # axispot.geotemp.time-zoneを切り替えた場合はAxispotのデータをリセットすること
+      time-zone: "UTC"
+      config: build/tmp/axispot/geotempConfig.properties
+      save:
+        retry:
+          # Axispot格納処理のタイムアウト（ミリ秒）
+          timeout: 3100
+          # 失敗した後の待機時間（ミリ秒）
+          fixed-backoff: 1000
+
+  # VDL
+  vdl:
+    api:
+      token:
+        request:
+          endpoint: https://[VDL_HOST]:[VDL_PORT]/realms/vdl/protocol/openid-connect/token
+          parameters:
+            client-id: vdl_client
+            # client-secretはgit管理しないため、
+            # 環境変数「TARGET_VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET」にて設定すること
+            client-secret: ${TARGET_VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET:}
+            username: tier4-admin
+            # passwordはgit管理しないため、
+            # 環境変数「TARGET_VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD」にて設定すること
+            password: ${TARGET_VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD:}
+            grant-type: password
+            scope: openid
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          timeout: 10000
+          # 自己署名証明書を利用する場合は検証処理をスキップする必要があるためfalseとする
+          verify-ssl: false
+      data:
+        request:
+          endpoint: https://[VDL_HOST]:[VDL_PORT]/api/v1/data
+          vdl-path-prefix: /provider-tier4/target/target-information-collector/data/tier4-targetinfoapi/targetinfo
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          timeout: 10000
+          # 自己署名証明書を利用する場合は検証処理をスキップする必要があるためfalseとする
+          verify-ssl: false
+          retry:
+            # VDL格納処理のタイムアウト（ミリ秒）
+            timeout: 3100
+            # 失敗した後の待機時間（ミリ秒）
+            fixed-backoff: 1000

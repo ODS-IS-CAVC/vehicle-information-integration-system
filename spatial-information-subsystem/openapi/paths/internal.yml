@@ -1,0 +1,205 @@
+internal_{vdlPath}: 
+  summary: This API group is related to the actual data management function.(This groups of API require vdlPath to be specified as a request parameter.)
+  post:
+    tags:
+      - internal
+    operationId: internaldataUpload
+    summary: Upload ‘actual data’ from historical data virtual integration.
+    description: |-
+      Upload and register the actual internaldata.
+      <ul>
+        <li>When multiple uploads are requested to the same target,  the earliest request succeeds and later request fail (with 409 Conflict).</li>
+      </ul>
+      Request example: POST /internal/api/v1/data//providerA/sourceX/file?writeType=ASYNC_THROUGH
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryWriteType'
+    requestBody:
+      required: true
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+    responses:      
+      '201':
+        description: Responds that the upload of actual internaldata was successful.
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '409':
+        description: The uploaded actual data is already registered.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+  get:
+    tags:
+      - internal
+    operationId: internaldataDownload
+    summary: Download ‘actual data’ from historical data virtual integration.
+    description: |-
+      Download the actual internaldata.(Partial download supported.)
+      <ul>
+        <li>Partial download is requested via Range header.</li>
+        <li>Multiple range requests in the Range header are not supported.</li>
+        <li>The status code of the response upon successful completion changes depending on whether the entire file was downloaded or a portion of the file was downloaded.</li>
+      </ul>
+      Request example: GET /internal/api/v1/data//providerA/sourceX/file?readType=CACHE
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryReadType'
+      - $ref: '../components/parameters/param.yml#/headerRange'
+    responses:
+      '200':
+        description: Returns actual internaldata acquired by downloading an entire file.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      '206':
+        description: Returns actual internaldata got by downloading a portion of the file.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      '400':
+        description: |-
+          If you can't open the resource.(For example, an incomplete file is specified.)<br>
+          The required parameters for the request do not exist, or the input format is invalid.
+          If the number of files/file size under the directory to be compressed exceeds the upper limit specified in the configuration.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '416':
+        description: Multiple range requests in the Range header (unsupported).
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Range for the resource is not available.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+
+discovery_{searchString}:
+  summary: Business metadata access integration.
+  post:
+    tags:
+      - internal
+    operationId: internaldataSearch
+    summary: Dataset/Data Job Search.
+    description: |-
+      Search for datasets/data jobs under the following conditions.
+      <ul>
+        <li>Search for datasets linked to the VDL path.</li>
+        <li>Search for datasets linked to the topic name.</li>
+        <li>Search for datasets included upstream in the lineage information.</li>
+        <li>Search for datajobs included downstream in the lineage information.</li>
+      </ul>
+      1.If the request data contains "searchAcrossLineage" and urn is dataset, Search for datasets included downstream or upstream in the lineage information.
+        Request example: POST /internal/api/v1/discovery/ -d
+        {"query":"{ searchAcrossLineage(input: { direction:UPSTREAM , urn: \"urn:li:dataset:(urn:li:dataPlatform:hoge,lineage1,PROD)\"}) 
+        { searchResults { degree entity { type ...on Dataset{name urn platform{name} properties{name description customProperties{key value}} tags{tags{tag{name}}} glossaryTerms{terms{term{name}}}
+        ownership{owners{owner{...on CorpUser{username}}}} } ...on DataJob{jobId urn properties{name description customProperties{key value} externalUrl} tags{tags{tag{name}}} 
+        glossaryTerms{terms{term{name}}} ownership{owners{owner{...on CorpUser{username}}}}}}}}} ownership{owners{ type owner{...on CorpUser{username}}}}}}}}}"}'
+
+      2.If the request data contains "searchAcrossLineage" and urn is datajob, Search for datajob included downstream or upstream in the lineage information.
+        Request example: POST /internal/api/v1/discovery/ -d
+        {"query":"{ searchAcrossLineage(input: { direction:UPSTREAM , urn: \"urn:li:dataJob:(urn:li:dataPlatform:hoge,lineage1,PROD)\"}) 
+        { searchResults { degree entity { type ...on Dataset{name urn platform{name} properties{name description customProperties{key value}} tags{tags{tag{name}}} glossaryTerms{terms{term{name}}}
+        ownership{owners{owner{...on CorpUser{username}}}} } ...on DataJob{jobId urn properties{name description customProperties{key value} externalUrl} tags{tags{tag{name}}}
+        glossaryTerms{terms{term{name}}} ownership{owners{owner{...on CorpUser{username}}}} } } } }}
+
+      3.If the request data contains "vdlSpec.topic", Search for datasets linked to the topic name.
+        Request example: POST /internal/api/v1/discovery/ -d 
+        {"query":"{ search(input: { type:DATASET, query: \"*\", start: 0, count: 30, orFilters:[{and:[{field: \"customProperties\", values:[\"vdlSpec.topic=/providerA_dataSourceA.traffic\"], 
+        condition: EQUAL}]}] }) { searchResults { entity { ...on Dataset { urn description name tags{ tags{ tag{name}}} glossaryTerms{terms{term{name}}} properties{customProperties{key value}} 
+        wnership{owners{ type owner{...on CorpUser{username}}}}}}}}}"}'
+
+      4.In other cases,Search for datasets linked to the VDL path.
+        Request example: POST /internal/api/v1/discovery/ -d 
+        {"query":"{ search(input: { type:DATASET, query: \"*\", start: 0, count: 30, orFilters:[{and:[{field: \"customProperties\", values:[\"vdlSpec.vdlPath=/AAA\"], condition: EQUAL}]}] })
+        { searchResults { entity { ...on Dataset { urn description name tags{ tags{ tag{name}}} glossaryTerms{terms{term{name}}} properties{customProperties{key value}} 
+        ownership{owners{ type owner{...on CorpUser{username}}}}}}}}}"}'
+    responses:      
+      '200':
+        description: |-
+          Returns the results of a search for the dataset or datajob as an array
+          <ul>
+            <li>If the target resource does not exist, or if authorization function returns NG as an authorization decision result for all resources, an empty array is returned</li>
+          </ul>        
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted
+      '500':
+        description: An error occurred in the server's internal processing

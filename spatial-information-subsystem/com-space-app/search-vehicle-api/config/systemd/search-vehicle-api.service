@@ -1,0 +1,12 @@
+[Unit]
+Description=Search vehicle API
+After=network.target
+
+[Service]
+User=digiline
+ExecStart=/opt/search-vehicle-api/bin/bootstrap.sh
+SuccessExitStatus=143
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

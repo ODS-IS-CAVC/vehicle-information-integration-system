@@ -1,0 +1,90 @@
+schemaLineage:
+  type: array
+  description: List of the dataset/job
+  items:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Dataset or job ID
+      degree:
+        type: integer
+        description: Number of generations. 
+      next:
+        type: array
+        description: Dataset or job ID(s) of next generation
+        items:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Dataset or job ID
+
+schemaUpdateLineageRequest:
+  type: object
+  properties:
+   add:
+     type: array
+     description: List of linage to be added
+     items:
+       type: object
+       properties: 
+         upstream:
+           type: object
+           description: Dataset or data job to be specified in the upward direction
+           properties:
+               id:
+                 type: string
+                 description: Dataset or data job ID
+                 pattern: '^(dataset|datajob)_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+                 example: dataset_6f60b1f2-c2d0-44a0-ae44-cb4c25ff61f7
+         downstream:
+           type: object
+           description: Dataset or data job to be specified in the downward direction
+           properties: 
+               id:
+                 type: string
+                 description: Dataset or data job ID
+                 pattern: '^(dataset|datajob)_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+                 example: datajob_99e82089-f655-4ebc-9bec-146d08ac8711
+   remove:
+     type: array
+     description: List of linage to be removed
+     items:
+       type: object
+       properties: 
+         upstream:
+           type: object
+           description: Dataset or data job to be specified in the upward direction
+           properties:
+               id:
+                 type: string
+                 description: Dataset or data job ID
+                 pattern: '^(dataset|datajob)_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+                 example: dataset_6f60b1f2-c2d0-44a0-ae44-cb4c25ff61f7
+         downstream:
+           type: object
+           description: Dataset or data job to be specified in the downward direction
+           properties: 
+               id:
+                 type: string
+                 description: Dataset or data job ID
+                 pattern: '^(dataset|datajob)_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+                 example: datajob_99e82089-f655-4ebc-9bec-146d08ac8711
+
+schemaSearchLineageRequest: 
+  type: object
+  required: 
+    - direction
+    - id
+  properties:
+    direction:
+      type: string
+      description: Direction to search
+      enum: [UPSTREAM , DOWNSTREAM]
+      example: UPSTREAM
+    id:
+      type: string
+      description: Dataset or Job ID
+      pattern: '^(dataset|datajob)_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      example: dataset_7a87fecc-8cf5-42bb-a975-c4d0648ce1e4

@@ -1,0 +1,51 @@
+metadata_get_request_sample:
+  summary: simple metadata get request
+  value:
+    loadMetadataType: NEVER
+    syncIntervalMs: 0
+metadata_update_sample:
+  summary: simple metadata update request
+  value:
+    recursive: false
+metadata_search_sample:
+  summary: simple metadata search request
+  value:
+    recursive: false
+    loadMetadataType: NEVER
+    syncIntervalMs: 0
+
+metadata_get_sample:
+  creationTimeMs: 1698053295519
+  inAlluxioPercentage: 100
+  inMemoryPercentage: 100
+  lastAccessTimeMs: 1698053281000
+  lastModificationTimeMs: 1698053281000
+  length: 5
+  name: file
+  path: /coopX/s3/dir/file
+  persistenceState: PERSISTED
+  ttl: -1
+  ufsPath: s3://bucket/dir/file
+  cacheable: true
+  completed: true
+  folder: false
+  mountPoint: false
+  persisted: true
+
+metadata_list_sample:
+  - creationTimeMs: 1698053295519
+    inAlluxioPercentage: 100
+    inMemoryPercentage: 100
+    lastAccessTimeMs: 1698053281000
+    lastModificationTimeMs: 1698053281000
+    length: 5
+    name: file
+    path: /coopX/s3/dir/file
+    persistenceState: PERSISTED
+    ttl: -1
+    ufsPath: s3://bucket/dir/file
+    cacheable: true
+    completed: true
+    folder: false
+    mountPoint: false
+    persisted: true

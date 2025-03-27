@@ -1,0 +1,16 @@
+# masking.enabledをtrueにする
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection: DEBUG
+halex:
+  dream-api:
+    wimage72:
+      response:
+        save:
+          masking:
+            enabled: true
+            query: |
+              .ActualInfos |= with_entries(.value.temperature = "11.1") |
+              .ActualPrecipitation[] |= (.value="22.2") |
+              .ForecastInfos |= with_entries(.value.temperature = "33.3")

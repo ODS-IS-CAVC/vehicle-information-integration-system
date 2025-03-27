@@ -1,0 +1,60 @@
+policy_get_sample:
+  id: e13a4776-b39d-f016-1365-a2113a11023f
+  type: provider
+  ruleType: allow
+  rule:
+    object:
+      providerId: 42538c89-a746-44a7-8b88-b390e9fe8517
+    subject:
+      userPattern: ^user[A-Z]
+      companyPattern: ^company[A-Z]
+      role: role1
+    context:
+      validDate:
+        - condition: ge
+          comparison: now
+          unit: hours
+          value: "1"
+      customData:
+        - key: key1
+          value: ^value[0-9]+
+    method:
+      values:
+        - CREATE
+        - READ
+
+policy_list_sample:
+  rules:
+    - id: e13a4776-b39d-f016-1365-a2113a11023f
+      type: provider
+      ruleType: allow
+      rule:
+        object:
+          providerId: 42538c89-a746-44a7-8b88-b390e9fe8517
+        subject:
+          userPattern: ^user[A-Z]
+          companyPattern: ^company[A-Z]
+          role: role1
+        context:
+          validDate:
+            - condition: ge
+              comparison: now
+              unit: hours
+              value: "1"
+          customData:
+            - key: key1
+              value: ^value[0-9]+
+        method:
+          values:
+            - READ
+    - id: c0efdd45-e4b5-48c7-b27f-ee676181befc
+      type: storage
+      ruleType: allow
+      rule:
+        object:
+          storageId: e13a4776-b39d-f016-1365-a2113a11023f
+        subject:
+          companyPattern: ^company[A-Z]
+        method:
+          values:
+            - READ

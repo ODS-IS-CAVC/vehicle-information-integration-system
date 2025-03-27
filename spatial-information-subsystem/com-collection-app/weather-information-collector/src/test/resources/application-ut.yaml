@@ -1,0 +1,160 @@
+# 気象情報収集AP
+application:
+  # タイムゾーン
+  time-zone: "Asia/Tokyo"
+  # scheduler
+  scheduler:
+    # 毎時25分に実行する場合
+    # cron: "0 25 * * * ?"
+    # 自動実行しない場合
+    cron: "-"
+    # cronのタイムゾーン
+    zone: ${application.time-zone}
+
+# spring
+spring:
+  application:
+    name: weather-information-collector
+
+
+# spring-web
+server:
+  port: 8181
+
+# logging
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection.timespatialindexcreator: DEBUG
+    com.nttdata.vehicleinfo.collection.weatherinformationcollector: DEBUG
+    jp.co.ntt.sic: DEBUG
+    org.springframework.web: INFO
+#  file:
+#     name: ${spring.application.name}.log
+
+# spring-actuator
+# 本番環境では無効化すること
+# http://localhost:8181/actuator/info
+# http://localhost:8181/actuator/env
+# http://localhost:8181/actuator/health
+management:
+  server:
+    port: ${server.port}
+  endpoints:
+    web:
+      exposure:
+        # すべてを無効化する場合
+        # include: ""
+        # すべてを許可する場合
+        include: "*"
+
+# HALEX DreamApi
+halex:
+  dream-api:
+    # halex.dream-api.keyはgit管理しないため、
+    # 環境変数「HALEX_DREAMAPI_KEY」にて設定すること
+    key: ${HALEX_DREAMAPI_KEY:}
+    wimage72:
+      # halex.dream-api.wimage72.time-zoneはハレックス社のAPI仕様に準拠すること
+      # ・レスポンスのタイムゾーンのない日時を解析する際のタイムゾーンに利用する
+      # ・レスポンスの保存ディレクトリの日時のタイムゾーンに利用する
+      # ・レスポンスのsystemTime（タイムゾーンあり）をAxispotの属性updatedAtに変換する際のタイムゾーンに利用する
+      time-zone: "Asia/Tokyo"
+      request:
+        endpoint: https://fspweb01.halex.co.jp/wimage/hpd
+        parameters:
+          sid: wimage72-service
+          rem: all
+          proj: 0
+        coordinates:
+          # UT用 正常
+          - lat: 35.73243
+            lon: 139.71547
+          # UT用 空間IDの有効範囲外
+          - lat: -90
+            lon: 139.71547
+          # UT用 Axispotの有効範囲外
+          - lat: -85.0511287
+            lon: 139.71547
+          # JR大甕駅周辺（一般道）zoom15
+          ## 15/29183/12809 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/36.5140511994/140.6195068359375
+          - lat: 36.5140511994
+            lon: 140.6195068359375
+          ## 15/29183/12810 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/36.5052208633/140.6195068359375
+          - lat: 36.5052208633
+            lon: 140.6195068359375
+          ## 15/29184/12809 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/36.5140511994/140.6304931640625
+          - lat: 36.5140511994
+            lon: 140.6304931640625
+          ## 15/29184/12810 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/36.5052208633/140.6304931640625
+          - lat: 36.5052208633
+            lon: 140.6304931640625
+          # 新東名高速道路駿河沼津SA～浜松SA（高速道）zoom15
+          ## 15/28921/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/137.7410888671875
+          - lat: 34.8453669318
+            lon: 137.7410888671875
+          ## 15/28921/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.7410888671875
+          - lat: 34.8363499907
+            lon: 137.7410888671875
+          ## 15/28922/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/137.7520751953125
+          - lat: 34.8453669318
+            lon: 137.7520751953125
+          ## 15/28922/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.7520751953125
+          - lat: 34.8363499907
+            lon: 137.7520751953125
+        per-second: 5
+        timeout: 10000
+        retry:
+          timeout: 3000
+          fixed-backoff: 1000
+      response:
+        save:
+          directory: build/tmp/data/halex-dreamapi/wimage72-service
+          masking:
+            enabled: false
+            query: ""
+      copy-forecast:
+        days: 12
+
+# Axispot
+axispot:
+  geotemp:
+    # 時空間インデックスの生成に利用する時間（エポック秒）のタイムゾーン
+    # axispot.geotemp.time-zoneを切り替えた場合はAxispotのデータをリセットすること
+    time-zone: "UTC"
+    config: build/tmp/axispot/geotempConfig.properties
+    save:
+      retry:
+        timeout: 3100
+        fixed-backoff: 1000
+
+# VDL
+vdl:
+  api:
+    token:
+      request:
+        #endpoint: https://127.0.0.1:31444/realms/vdl/protocol/openid-connect/token
+        endpoint: https://172.16.182.39:31444/realms/vdl/protocol/openid-connect/token
+        parameters:
+          client-id: vdl_client
+          # vdl.api.token.request.parameters.client-secretはgit管理しないため、
+          # 環境変数「VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET」にて設定すること
+          client-secret: ${VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET:}
+          username: halex-admin
+          # vdl.api.token.request.parameters.passwordはgit管理しないため、
+          # 環境変数「VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD」にて設定すること
+          password: ${VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD:}
+          grant-type: password
+          scope: openid
+        timeout: 10000
+        verify-ssl: false
+    data:
+      request:
+        endpoint: https://172.16.182.39:30090/api/v1/data
+        vdl-path-prefix: /provider-halex/weather/weather-information-collector/data/halex-dreamapi/wimage72-service
+        timeout: 10000
+        verify-ssl: false
+        retry:
+          timeout: 3100
+          fixed-backoff: 1000
+

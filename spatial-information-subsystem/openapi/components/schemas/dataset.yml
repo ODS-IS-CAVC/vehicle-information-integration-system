@@ -1,0 +1,392 @@
+schemaDataset:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Dataset ID
+      example: dataset_c0efdd45-e4b5-48c7-b27f-ee676181befc
+    name:
+      type: string
+      description: Dataset name
+      example: DatasetNo1
+    description:
+      type: string
+      description: Description of the dataset
+      example: The Dataset for Data X
+    customProperties:
+      type: object
+      description: User-specified Key/Values parameter
+      additionalProperties:
+        type: string
+      example: 
+        key1: value1
+    dataType:
+        type: string
+        description: dataType name
+        example: batch        
+    tags:
+      type: array
+      description: List of tags to be associated with the dataset
+      items:
+        $ref: '../../components/schemas/tag.yml#/schemaTag'
+    terms:
+      type: array
+      description: List of terms to be associated with the dataset
+      items:
+        $ref: '../../components/schemas/term.yml#/schemaTerm'
+    owner:
+      type: string
+      description: Dataset owner information (Data provider ID)
+      format: uuid
+      example: e13a4776-b39d-f016-1365-a2113a11023f
+    vdlSpec:
+      type: object
+      description: Spec definition of the dataset (directive to VDL)
+      properties:
+        vdlPath:
+          type: string
+          description: Dataset vdl path
+          example: /providerA/sourceX/file
+        topic:
+          type: string
+          description: topic name
+          example: companyA_datasourceA.topicA
+        isReady:
+          type: boolean
+          description: Available flag (Spec definition)
+          example: true
+        activeSync:
+          type: boolean
+          description: |-
+            ActiveSync status (Spec definition)
+            <ul>
+              <li>Enable (true) or disable (false)</li>
+            </ul>
+          example: true
+        pathOption:
+          type: object
+          description: Path option information (Spec definition)
+          additionalProperties:
+            type: string
+          example:
+            alluxio.user.file.metadata.load.type: ONCE
+schemaDatasetwithaddInfo:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Dataset ID
+      example: dataset_c0efdd45-e4b5-48c7-b27f-ee676181befc
+    name:
+      type: string
+      description: Dataset name
+      example: DatasetNo1
+    description:
+      type: string
+      description: Description of the dataset
+      example: The Dataset for Data X
+    dataType:
+      type: string
+      description: dataType name
+      example: batch     
+    customProperties:
+      type: object
+      description: User-specified Key/Values parameter
+      additionalProperties:
+        type: string
+      example: 
+        key1: value1
+    tags:
+      type: array
+      description: List of tags to be associated with the dataset
+      items:
+        $ref: '../../components/schemas/tag.yml#/schemaTag'
+    terms:
+      type: array
+      description: List of terms to be associated with the dataset
+      items:
+        $ref: '../../components/schemas/term.yml#/schemaTerm'
+    owner:
+      type: string
+      description: Dataset owner information (Data provider ID)
+      format: uuid
+      example: e13a4776-b39d-f016-1365-a2113a11023f
+    vdlSpec:
+      type: object
+      description: Spec definition of the dataset (directive to VDL)
+      properties:
+        vdlPath:
+          type: string
+          description: Dataset vdl path
+          example: /providerA/sourceX/file
+        topic:
+          type: string
+          description: topic name
+          example: companyA_datasourceA.topicA
+        isReady:
+          type: boolean
+          description: Available flag (Spec definition)
+          example: true
+        activeSync:
+          type: boolean
+          description: |-
+            ActiveSync status (Spec definition)
+            <ul>
+              <li>Enable (true) or disable (false)</li>
+            </ul>
+          example: true
+        pathOption:
+          type: object
+          description: Path option information (Spec definition)
+          additionalProperties:
+            type: string
+          example:
+            alluxio.user.file.metadata.load.type: ONCE
+    vdlStatus:
+      type: object
+      description: Actual status of the dataset (obtained from VDL)
+      properties:
+        isOk:
+          type: boolean
+          description: Available flag (Actual status). Actual state obtained from VDL that indicate the readiness of the dataset to the data users
+          example: true
+        activeSync:
+          type: boolean
+          description: ActiveSync status (Actual status)
+          example: true
+        pathOption:
+          type: object
+          description: Path option information (Actual status)
+          additionalProperties:
+            type: string
+          example:
+            alluxio.user.file.metadata.load.type: ONCE
+        pathOptionUnified:
+          type: object
+          description: Path option information (Actual status:including those inherited from higher-level directories)
+          additionalProperties:
+            type: string
+          example:
+            alluxio.user.file.metadata.load.type: ONCE
+
+schemaCreateDatasetRequest: 
+  type: object
+  required: 
+    - name
+    - owner
+  properties:
+    name:
+      type: string
+      description: Dataset name
+      example: DatasetNo1
+    description:
+      type: string
+      description: Description of Dataset
+      example: The Dataset for Data X
+    customProperties:
+      type: object
+      description: |-  
+        User-specified Key/Value parameter
+        <ul>
+          <li>The following characters cannot be specified for customProperties keys</li>
+          <ul>
+            <li>String starting with vdlSpec</li>
+          </ul>
+          <li>The following characters cannot be specified for customProperties keys and values</li>
+          <ul>
+            <li>String containing =</li>
+          </ul>
+        </ul>
+      additionalProperties:
+        type: string
+      example: 
+        key1: value1
+    dataType:
+      type: string
+      description: DataType name
+      enum: [stream, batch]
+      example: stream
+    tags:
+      type: array
+      description: List of tags to be associated with the dataset
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: |-
+              Tag ID
+              <ul>
+                <li>Only existing tag can be specified for tag ID</li>
+                <li>Only tags created by the owner can be specified for the tag ID</li>
+              </ul>
+            pattern: '^.+_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+            example: weather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms:
+      type: array
+      description: List of terms to be associated with the dataset
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: |-
+              Term name
+              <ul>
+                <li>Only existing term can be specified for term name</li>
+              </ul>
+            example: sensitive
+    owner:
+      type: string
+      description: Dataset owner information (Data provider ID)
+      pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      example: e13a4776-b39d-f016-1365-a2113a11023f
+    vdlSpec:
+      type: object
+      description: Spec definition of the dataset (directive to VDL)
+      properties:
+        vdlPath:
+          type: string
+          description: |-
+            Dataset vdl path
+            <ul>
+              <li>Notation in absolute path (start with "/")</li>
+              <li>Must be under the directory assigned to the data provider</li>
+              <li>An error occurs if a value is set when the data type is stream</li>
+              <li>Required if the data type is batch</li>
+            </ul>
+          pattern: '^/.{0,1026}[^/]$'
+          example: /providerA/sourceX/file
+        topic:
+          type: string
+          description: |-
+            Topic Name
+            <ul>
+              <li>An error occurs if a value is set when the data type is batch</li>
+              <li>Required if the data type is stream</li>
+            </ul>
+          example: companyA_datasourceA.topicA
+        isReady:
+          type: boolean
+          description: |-
+            Available flag (Spec definition)
+            <ul>
+              <li>A flag used by the data provider to indicate the readiness of the dataset to the data users</li>
+              <li>An error occurs if a value is set when the data type is stream</li>
+            </ul>
+          default: false
+          example: true
+        activeSync:
+          type: boolean
+          description: |-
+            ActiveSync status (Spec definition)
+            <ul>
+              <li>Enable (true) or disable (false)</li>
+              <li>An error occurs if a value is set when the data type is stream</li>
+            </ul>
+          default: false
+          example: true
+        pathOption:
+          type: object
+          description: |-
+            Path option information (Spec definition)
+            <ul>
+              <li>Specify them by key/value.</li>
+              <li>Only the keys set in the datahub.dataset.pathoption can be specified.</li>
+            </ul>
+          additionalProperties:
+            type: string
+          example:
+            alluxio.user.file.metadata.load.type: ONCE
+
+schemaUpdateDatasetRequest: 
+  type: object
+  properties:
+    description:
+      type: string
+      description: Description of the dataset
+      example: changedDescription
+    customProperties:
+      type: object
+      description: |-  
+        User-specified Key/Values parameter
+        <ul>
+          <li>The following characters cannot be specified for customProperties keys</li>
+          <ul>
+            <li>String starting with vdlSpec</li>
+          </ul>
+          <li>The following characters cannot be specified for customProperties keys and values</li>
+          <ul>
+            <li>String containing =</li>
+          </ul>
+        </ul>
+      additionalProperties:
+        type: string
+      example: 
+        key2: value2
+    tags:
+      type: array
+      description: List of tags to be associated with the dataset
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: |-
+              Tag ID
+              <ul>
+                <li>Only existing tag can be specified for tag ID</li>
+                <li>Only tags created by the owner can be specified for the tag ID</li>
+              </ul>
+            pattern: '^.+_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+            example: changedweather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms:
+      type: array
+      description: List of terms to be associated with the dataset
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: |-
+              Term name
+              <ul>
+                <li>Only existing term can be specified for term name</li>
+              </ul>
+            example: termName
+    vdlSpec:
+      type: object
+      description: Spec definition of the dataset (directive to VDL)
+      properties:
+        isReady:
+          type: boolean
+          description: |-
+            Available flag (Spec definition)
+            <ul>
+              <li>A flag used by the data provider to indicate the readiness of the dataset to the data users</li>
+              <li>If the data type is stream and a value is set, an error will occur</li>
+            </ul>
+          default: false
+          example: true
+        activeSync:
+          type: boolean
+          description: |-
+            ActiveSync status (Spec definition)
+            <ul>
+              <li>Enable (true) or disable (false)</li>
+              <li>If the data type is stream and a value is set, an error will occur</li>
+            </ul>
+          default: false
+          example: false
+        pathOption:
+          type: object
+          description: |-
+            Path option information (Spec definition)
+            <ul>
+              <li>Specify them by key/value.</li>
+              <li>Only the keys set in the datahub.dataset.pathoption can be specified.</li>
+            </ul>
+          additionalProperties:
+            type: string
+          example:
+            alluxio.user.file.metadata.load.type: ALWAYS

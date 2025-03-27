@@ -1,0 +1,12 @@
+[Unit]
+Description=Search weather API
+After=network.target
+
+[Service]
+User=digiline
+ExecStart=/opt/search-weather-api/bin/bootstrap.sh
+SuccessExitStatus=143
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

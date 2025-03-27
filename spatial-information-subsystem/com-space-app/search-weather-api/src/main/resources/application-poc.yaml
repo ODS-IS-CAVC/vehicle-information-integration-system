@@ -1,0 +1,6 @@
+server:
+  port: 8082
+
+axispot:
+  storeNodeInfo: "clustercfg.poc-space-redis-halex.soila4.apne1.cache.amazonaws.com:6379"
+  bitPattern: "tttttttttttttttttttttttttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:38:ZFXY"

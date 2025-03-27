@@ -1,0 +1,105 @@
+- name: install kubernetes
+  command:
+    cmd: 'python3 -m pip install kubernetes'
+    chdir: $HOME/
+
+- name: download kubectl v1.31
+  get_url:
+    url: https://s3.us-west-2.amazonaws.com/amazon-eks/1.31.0/2024-09-12/bin/linux/amd64/kubectl
+    dest: $HOME/kubectl
+
+- name: chmod kubectl
+  command:
+    cmd: 'chmod +x $HOME/kubectl'
+    chdir: $HOME/
+
+- name: mkdir /bin directory
+  file:
+    path: $HOME/bin
+    state: directory
+    mode: '0755'
+
+- name: copy kubectl
+  copy:
+    src: $HOME/kubectl
+    dest: $HOME/bin/kubectl
+    remote_src: yes
+    mode: '0755'
+  environment:
+    PATH: $HOME/bin:$PATH
+
+- name: check kubectl version
+  command:
+    cmd: 'kubectl version --client'
+    chdir: $HOME/
+  register: kubectl_version
+
+- debug: msg="{{ kubectl_version.stdout }}"
+
+- name: copy eksctl cluster yaml file
+  copy:
+    src: "{{ terraform_directory }}/vdl/eks/outputs/{{ env }}_vdl_eks_cluster.yaml"
+    dest: $HOME/
+
+- name: copy eksctl nodegroup yaml file
+  copy:
+    src: "{{ terraform_directory }}/vdl/eks/outputs/{{ env }}_vdl_eks_nodegroup.yaml"
+    dest: ~/
+
+- name: copy keypair file
+  copy:
+    src: "{{ terraform_directory }}/vdl/eks/outputs/iia-digiline-com-keypair.pub"
+    dest: ~/
+
+- name: download eksctl
+  get_url:
+    url: https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz
+    dest: $HOME/
+
+- name: unarchive eksctl
+  unarchive:
+    src: $HOME/eksctl_Linux_amd64.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: copy eksctl
+  copy:
+    src: /tmp/eksctl
+    dest: /usr/local/bin
+    remote_src: yes
+    mode: 0755
+  become: yes
+
+- name: create eks cluster
+  command:
+    cmd: 'eksctl create cluster -f ./{{ env }}_vdl_eks_cluster.yaml'
+    chdir: $HOME/
+  register: eks_cluster
+  ignore_errors: true
+
+- debug: msg="{{ eks_cluster.stdout }}"
+
+- name: update kubeconfig
+  command:
+    cmd: 'aws eks update-kubeconfig --region ap-northeast-1 --name {{ env }}-vdl-eks-cluster-v2'
+    chdir: $HOME/
+
+- name: download network add-on
+  get_url:
+    url: https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
+    dest: $HOME/
+
+- name: add network add-on
+  shell: |
+    kubectl apply -f ./weave-daemonset-k8s.yaml
+  args:
+    chdir: $HOME/
+
+- name: create eks nodegroup
+  command:
+    cmd: 'eksctl create nodegroup -f ./{{ env }}_vdl_eks_nodegroup.yaml'
+    chdir: $HOME/
+  register: eks_nodegroup
+  ignore_errors: true
+
+- debug: msg="{{ eks_nodegroup.stdout }}"

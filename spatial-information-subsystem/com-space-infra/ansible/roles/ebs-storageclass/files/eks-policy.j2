@@ -1,0 +1,17 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: {{ env }}-vdl-eks-cluster-v2
+  region: ap-northeast-1
+  version: "1.31" 
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - metadata:
+      name: ebs-csi-controller-sa
+      namespace: kube-system
+    attachPolicyARNs:
+    - "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy" 
+    roleName: {{ env }}_AmazonEKS_EBS_CSI_DriverRole_v2
+    roleOnly: true

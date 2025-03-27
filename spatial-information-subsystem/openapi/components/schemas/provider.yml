@@ -1,0 +1,138 @@
+schemaProvider:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Data provider ID
+      format: uuid
+      example: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    bindPoint:
+      type: string
+      description: Bind point name
+      example: coopX
+    topicPrefix:
+      type: string
+      description: |-
+        topicPrefix.
+        <ul>
+          <li>To maintain compatibility with the v1.0 API, this is not a required value (NULL is allowed). 
+          <li>However, please note that if this item is null, the stream data virtual integration platform will not be able to work properly with the VDL.</li>
+        </ul>
+      example: topicPrefix name      
+    name:
+      type: string
+      description: Data provider name
+      example: company
+    displayName:
+      type: string
+      description: Data provider display name
+      example: Enterprise X
+    description:
+      type: string
+      description: Description
+      example: The bind point for enterprise X.
+    soft_deleted:
+      type: boolean
+      description: |-
+        Logical delete flag.
+        <ul>
+          <li>This flag does not affect the operation of VDL.</li>
+        </ul>
+      example: false
+    dataspaceCacheEnabled:
+      type: boolean
+      example: false
+
+schemaProviderCreateRequest:
+  type: object
+  required: 
+    - bindPoint
+    - name
+  properties:
+    bindPoint:
+      type: string
+      description: |- 
+        Bind point name.
+        <ul>
+          <li>Bind Point must be unique throughout VDL.</li>
+          <li>Acceptable strings = POSIX compliant + string length between 2 and 32 characters.</li>
+        </ul>
+      pattern: '^[a-zA-Z0-9][a-zA-Z0-9._-]{1,31}$'
+      example: coopX
+    name: 
+      type: string
+      description: |- 
+        Data provider name.
+        <ul>
+          <li>Data provider name must be unique throughout VDL.</li>
+          <li>Specify the value to be set for the company name claim on the ID token.</li>
+        </ul>
+      pattern: '^[a-zA-Z0-9][a-zA-Z0-9._-]{1,31}$'
+      example: company
+    topicPrefix: 
+      type: string
+      nullable: true
+      description: |- 
+        Topic prefix name.
+        <ul>
+          <li>Topic prefix name must be unique throughout VDL.</li>
+          <li>To maintain compatibility with version 1.0 of the API, do not make this a required value (allow NULL).</li>
+          <li>if this item is NULL, the PEP function (VDL integration) of the Stream Data Virtual Integration Platform will not function correctly.</li>
+        </ul>
+      default: NULL  
+      pattern: '^[a-zA-Z0-9][a-zA-Z0-9-]{1,36}$'
+      example: topicPrefixA
+    displayName:
+      type: string
+      nullable: true
+      description: |-
+        Data provider display name.
+        <ul>
+          <li>String length is 1024 characters or less.</li>
+        </ul>
+      default: NULL
+      pattern: '^.{0,1024}$'
+      example: Enterprise X
+    description:
+      type: string
+      nullable: true
+      description: |-
+        Description of data provider.
+        <ul>
+          <li>String length is 1024 characters or less.</li>
+        </ul>
+      default: NULL
+      pattern: '^.{0,1024}$'
+      example: The bind point for enterprise X.
+    dataspaceCacheEnabled: 
+      type: boolean
+      default: false  
+      example: false
+
+schemaProviderUpdateRequest: 
+  type: object
+  properties:
+    displayName:
+      type: string
+      nullable: true
+      description: Data provider display name
+      default: NULL
+      pattern: '^.{0,1024}$'
+      example: Enterprise X
+    description:
+      type: string
+      nullable: true
+      description: Description
+      default: NULL
+      pattern: '^.{0,1024}$'
+      example: The bind point for enterprise X.
+    soft_deleted:
+      type: boolean
+      description: Logical delete flag
+      default: false
+      example: false
+    dataspaceCacheEnabled:
+      type: boolean
+      description: Enabling or Disabling Cache When Retrieving Data from Other Data Platforms
+      default: false
+      example: false

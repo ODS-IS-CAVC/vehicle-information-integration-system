@@ -1,0 +1,9 @@
+# request.timeoutを1秒に設定しておく
+vdl:
+  api:
+    token:
+      request:
+        timeout: 1000
+    data:
+      request:
+        timeout: 1000

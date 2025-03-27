@@ -1,0 +1,17 @@
+# masking.enabledをtrueにする
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection: DEBUG
+vehicle:
+  tier4:
+    digital-zenso-api:
+      vehicles:
+        response:
+          save:
+            masking:
+              enabled: true
+              query: >
+                .attribute[] |= (
+                    .vehicleName="***"
+                )

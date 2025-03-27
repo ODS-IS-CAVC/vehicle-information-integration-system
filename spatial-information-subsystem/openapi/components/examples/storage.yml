@@ -1,0 +1,40 @@
+storage_create_sample: 
+  summary: simple storage create request
+  value:
+    providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    name: s3
+    ufs: s3://bucket/dir
+    options:
+      s3a.accessKeyId: testaccesskey
+      s3a.secretKey: testsecretkey
+storage_update_sample: 
+  summary: simple storage update request
+  value:
+    options:
+      s3a.accessKeyId: new
+      s3a.secretKey: new
+
+storage_get_sample: 
+  id: a9138f3e-3f95-4bc5-ba54-affa32080d26
+  providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+  name: s3
+  ufs: s3://bucket/dir
+  options:
+    s3a.accessKeyId: testaccesskey
+    s3a.secretKey: testsecretkey
+  status: NotBound
+storage_list_sample: 
+  - id: a9138f3e-3f95-4bc5-ba54-affa32080d26
+    providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    name: s3
+    ufs: s3://bucket/dir
+    options:
+      s3a.accessKeyId: testaccesskey
+      s3a.secretKey: testsecretkey
+    status: NotBound
+  - id: 71f93b74-21db-4cf1-8f04-cb565341b3b8
+    providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    name: hdfs
+    ufs: hdfs://192.168.0.1:9000/dir
+    options: null
+    status: NotBound

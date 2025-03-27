@@ -1,0 +1,105 @@
+[servers]
+aws-digiline-dev-vdl-ec2-eks-work
+aws-digiline-poc-vdl-ec2-eks-work
+aws-digiline-dev-space-ec2-azASpatialIdSearch
+aws-digiline-dev-space-ec2-azCSpatialIdSearch
+aws-digiline-poc-space-ec2-azASpatialIdSearch
+aws-digiline-poc-space-ec2-azCSpatialIdSearch
+aws-digiline-dev-collection-ec2-azATier4
+aws-digiline-dev-collection-ec2-azAHalex
+aws-digiline-poc-collection-ec2-azATier4
+aws-digiline-poc-collection-ec2-azAHalex
+
+[dev-vdl]
+aws-digiline-dev-vdl-ec2-eks-work-v2
+
+[poc-vdl]
+aws-digiline-poc-vdl-ec2-eks-work-v2
+
+[dev-space-SpatialIdSearch]
+aws-digiline-dev-space-ec2-azASpatialIdSearch
+aws-digiline-dev-space-ec2-azCSpatialIdSearch
+
+[poc-space-SpatialIdSearch]
+aws-digiline-poc-space-ec2-azASpatialIdSearch
+aws-digiline-poc-space-ec2-azCSpatialIdSearch
+
+[dev-collection-tier4]
+aws-digiline-dev-collection-ec2-azATier4
+
+[dev-collection-halex]
+aws-digiline-dev-collection-ec2-azAHalex
+
+[poc-collection-tier4]
+aws-digiline-poc-collection-ec2-azATier4
+
+[poc-collection-halex]
+aws-digiline-poc-collection-ec2-azAHalex
+
+[all:vars]
+aws_access_key_id="<AWS ACCESS KEY ID>"
+aws_secret_key="<AWS SECRET KEY>"
+
+[dev-vdl:vars]
+terraform_directory="~/com-space-infra/terraform"
+env="dev"
+subnet_cidr="172.16.176.0/20"
+eks_work_ip="172.16.176.11"
+keycloak_client_secret="<KEYCLOAK CLIENT SECRET>"
+keycloak_platformer_username="<KEYCLOAK PLATFORMER USERNAME>"
+keycloak_user_password="<KEYCLOAK USER PASSWORD>"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_python_interpreter=/usr/bin/python3
+
+[poc-vdl:vars]
+terraform_directory="~/com-space-infra/terraform"
+env="poc"
+subnet_cidr="172.17.176.0/20"
+eks_work_ip="172.17.176.11"
+keycloak_client_secret="<KEYCLOAK CLIENT SECRET>"
+keycloak_platformer_username="<KEYCLOAK PLATFORMER USERNAME>"
+keycloak_user_password="<KEYCLOAK USER PASSWORD>"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_python_interpreter=/usr/bin/python3
+
+[dev-space-SpatialIdSearch:vars]
+env="dev"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_python_interpreter=/usr/bin/python3
+vehicle_port=8081
+vehicle_redis="clustercfg.dev-space-redis-tier4.soila4.apne1.cache.amazonaws.com:6379"
+vehicle_bit_pattern="tttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:52:ZFXY"
+weather_port=8082
+weather_redis="clustercfg.dev-space-redis-halex.soila4.apne1.cache.amazonaws.com:6379"
+weather_bit_pattern="tttttttttttttttttttttttttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:38:ZFXY"
+
+[poc-space-SpatialIdSearch:vars]
+env="poc"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_python_interpreter=/usr/bin/python3
+vehicle_port=8081
+vehicle_redis="clustercfg.poc-space-redis-tier4.soila4.apne1.cache.amazonaws.com:6379"
+vehicle_bit_pattern="tttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:52:ZFXY"
+weather_port=8082
+weather_redis="clustercfg.poc-space-redis-halex.soila4.apne1.cache.amazonaws.com:6379"
+weather_bit_pattern="tttttttttttttttttttttttttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:38:ZFXY"
+
+[dev-collection-tier4:vars]
+env="dev"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_python_interpreter=/usr/bin/python3
+
+[dev-collection-halex:vars]
+env="dev"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_python_interpreter=/usr/bin/python3
+
+[poc-collection-tier4:vars]
+env="poc"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_python_interpreter=/usr/bin/python3
+
+[poc-collection-halex:vars]
+env="poc"
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+ansible_python_interpreter=/usr/bin/python3

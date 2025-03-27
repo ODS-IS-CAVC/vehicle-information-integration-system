@@ -1,0 +1,23 @@
+{
+  "name": "dmp digi line c2",
+  "entryPoints": [
+    "../backend/src"
+  ],
+  "out": "./docs",
+  "entryPointStrategy": "expand",
+  "exclude": [
+    "../backend/src/dataSource.ts",
+    "../backend/src/main.ts",
+    "../backend/src/serverless.ts",
+    "../backend/src/shares/**/*",
+    "../backend/src/consts/*",
+    "../backend/src/ouranos-gex-lib/**/*",
+    "**/*spec.ts",
+    "**/spec/**"
+  ],
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "compilerOptions": {
+    "declaration": false
+  },
+}

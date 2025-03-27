@@ -1,0 +1,724 @@
+policies_{providerId}:
+  summary: This API group is related to authorization rule management function.
+  post:
+    tags:
+      - policy
+    operationId: policyCreate
+    summary: Create the authorization rule
+    description: |-
+      Create authorization rule.<br>
+      The authorization rule consists of target resource type ("type" in the definition below), rule type ("ruleType"), and authorization condition ("rule").
+      The authorization rule is specified by the policy parameter of the request body.<br>
+      When accessing resources, authorization rules that match the authorization condition are evaluated, and the access is permitted or denied accrdong to the rule type (allow/deny).<br>
+      There are four elements in the authorization condition.
+      <ul>
+        <li>object: specification of the resource to be authorized
+        <li>subject: user accessing the resource
+        <li>context: date and time or external conditions
+        <li>method: action on resource
+      </ul>
+      Each element of the authorization condition and the items within each element are evaluated as logical product (AND), with some exceptions.<br>
+      Items within each element are determined using one of the following comparison methods:
+      <ul>
+        <li>exact match
+        <li>regular expression match
+        <li>time comparison
+        <li>numerical comparison
+        <li>key-value match
+      </ul>
+      <br>
+      Request example: POST /api/v1/policies/{providerId}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathProviderId'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/policy.yml#/schemaCreatePolicyRequest'
+          examples:
+            create_sample:
+              $ref: '../components/examples/policy.yml#/policy_create_sample'
+            parentDataset_sample:
+              $ref: '../components/examples/policy.yml#/policy_parentDataset_sample'
+            relatedDataset_sample:
+              $ref: '../components/examples/policy.yml#/policy_relatedDataset_sample'  
+    responses:
+      '201':
+        description: Return the created rule ID.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: rule ID
+                  format: uuid
+      '400':
+        description: |-
+          The required parameters for the request do not exist, or the input format is invalid.<br>
+          The request body does not fit the JSON schema.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: The target providerId does not exist.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+
+  get:
+    tags:
+      - policy
+    operationId: policyList
+    summary: List authorization rules
+    description: |-
+      List authorization rules.<br>
+      Only resources authorized by authorization function are returned.<br><br>
+      Request example: GET /api/v1/policies/{providerId}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathProviderId'
+    responses:
+      '200':
+        description: |-
+          Return a list of authorization rule information.
+          <ul>
+            <li>If the target resource does not exist, or if authorization function returns NG as an authorization decision result for all resources, an empty array is returned.</li>
+          </ul>
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rules:
+                  type: array
+                  description: list of rules
+                  items:
+                    $ref: '../components/schemas/policy.yml#/schemaPolicyResponse'
+            example:
+              $ref: '../components/examples/policy.yml#/policy_list_sample'
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '500':
+        description: An error occurred in the server's internal processing.
+
+policies_{providerId}_{ruleId}:
+  summary: This API group is related to authorization rule management function.
+  get:
+    tags:
+      - policy
+    operationId: policyRead
+    summary: Get the authorization rule
+    description: |-
+      Get the authorization rule.<br><br>
+      Request example: GET /api/v1/policies/{providerId}/{ruleId}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathProviderId'
+      - $ref: '../components/parameters/param.yml#/pathRuleId'
+    responses:
+      '200':
+        description: Return authorization rule information.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/policy.yml#/schemaPolicyResponse'
+            example:
+              $ref: '../components/examples/policy.yml#/policy_get_sample'
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '500':
+        description: An error occurred in the server's internal processing.
+
+  patch:
+    tags:
+      - policy
+    operationId: policyUpdate
+    summary: Update the authorization rule
+    description: |-
+      Update the authorization rule.<br>
+      Specify the objects to be changed (Objects not specified remain unchanged).<br>
+      ResourceType(type) cannot be changed.<br><br>
+      Request example: PATCH /api/v1/policies/{providerId}/{ruleId}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathProviderId'
+      - $ref: '../components/parameters/param.yml#/pathRuleId'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/policy.yml#/schemaUpdatePolicyRequest'
+          examples:
+            update_sample:
+              $ref: '../components/examples/policy.yml#/policy_update_sample'
+    responses:
+      '204':
+        description: Responds that the resource is successfully updated.
+      '400':
+        description: |-
+          The required parameters for the request do not exist, or the input format is invalid.<br>
+          The request body does not fit the JSON schema.<br>
+          The request changing the ResourceType(type).
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+
+  delete:
+    tags:
+      - policy
+    operationId: policyDelete
+    summary: Delete the authorization rule
+    description: |-
+      Delete the authorization rule.<br><br>
+      Request example: DELETE /api/v1/policies/{providerId}/{ruleId}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathProviderId'
+      - $ref: '../components/parameters/param.yml#/pathRuleId'
+    responses:
+      '204':
+        description: Responds that the resource has been successfully deleted.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+
+admin_policies_{providerId}:
+  summary: This API group is related to authorization default rule management function.
+  post:
+    tags:
+      - policyDefault
+    operationId: defaultPolicyCreate
+    summary: Create default rule
+    description: |-
+      Create default rules for data provider.<br><br>
+      Request example: POST /api/v1/admin/policies/{providerId}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathProviderId'
+    responses:
+      '204':
+        description: Responds that the resource has been successfully created.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: The target providerId does not exist.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '409':
+        description: |-
+          default rule already exists.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+
+  delete:
+    tags:
+      - policyDefault
+    operationId: defaultPolicyDelete
+    summary: Delete default rule
+    description: |-
+      Delete default rules for data provider.<br><br>
+      Request example: DELETE /api/v1/admin/policies/{providerId}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathProviderId'
+    responses:
+      '204':
+        description: Responds that the resource has been successfully deleted.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: There is no default rule.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '409':
+        description: |-
+          There is a authorization rule for the target data provider.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+
+admin_policies:
+  summary: This API group is related to authorization default rule management function.
+  get:
+    tags:
+      - policyDefault
+    operationId: defaultPolicyList
+    summary: List default rules
+    description: |-
+      List default rules for data provider.<br><br>
+      Request example: GET /api/v1/admin/policies/
+    responses:
+      '200':
+        description: |-
+          Return a list of authorization rule information.
+          <ul>
+            <li>If the target resource does not exist, or if authorization function returns NG as an authorization decision result for all resources, an empty array is returned.</li>
+          </ul>
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '../components/schemas/policy.yml#/schemaDefaultRuleListResponse'
+            example:
+              $ref: '../components/examples/policy.yml#/policy_default_rule_list_sample'
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: The target providerId does not exist.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '409':
+        description: |-
+          default rule already exists.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+
+admin_context:
+  summary: This API group is related to authorization context management function.
+  put:
+    tags:
+      - policyContext
+    operationId: policyContextCreate
+    summary: Create policy context
+    description: |-
+      Create context.<br><br>
+      Request example: PUT /api/v1/admin/context
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/policy.yml#/schemaCreateContextRequest'
+          examples:
+            update_sample:
+              $ref: '../components/examples/policy.yml#/create_context_sample'
+    responses:
+      '201':
+        description: Return the created context.
+        content:
+          application/json:
+            schema:
+            type: object
+            properties:
+              status:
+                type: string
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: The target providerId does not exist.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '409':
+        description: |-
+          default rule already exists.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+  get:
+    tags:
+      - policyContext
+    operationId: policyContextGet
+    summary: Get policy context
+    description: |-
+      Get context.<br><br>
+      Request example: GET /api/v1/admin/context
+    responses:
+      '200':
+        description: get the created context.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/policy.yml#/schemaGetContextResponse'
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: The target providerId does not exist.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '409':
+        description: |-
+          default rule already exists.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+  delete:
+    tags:
+      - policyContext
+    operationId: policyContextDelete
+    summary: DELETE policy context
+    description: |-
+      Delete context.<br><br>
+      Request example: Delete /api/v1/admin/context
+    responses:
+      '204':
+        description: Responds that the resource has been successfully deleted.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: The target providerId does not exist.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '409':
+        description: |-
+          default rule already exists.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.
+      '500':
+        description: An error occurred in the server's internal processing.
+      '503':
+        description: |-
+          Server is down or overloaded.<br>
+          Conflicting commits to gitlab.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Conflicts with current resources.                          

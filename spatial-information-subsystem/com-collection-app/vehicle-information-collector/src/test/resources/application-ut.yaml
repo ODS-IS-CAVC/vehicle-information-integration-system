@@ -1,0 +1,142 @@
+# 車両情報収集AP
+application:
+  # タイムゾーン
+  time-zone: "Asia/Tokyo"
+  # spring-scheduler
+  scheduler:
+    # 5秒ごとに実行する場合
+    # cron: "*/5 * * * * ?"
+    # 自動実行しない場合
+    cron: "-"
+    # cronのタイムゾーン
+    zone: ${application.time-zone}
+
+# spring-boot
+spring:
+  application:
+    name: vehicle-information-collector
+
+# spring-web
+server:
+  port: 8082
+
+# logging
+logging:
+  level:
+    root: DEBUG
+    com.nttdata.vehicleinfo.collection.timespatialindexcreator: DEBUG
+    jp.co.ntt.sic: DEBUG
+    org.springframework.web: INFO
+#  file:
+#     name: ./logs/${spring.application.name}.log
+
+# spring-actuator
+# 本番環境では設定を見直すこと
+management:
+  server:
+    port: ${server.port}
+  endpoints:
+    web:
+      exposure:
+        # すべてを無効化する場合
+        # include: ""
+        # すべてを許可する場合
+        include: "*"
+
+
+# Prefix
+# 環境変数の競合を避けるため
+vehicle:
+  # auth
+  auth-api:
+    login:
+      # keyはgit管理しないため、
+      # 環境変数「VEHICLE_AUTH_API_LOGIN_KEY」にて設定すること
+      key: ${VEHICLE_AUTH_API_LOGIN_KEY:}
+      request:
+        endpoint: https://[AUTH_API_HOST]/auth/login
+        parameters:
+          # operator-account-idはgit管理しないため、
+          # 環境変数「VEHICLE_AUTH_API_LOGIN_REQUEST_PARAMETERS_OPERATOR_ACCOUNT_ID」にて設定すること
+          operator-account-id: ${VEHICLE_AUTH_API_LOGIN_REQUEST_PARAMETERS_OPERATOR_ACCOUNT_ID:}
+          # account-passwordはgit管理しないため、
+          # 環境変数「VEHICLE_AUTH_API_LOGIN_REQUEST_PARAMETERS_ACCOUNT_PASSWORD」にて設定すること
+          account-password: ${VEHICLE_AUTH_API_LOGIN_REQUEST_PARAMETERS_ACCOUNT_PASSWORD:}
+        timeout: 10000
+  # Tier4
+  tier4:
+    digital-zenso-api:
+      # keyはgit管理しないため、
+      # 環境変数「VEHICLE_TIER4_DIGITAL_ZENSO_API_KEY」にて設定すること
+      key: ${VEHICLE_TIER4_DIGITAL_ZENSO_API_KEY:}
+      vehicles:
+        # time-zoneはレスポンス保存時のディレクトリ名とファイル名の日時に利用する
+        time-zone: "Asia/Tokyo"
+        request:
+          endpoint: https://[DIGITAL_ZENSO_API_HOST]/vehicles
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          timeout: 1000
+          retry:
+            # リトライのタイムアウト（ミリ秒）
+            timeout: 4000
+            # 失敗した後の待機時間（ミリ秒）
+            fixed-backoff: 1000
+        response:
+          save:
+            directory: build/tmp/data/tier4-digitalzensoapi/vehicles
+            masking:
+              # マスク処理
+              # false(無効）
+              enabled: false
+              # 実行するjqクエリ
+              query: ""
+      # 認証システムが準備できていない場合の設定のため本番環境ではfalseにすること
+      debug-auth-skip: false
+
+  # Axispot
+  axispot:
+    geotemp:
+      # axispot.geotemp.time-zoneを切り替えた場合はAxispotのデータをリセットすること
+      time-zone: "UTC"
+      config: build/tmp/axispot/geotempConfig.properties
+      save:
+        retry:
+          # Axispot格納処理のタイムアウト（ミリ秒）
+          timeout: 3100
+          # 失敗した後の待機時間（ミリ秒）
+          fixed-backoff: 1000
+
+  # VDL
+  vdl:
+    api:
+      token:
+        request:
+          endpoint: https://[VDL_HOST]:[VDL_PORT]/realms/vdl/protocol/openid-connect/token
+          parameters:
+            client-id: vdl_client
+            # client-secretはgit管理しないため、
+            # 環境変数「VEHICLE_VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET」にて設定すること
+            client-secret: ${VEHICLE_VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET:}
+            username: tier4-admin
+            # passwordはgit管理しないため、
+            # 環境変数「VEHICLE_VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD」にて設定すること
+            password: ${VEHICLE_VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD:}
+            grant-type: password
+            scope: openid
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          timeout: 10000
+          # 自己署名証明書を利用する場合は検証処理をスキップする必要があるためfalseとする
+          verify-ssl: false
+      data:
+        request:
+          endpoint: https://[VDL_HOST]:[VDL_PORT]/api/v1/data
+          vdl-path-prefix: /provider-tier4/vehicle/vehicle-information-collector/data/tier4-digitalzensoapi/vehicles
+          # HTTPリクエストのタイムアウト（ミリ秒）
+          timeout: 10000
+          # 自己署名証明書を利用する場合は検証処理をスキップする必要があるためfalseとする
+          verify-ssl: false
+          retry:
+            # VDL格納処理のタイムアウト（ミリ秒）
+            timeout: 3100
+            # 失敗した後の待機時間（ミリ秒）
+            fixed-backoff: 1000

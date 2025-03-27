@@ -1,0 +1,115 @@
+caches_{vdlPath}: 
+  summary: This API group is related to the Cache data management function.(This groups of API require vdlPath to be specified as a request parameter.)
+  post:
+    tags:
+      - cache
+    operationId: cacheCreate
+    summary: Create the cache data
+    description: |-
+      Create the cache data.
+      <ul>
+        <li>If the VDL path to be cached in is a file, cache in is performed for the file.</li>
+        <li>If the VDL path to be cached in is a directory, cache in is performed for all files and directories under the directory.</li>
+      </ul>
+      Request example: POST /api/v1/caches/{vdlPath}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+    responses:
+      '200':
+        description: Responds that the cache data process was successful.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                result:
+                  type: string
+                  description: Cache processing result
+                  example: /coopX/s3/dir/file1 already in Alluxio fully\\n/coopX/s3/dir/file2 loaded\\n/coopX/s3/dir/file3 already in Alluxio fully
+            example:
+              $ref: '../components/examples/cache.yml#/cache_create_sample'
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+  delete:
+    tags:
+      - cache
+    operationId: cacheDelete
+    summary: Free the cache data
+    description: |-
+      Free the cache data.
+      <ul>
+        <li>If the VDL path to be cached out is a file, cache out the file.</li>
+        <li>If the VDL path to be cached out is a directory, cache out is performed for all files and directories under the directory.</li>
+      </ul>
+      Request example: DELETE /api/v1/caches/{vdlPath}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+    responses:
+      '204':
+        description: Responds that the resource has been successfully deleted (cached out).
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.

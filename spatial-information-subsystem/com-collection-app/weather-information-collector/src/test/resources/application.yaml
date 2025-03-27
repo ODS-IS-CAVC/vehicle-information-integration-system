@@ -1,0 +1,5 @@
+# spring
+spring:
+  profiles:
+    active: ut
+

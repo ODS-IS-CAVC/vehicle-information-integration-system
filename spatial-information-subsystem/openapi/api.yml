@@ -1,0 +1,134 @@
+openapi: 3.0.1
+
+info:
+  title: Virtual datalake API gateway
+  version: "20250310"
+
+servers:
+  - url: https://localhost:8090/api/v1
+
+tags:
+  - name: health
+    description: Health Check
+  - name: config
+    description: VDL Config
+  - name: provider
+    description: Data Provider Information
+  - name: data source
+    description: Data Source Information
+  - name: data
+    description: Actual data
+  - name: cache
+    description: Cache data
+  - name: metadata
+    description: Technical Metadata
+  - name: dataset
+    description: Dataset
+  - name: tag
+    description: Tag
+  - name: term
+    description: Business Term
+  - name: job
+    description: Data Job
+  - name: lineage
+    description: Data Lineage
+  - name: policy
+    description: Authorization Rule
+  - name: policyDefault
+    description: Authorization Default Rule
+
+security:
+  - bearer: []
+    ApiKeyAuth: []
+
+paths:
+  /admin/health:
+    $ref: './paths/health.yml#/admin_health'
+  /health:
+    $ref: './paths/health.yml#/health'
+  /admin/config:
+    $ref: './paths/config.yml#/admin_config'
+  /admin/providers:
+    $ref: './paths/provider.yml#/admin_providers'
+  /providers:
+    $ref: './paths/provider.yml#/providers'
+  /providers/{providerId}:
+    $ref: './paths/provider.yml#/providers_{providerId}'
+  /admin/providers/{providerId}:
+    $ref: './paths/provider.yml#/admin_providers_{providerId}'
+  /storages:
+    $ref: './paths/storage.yml#/storages'
+  /storages/{storageId}:
+    $ref: './paths/storage.yml#/storages_{storageId}'
+  /storages/{storageId}/{action}:
+    $ref: './paths/storage.yml#/storages_{storageId}_{action}'
+  /data/{vdlPath}:
+    $ref: './paths/data.yml#/data_{vdlPath}'
+  /multipartUpload/{vdlPath}:
+    $ref: './paths/data.yml#/multipartUpload_{vdlPath}'
+  /multipartUploadIncompletedParts/{vdlPath}:
+    $ref: './paths/data.yml#/multipartUploadIncompletedParts_{vdlPath}'
+  /multipartUploadComplete/{vdlPath}:
+    $ref: './paths/data.yml#/multipartUploadComplete_{vdlPath}'
+  /caches/{vdlPath}:
+    $ref: './paths/cache.yml#/caches_{vdlPath}'
+  /metadata/{vdlPath}:
+    $ref: './paths/metadata.yml#/metadata_{vdlPath}'
+  /metadata/search/{vdlPath}:
+    $ref: './paths/metadata.yml#/metadata_search_{vdlPath}'
+  /datasets:
+    $ref: './paths/dataset.yml#/datasets'
+  /datasets/search:
+    $ref: './paths/dataset.yml#/datasets_search'
+  /datasets/{datasetId}:
+    $ref: './paths/dataset.yml#/datasets_{datasetId}'
+  /datasets/{datasetId}/{action}:
+    $ref: './paths/dataset.yml#/datasets_{datasetId}_{action}'
+  /tags:
+    $ref: './paths/tag.yml#/tags'
+  /tags/search:
+    $ref: './paths/tag.yml#/tags_search'
+  /tags/{tagId}:
+    $ref: './paths/tag.yml#/tags_{tagId}'
+  /admin/terms:
+    $ref: './paths/term.yml#/admin_terms'
+  /terms/search:
+    $ref: './paths/term.yml#/terms_search'
+  /terms/{termName}:
+    $ref: './paths/term.yml#/terms_{termName}'
+  /admin/terms/{termName}:
+    $ref: './paths/term.yml#/admin_terms_{termName}'
+  /jobs:
+    $ref: './paths/job.yml#/jobs'
+  /jobs/search:
+    $ref: './paths/job.yml#/jobs_search'
+  /jobs/{jobId}:
+    $ref: './paths/job.yml#/jobs_{jobId}'
+  /lineages:
+    $ref: './paths/lineage.yml#/lineages'
+  /lineages/search:
+    $ref: './paths/lineage.yml#/lineages_search'
+  /lineages/search/{datasetIdOrDatajobId}:
+    $ref: './paths/lineage.yml#/lineages_search_{datasetIdOrDatajobId}'
+  /policies/{providerId}:
+    $ref: './paths/policy.yml#/policies_{providerId}'
+  /policies/{providerId}/{ruleId}:
+    $ref: './paths/policy.yml#/policies_{providerId}_{ruleId}'
+  /admin/policies/{providerId}:
+    $ref: './paths/policy.yml#/admin_policies_{providerId}'
+  /admin/policies:
+    $ref: './paths/policy.yml#/admin_policies'
+  /admin/context:
+    $ref: './paths/policy.yml#/admin_context'    
+
+
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      description: JWT OAuth2 access token authentication
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Authentication-ID_TOKEN

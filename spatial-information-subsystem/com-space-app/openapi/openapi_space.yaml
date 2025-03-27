@@ -1,0 +1,31 @@
+openapi: '3.0.3'
+info:
+  title: SpatialID Search API
+  version: 0.0.1
+servers:
+  - url: http://localhost:8090/cav/api/space/v1
+    description: Test server
+tags:
+  - name: vehicle
+    description: Vehicles operations
+  - name: target
+    description: Targets operations
+  - name: weather
+    description: Weathers operations
+paths:
+  /vehicles:
+    $ref: "./paths/vehicles.yaml#/vehicles"
+  /targets:
+    $ref: "./paths/targets.yaml#/targets"
+  /weathers:
+    $ref: "./paths/weathers.yaml#/weathers"
+components:
+  schemas:
+    common:
+      $ref: './components/schemas/common.yaml#/common'
+    vehicles:
+      $ref: './components/schemas/vehicles.yaml#/vehicles'
+    targets:
+      $ref: './components/schemas/targets.yaml#/targets'
+    weathers:
+      $ref: './components/schemas/weathers.yaml#/weathers'

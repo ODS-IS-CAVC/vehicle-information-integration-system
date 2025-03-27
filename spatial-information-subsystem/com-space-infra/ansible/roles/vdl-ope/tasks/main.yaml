@@ -1,0 +1,792 @@
+- name: set NODES
+  shell: |
+    kubectl get node -o wide | grep -v "NAME" | head -n 1 | awk '{ORS=" ";print $6}' | awk '{print substr($0, 1, length($0)-1)}'
+  args:
+    chdir: $HOME/
+  register: NODES
+
+# Keycloakのidpユーザ登録
+- name: get token for admin user
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/realms/master/protocol/openid-connect/token"
+    method: POST
+    validate_certs: no
+    body_format: form-urlencoded
+    body:
+      username: "user"
+      password: "admin"
+      grant_type: "password"
+      client_id: "admin-cli"
+  register: keycloak_token
+
+- name: "debug: get token for admin user"
+  debug:
+    msg: "{{ keycloak_token.json.access_token }}"
+
+- name: create keycloak user for platformer
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/admin/realms/vdl/users"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ keycloak_token.json.access_token }}"
+    body_format: "json"
+    body:
+      enabled: true
+      username: "{{ keycloak_platformer_username }}"
+      credentials:
+        - type: password
+          value: "{{ keycloak_user_password }}"
+          temporary: false
+      groups:
+        - "vdl"
+      attributes:
+        vdl_user:
+          - "{{ keycloak_platformer_username }}"
+        vdl_company:
+          - "companyAdmin"
+        vdl_roles:
+          - "vdlAdmin"
+          - "vdlPolicyAdmin"
+          - "vdlOperator"
+  register: keycloak_user_platformer_create
+
+- name: "debug: create keycloak user for platformer"
+  debug:
+    msg: "{{ keycloak_user_platformer_create }}"
+
+- name: create keycloak user for halex-admin
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/admin/realms/vdl/users"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ keycloak_token.json.access_token }}"
+    body_format: "json"
+    body:
+      enabled: true
+      username: "halex-admin"
+      credentials:
+        - type: password
+          value: "{{ keycloak_user_password }}"
+          temporary: false
+      groups:
+        - "vdl"
+      attributes:
+        vdl_user:
+          - "halex-admin"
+        vdl_company:
+          - "halex-contributor"
+        vdl_roles:
+          - "vdlPolicyAdmin"
+  register: keycloak_user_halex_admin_create
+
+- name: "debug: create keycloak user for halex-admin"
+  debug:
+    msg: "{{ keycloak_user_halex_admin_create }}"
+
+- name: create keycloak user for tier4-admin
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/admin/realms/vdl/users"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ keycloak_token.json.access_token }}"
+    body_format: "json"
+    body:
+      enabled: true
+      username: "tier4-admin"
+      credentials:
+        - type: password
+          value: "{{ keycloak_user_password }}"
+          temporary: false
+      groups:
+        - "vdl"
+      attributes:
+        vdl_user:
+          - "tier4-admin"
+        vdl_company:
+          - "tier4-contributor"
+        vdl_roles:
+          - "vdlPolicyAdmin"
+  register: keycloak_user_tier4_admin_create
+
+- name: "debug: create keycloak user for tier4-admin"
+  debug:
+    msg: "{{ keycloak_user_tier4_admin_create }}"
+
+- name: create keycloak user for nttd-admin
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/admin/realms/vdl/users"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      Authorization: "Bearer {{ keycloak_token.json.access_token }}"
+    body_format: "json"
+    body:
+      enabled: true
+      username: "nttd-admin"
+      credentials:
+        - type: password
+          value: "{{ keycloak_user_password }}"
+          temporary: false
+      groups:
+        - "vdl"
+      attributes:
+        vdl_user:
+          - "nttd-admin"
+        vdl_company:
+          - "nttd"
+        vdl_roles:
+          - "vdlOperator"
+  register: keycloak_user_nttd_admin_create
+
+- name: "debug: create keycloak user for nttd-admin"
+  debug:
+    msg: "{{ keycloak_user_nttd_admin_create }}"
+
+# VDLのユーザ登録
+## プラットフォーマーの登録
+- name: get token for vdl-admin user
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/realms/vdl/protocol/openid-connect/token"
+    method: POST
+    validate_certs: no
+    body_format: form-urlencoded
+    body:
+      username: "sewa"
+      password: "{{ keycloak_user_password }}"
+      grant_type: "password"
+      client_id: "vdl_client"
+      client_secret: "{{ keycloak_client_secret }}"
+      scope: "openid"
+  register: keycloak_vdl_admin_token
+
+- name: "debug: get token for vdl-admin user"
+  debug:
+    msg: "{{ keycloak_vdl_admin_token.json }}"
+
+- name: create vdl user for platformer
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/admin/providers"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"bindPoint":"nttd","name":"{{ keycloak_platformer_username }}","displayName":"Nttdata Admin","description":"nttdata corporation"}'
+  register: vdl_user_platformer_create
+
+- name: "debug: create vdl user for platformer"
+  debug:
+    msg: "{{ vdl_user_platformer_create }}"
+
+- name: create default rule for platformer
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/admin/policies/{{ vdl_user_platformer_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 204
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_admin_token.json.access_token }}"
+
+- name: get token for platformer
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/realms/vdl/protocol/openid-connect/token"
+    method: POST
+    validate_certs: no
+    body_format: form-urlencoded
+    body:
+      username: "{{ keycloak_platformer_username }}"
+      password: "{{ keycloak_user_password }}"
+      grant_type: "password"
+      client_id: "vdl_client"
+      client_secret: "{{ keycloak_client_secret }}"
+      scope: "openid"
+  register: keycloak_vdl_platformer_token
+
+- name: "debug: get token for platformer"
+  debug:
+    msg: "{{ keycloak_vdl_platformer_token.json }}"
+
+## データ提供者の登録
+### Halex
+- name: create vdl user for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/admin/providers"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_platformer_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_platformer_token.json.access_token }}"
+    body_format: "json"
+    body: '{"bindPoint":"provider-halex","name":"halex-contributor","displayName":"Halex Weather","description":"Halex Corporation"}'
+  register: vdl_user_halex_create
+
+- name: "debug: create vdl user for halex"
+  debug:
+    msg: "{{ vdl_user_halex_create }}"
+
+- name: create default rule for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/admin/policies/{{ vdl_user_halex_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 204
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_platformer_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_platformer_token.json.access_token }}"
+
+### Tier4
+- name: create vdl user for tier4
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/admin/providers"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_platformer_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_platformer_token.json.access_token }}"
+    body_format: "json"
+    body: '{"bindPoint":"provider-tier4","name":"tier4-contributor","displayName":"Tier4 Vehicle and Target","description":"Tier4 Corporation"}'
+  register: vdl_user_tier4_create
+
+- name: "debug: create vdl user for tier4"
+  debug:
+    msg: "{{ vdl_user_tier4_create }}"
+
+- name: create default rule for tier4
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/admin/policies/{{ vdl_user_tier4_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 204
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_platformer_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_platformer_token.json.access_token }}"
+
+## データ利用者の登録
+### NTTD
+- name: create vdl user for nttd
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/admin/providers"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_platformer_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_platformer_token.json.access_token }}"
+    body_format: "json"
+    body: '{"bindPoint":"nttd-admin","name":"nttd","displayName":"NTT DATA","description":"NTT DATA Corporation"}'
+  register: vdl_user_nttd_create
+
+- name: "debug: create vdl user for nttd"
+  debug:
+    msg: "{{ vdl_user_nttd_create }}"
+
+- name: create default rule for nttd
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/admin/policies/{{ vdl_user_nttd_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 204
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_platformer_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_platformer_token.json.access_token }}"
+
+# データソース情報の登録
+## Halex
+- name: get token for halex-admin user
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/realms/vdl/protocol/openid-connect/token"
+    method: POST
+    validate_certs: no
+    body_format: form-urlencoded
+    body:
+      username: "halex-admin"
+      password: "{{ keycloak_user_password }}"
+      grant_type: "password"
+      client_id: "vdl_client"
+      client_secret: "{{ keycloak_client_secret }}"
+      scope: "openid"
+  register: keycloak_vdl_halex_admin_token
+
+- name: "debug: get token for halex-admin user"
+  debug:
+    msg: "{{ keycloak_vdl_halex_admin_token.json }}"
+
+- name: create vdl datasource for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/storages"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_halex_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_halex_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"providerId":"{{ vdl_user_halex_create.json.id }}","name":"weather","ufs":"s3://{{ env }}-vdl-s3-datasource/provider-halex/weather","options":{"s3a.accessKeyId":"{{ aws_access_key_id }}","s3a.secretKey":"{{ aws_secret_key }}"}}'
+  register: vdl_datasource_halex_create
+
+- name: "debug: create vdl datasource for halex"
+  debug:
+    msg: "{{ vdl_datasource_halex_create }}"
+
+- name: bind vdl datasource for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/storages/{{ vdl_datasource_halex_create.json.id }}/bind"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 204
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_halex_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_halex_admin_token.json.access_token }}"
+
+## Tier4-vehicle
+- name: get token for tier4-admin user
+  uri:
+    url: "https://{{ NODES.stdout }}:31444/realms/vdl/protocol/openid-connect/token"
+    method: POST
+    validate_certs: no
+    body_format: form-urlencoded
+    body:
+      username: "tier4-admin"
+      password: "{{ keycloak_user_password }}"
+      grant_type: "password"
+      client_id: "vdl_client"
+      client_secret: "{{ keycloak_client_secret }}"
+      scope: "openid"
+  register: keycloak_vdl_tier4_admin_token
+
+- name: "debug: get token for tier4-admin user"
+  debug:
+    msg: "{{ keycloak_vdl_tier4_admin_token.json }}"
+
+- name: create vdl datasource for tier4-vehicle
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/storages"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"providerId":"{{ vdl_user_tier4_create.json.id }}","name":"vehicle","ufs":"s3://{{ env }}-vdl-s3-datasource/provider-tier4/vehicle","options":{"s3a.accessKeyId":"{{ aws_access_key_id }}","s3a.secretKey":"{{ aws_secret_key }}"}}'
+  register: vdl_datasource_tier4_vehicle_create
+
+- name: "debug: create vdl datasource for tier4-vehicle"
+  debug:
+    msg: "{{ vdl_datasource_tier4_vehicle_create }}"
+
+- name: bind vdl datasource for tier4-vehicle
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/storages/{{ vdl_datasource_tier4_vehicle_create.json.id }}/bind"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 204
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+
+## Tier4-target
+- name: create vdl datasource for tier4-target
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/storages"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"providerId":"{{ vdl_user_tier4_create.json.id }}","name":"target","ufs":"s3://{{ env }}-vdl-s3-datasource/provider-tier4/target","options":{"s3a.accessKeyId":"{{ aws_access_key_id }}","s3a.secretKey":"{{ aws_secret_key }}"}}'
+  register: vdl_datasource_tier4_target_create
+
+- name: "debug: create vdl datasource for tier4-target"
+  debug:
+    msg: "{{ vdl_datasource_tier4_target_create }}"
+
+- name: bind vdl datasource for tier4-target
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/storages/{{ vdl_datasource_tier4_target_create.json.id }}/bind"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 204
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+
+# タグ情報の登録
+## Halex
+- name: create vdl tag for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/tags"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_halex_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_halex_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"name":"weather","description":"weather","owner":"{{ vdl_user_halex_create.json.id }}"}'
+  register: vdl_tag_halex_create
+
+- name: "debug: create vdl tag for halex"
+  debug:
+    msg: "{{ vdl_tag_halex_create }}"
+
+## Tier4-vehicle
+- name: create vdl tag for tier4-vehicle
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/tags"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"name":"vehicle","description":"vehicle","owner":"{{ vdl_user_tier4_create.json.id }}"}'
+  register: vdl_tag_tier4_vehicle_create
+
+- name: "debug: create vdl tag for tier4-vehicle"
+  debug:
+    msg: "{{ vdl_tag_tier4_vehicle_create }}"
+
+## Tier4-target
+- name: create vdl tag for tier4-target
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/tags"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"name":"target","description":"target","owner":"{{ vdl_user_tier4_create.json.id }}"}'
+  register: vdl_tag_tier4_target_create
+
+- name: "debug: create vdl tag for tier4-target"
+  debug:
+    msg: "{{ vdl_tag_tier4_target_create }}"
+
+# データセット情報の登録
+## Halex
+- name: create vdl dataset for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/datasets"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_halex_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_halex_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"name":"halexDataset","description":"dataset for halex","tags":[{"id":"{{ vdl_tag_halex_create.json.id }}"}],"owner":"{{ vdl_user_halex_create.json.id }}","vdlSpec":{"vdlPath":"/provider-halex/weather/weather-information-collector","isReady":true}}'
+  register: vdl_dataset_halex_create
+
+- name: "debug: create vdl dataset for halex"
+  debug:
+    msg: "{{ vdl_dataset_halex_create }}"
+
+## Tier4-vehicle
+- name: create vdl dataset for tier4-vehicle
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/datasets"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"name":"tier4VehicleDataset","description":"dataset for tier4 vehicle","tags":[{"id":"{{ vdl_tag_tier4_vehicle_create.json.id }}" }],"owner":"{{ vdl_user_tier4_create.json.id }}","vdlSpec":{"vdlPath":"/provider-tier4/vehicle/vehicle-information-collector","isReady":true}}'
+  register: vdl_dataset_tier4_vehicle_create
+
+- name: "debug: create vdl dataset for tier4-vehicle"
+  debug:
+    msg: "{{ vdl_dataset_tier4_vehicle_create }}"
+
+## Tier4-target
+- name: create vdl dataset for tier4-target
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/datasets"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"name":"tier4TargetDataset","description":"dataset for tier4 target","tags":[{"id":"{{ vdl_tag_tier4_target_create.json.id }}" }],"owner":"{{ vdl_user_tier4_create.json.id }}","vdlSpec":{"vdlPath":"/provider-tier4/target/target-information-collector","isReady":true}}'
+  register: vdl_dataset_tier4_target_create
+
+- name: "debug: create vdl dataset for tier4-target"
+  debug:
+    msg: "{{ vdl_dataset_tier4_target_create }}"
+
+# 認証ポリシーの登録
+## Halex
+- name: create vdl policy data for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_halex_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_halex_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_halex_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"data","ruleType":"allow","rule":{"object":{"parentDataset":{"tagPattern":"weather"}},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_data_halex_create
+
+- name: "debug: create vdl policy data for halex"
+  debug:
+    msg: "{{ vdl_policy_data_halex_create }}"
+
+- name: create vdl policy metadata for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_halex_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_halex_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_halex_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"metadata","ruleType":"allow","rule":{"object":{"parentDataset":{"tagPattern":"weather"}},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_metadata_halex_create
+
+- name: "debug: create vdl policy metadata for halex"
+  debug:
+    msg: "{{ vdl_policy_metadata_halex_create }}"
+
+- name: create vdl policy dataset for halex
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_halex_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_halex_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_halex_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"dataset","ruleType":"allow","rule":{"object":{"tagPattern":"weather"},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_dataset_halex_create
+
+- name: "debug: create vdl policy dataset for halex"
+  debug:
+    msg: "{{ vdl_policy_dataset_halex_create }}"
+
+## Tier4-vehicle
+- name: create vdl policy data for tier4-vehicle
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_tier4_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"data","ruleType":"allow","rule":{"object":{"parentDataset":{"tagPattern":"vehicle"}},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_data_tier4_vehicle_create
+
+- name: "debug: create vdl policy data for tier4-vehicle"
+  debug:
+    msg: "{{ vdl_policy_data_tier4_vehicle_create }}"
+
+- name: create vdl policy metadata for tier4-vehicle
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_tier4_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"metadata","ruleType":"allow","rule":{"object":{"parentDataset":{"tagPattern":"vehicle"}},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_metadata_tier4_vehicle_create
+
+- name: "debug: create vdl policy metadata for tier4-vehicle"
+  debug:
+    msg: "{{ vdl_policy_metadata_tier4_vehicle_create }}"
+
+- name: create vdl policy dataset for tier4-vehicle
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_tier4_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"dataset","ruleType":"allow","rule":{"object":{"tagPattern":"vehicle"},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_dataset_tier4_vehicle_create
+
+- name: "debug: create vdl policy dataset for tier4-vehicle"
+  debug:
+    msg: "{{ vdl_policy_dataset_tier4_vehicle_create }}"
+
+## Tier4-target
+- name: create vdl policy data for tier4-target
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_tier4_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"data","ruleType":"allow","rule":{"object":{"parentDataset":{"tagPattern":"target"}},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_data_tier4_target_create
+
+- name: "debug: create vdl policy data for tier4-target"
+  debug:
+    msg: "{{ vdl_policy_data_tier4_target_create }}"
+
+- name: create vdl policy metadata for tier4-target
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_tier4_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"metadata","ruleType":"allow","rule":{"object":{"parentDataset":{"tagPattern":"target"}},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_metadata_tier4_target_create
+
+- name: "debug: create vdl policy metadata for tier4-target"
+  debug:
+    msg: "{{ vdl_policy_metadata_tier4_target_create }}"
+
+- name: create vdl policy dataset for tier4-target
+  uri:
+    url: "https://{{ NODES.stdout }}:30090/api/v1/policies/{{ vdl_user_tier4_create.json.id }}"
+    method: POST
+    validate_certs: no
+    status_code:
+      - 201
+    headers:
+      Content-type: "application/json"
+      Accept: "application/json"
+      X-Authentication-ID_TOKEN: "{{ keycloak_vdl_tier4_admin_token.json.id_token }}"
+      Authorization: "Bearer {{ keycloak_vdl_tier4_admin_token.json.access_token }}"
+    body_format: "json"
+    body: '{"type":"dataset","ruleType":"allow","rule":{"object":{"tagPattern":"target"},"subject":{"companyPattern":"nttd"},"method":{"values":["READ"]}}}'
+  register: vdl_policy_dataset_tier4_target_create
+
+- name: "debug: create vdl policy dataset for tier4-target"
+  debug:
+    msg: "{{ vdl_policy_dataset_tier4_target_create }}"

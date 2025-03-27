@@ -1,0 +1,16 @@
+{
+  "dataModelType": "test1",
+  "attribute": [
+    {
+      "vehicleId": "78aa302c-1600-44b3-a331-e4659c0b28a1",
+      "vehicleName": "vehicle1",
+      "status": "driving",
+      "location": {
+        "lat": 35.6242681254456,
+        "lng": 139.74258640456,
+        "height": 0.01258640981
+      },
+      "updatedAt": "2014-10-10T04:50:40.000001+00:00"
+    }
+  ]
+}

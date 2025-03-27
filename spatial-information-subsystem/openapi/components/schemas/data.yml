@@ -1,0 +1,107 @@
+schemaDataUpdateRequest: 
+  type: object
+  required:
+    - action
+    - dst
+  properties:
+    action:
+      type: string
+      description: |-
+        Action parameter.<br>
+        Depending on the "action" parameter, the process will branch to either a file or directory renaming function or a function to persist the cache in data source.
+        <ul>
+          <li>The rename function is only available within the same data source.(Renaming between different data sources is not possible.)</li>
+          <li>The rename function is a pure metadata operation and does not affect the data block of a file.</li>
+        </ul>
+      enum: [rename, persist]
+      example: rename
+    dst:
+      type: string
+      description: |-
+        VDL path of destination.
+        <ul>
+          <li>Specified only when the action parameter is rename.</li>
+        </ul>
+      pattern: '^/[^ ]*[^/]$'
+      example: /coopX/hdfs/dst/file
+
+schemaDataDeleteRequest: 
+  type: object
+  properties:
+    recursive:
+      type: boolean
+      default: false
+      description: Delete the VDL path (directory), along with containing files and directories.
+
+schemaMultipartUpload: 
+  type: object
+  properties:
+    uploadId:
+      type: string
+      description: Return the upload ID used for the multipart upload.
+
+schemaMultipartVdlPath: 
+  type: object
+  properties:
+    vdlPath:
+      type: string
+      description: VDL path of the data after the multipart upload is completed.
+
+schemaMultipartUploadList: 
+  type: object
+  properties:
+    vdlPath:
+      type: string
+      description: VDL path of the data after the multipart upload is completed.
+    uploadId:
+      type: string
+      description: Return the upload ID used for the multipart upload.      
+    part:
+      type: array
+      description: List of uploaded files.
+      items:
+        partNumber:
+          type: integer
+          description: Part file number.
+        size:
+          type: integer
+          description: Part file size. 
+        lastModified:
+          type: string
+          description: Part file lastModified.
+
+schemaIncompleteMultipartUploadList: 
+  type: object
+  properties:
+    vdlPath:
+      type: string
+      description: VDL path of the data after the multipart upload is completed.      
+    upload:
+      type: array
+      description: List of uploaded files.
+      items:
+        vdlPath:
+          type: string
+          description: VDL path of Part file. 
+        uploadId:
+          type: string
+          description: Upload Id. 
+        initiated:
+          type: string
+          description: Upload start date and time.        
+
+schemaMultipartUploadCompleteRequest:
+  type: object
+  required:
+    - parts
+  properties:
+    parts:
+      type: array
+      description: Split File Information Parent Element.
+      items:
+        type: object
+        properties:
+          key:
+            type: integer
+            description: Number of the uploaded split file.
+            example: 1

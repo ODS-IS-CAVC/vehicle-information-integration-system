@@ -1,0 +1,27 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+{
+	"name": "dmp-digi-line",
+	"dockerComposeFile": "../../docker/docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"forwardPorts": [],
+	"postAttachCommand": ".devcontainer/app/postAttach.sh",
+	"remoteUser": "root",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"aaron-bond.better-comments",
+				"ms-azuretools.vscode-docker",
+				"mhutchie.git-graph",
+				"eamodio.gitlens",
+				"ms-vscode-remote.remote-containers",
+				"aaron-bond.better-comments",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"christian-kohler.path-intellisense",
+				"esbenp.prettier-vscode",
+				"dbaeumer.vscode-eslint"
+			]
+		}
+	}
+}

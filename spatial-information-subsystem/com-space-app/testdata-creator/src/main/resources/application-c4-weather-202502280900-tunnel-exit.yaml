@@ -1,0 +1,42 @@
+# 2025/02/28にリクエストされるデータ群
+# 2025/02/28の9時以降のトンネル出口通過後に既存データを上書きする
+testdata:
+  flushData: false
+  data: []
+  randomDataOutputDir: "./data/"
+  # 個別設定で上書きするため以下の2つは使われない
+  randomDataBaseTime: "2025-01-28T10:00:00+09:00"
+  randomDataDuration: 1h
+  # 2502280900-tunnelで投入したデータを上書きするためupdatedAtOffsetは3hを指定
+  randomData:
+    # 遠隔監視のリクエストデータ(上書き)
+    - id: "C4_202502280900_tunnel_exit"
+      name: "気象情報:（2/28(金) 08:00-13:00のデータ）"
+      templateType: Weather
+      interval: 1h
+      baseTime: "2025-02-28T08:00:00+09:00"
+      duration: 6h
+      updatedAtOffset: 3h
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 北沼上トンネル出口を含む空間IDの中央座標1
+            longitude: 138.4112548828125
+            latitude: 35.0434895143
+            altitude: 0.0
+        - boundingBoxes: []
+          coordinate:
+            # 北沼上トンネル出口を含む空間IDの中央座標2
+            longitude: 138.4002685546875
+            latitude: 35.0434895143
+            altitude: 0.0
+        - boundingBoxes: []
+          coordinate:
+            # 北沼上トンネル出口を含む空間IDの中央座標3
+            longitude: 138.3892822265625
+            latitude: 35.0434895143
+            altitude: 0.0
+      staticAttributes:
+        weatherForecast: "100"
+        windSpeed: "0.0"
+        precipitation: "0.0"

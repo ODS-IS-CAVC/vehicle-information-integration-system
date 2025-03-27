@@ -1,0 +1,304 @@
+metadata_{vdlPath}: 
+  summary: This API group is related to technical metadata management function.(This groups of API require vdlPath to be specified as a request parameter.)
+  get:
+    tags:
+      - metadata
+    operationId: metadataRead
+    summary: Get the technical metadata
+    description: |-
+      Get the technical metadata of the target VDL path.
+      <ul>
+        <li>If the actor is a platformer, all acquired technical metadata information is returned.</li>
+        <li>If the actor is not a platformer, only the information necessary to utilize the data is returned out of the all acquired technical metadata.</li>
+      </ul>
+      Request example: GET /api/v1/metadata/{vdlPath}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/metadata.yml#/schemaCreateMetadataRequest'
+          examples:
+            get_request_sample:
+              $ref: '../components/examples/metadata.yml#/metadata_get_request_sample'
+    responses:
+      '200':
+        description: |-
+          Returns the technical metadata retrieved.
+          <ul>
+            <li>Only the information necessary to utilize the data are shown below.</li>
+            <li>Note that if the actor is a platformer, all information will be output.</li>
+          </ul>
+        content:
+          application/json:
+            schema:
+              description: |-
+                This schema defines the case where the actor is not a platformer.<br>
+                If the actor is a platformer, all parameters are returned.
+              $ref: '../components/schemas/metadata.yml#/schemaMetadata'
+            example:
+              $ref: '../components/examples/metadata.yml#/metadata_get_sample'
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+  put:
+    tags:
+      - metadata
+    operationId: metadataUpdate
+    summary: Update the technical metadata
+    description: |-
+      Update the technical metadata (synchronize from data source).
+      <ul>
+        <li>Whenever this operation is performed, technical metadata of the VDL path is synchronized with data source.</li>
+      </ul>
+      Request example: PUT /api/v1/metadata/{vdlPath}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/metadata.yml#/schemaUpdateMetadataRequest'
+          examples:
+            update_sample:
+              $ref: '../components/examples/metadata.yml#/metadata_update_sample'
+    responses:
+      '204':
+        description: Respond that the technical metadata has been successfully updated (synchronized with data source).
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: |-
+          The target resource does not exist.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+
+metadata_search_{vdlPath}: 
+  summary: This group of API is a search function for technical metadata.(This groups of API require vdlPath to be specified as a request parameter.)
+  post:
+    tags:
+      - metadata
+    operationId: metadataSearch
+    summary: Search technical metadata
+    description: |-
+      Search technical metadata.
+      <ul>
+        <li>If the actor is a platformer, all acquired technical metadata information is returned.</li>
+        <li>If the actor is not a platformer, only the information necessary to utilize the data is returned from the technical metadata got.</li>
+      </ul>
+      Only resources authorized by authorization function are returned.<br>
+      Supports filtering query.
+      <ul>
+        <li>If no query is specified, no refinement is performed.</li>
+        <li>If multiple query conditions are specified, they are combined as logical product (AND) conditions.</li>
+        <li>OR conditional filtering is not provided.</li>
+        <li>If file size is specified as a search condition, the search results do not include directories.</li>
+      </ul>
+      Request example: POST /api/v1/metadata/search/coopX/s3/dir?path_regex=%2FcoopX%2Fs3%2Fdir%5B0-5%5D%7B1%7D&last_modified_dt_ge=1690538788000&size_ge=100
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathMetadataVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryPath_regex'
+      - $ref: '../components/parameters/param.yml#/queryLast_modified_dt_ge'
+      - $ref: '../components/parameters/param.yml#/queryLast_modified_dt_lt'
+      - $ref: '../components/parameters/param.yml#/querySize_ge'
+      - $ref: '../components/parameters/param.yml#/querySize_lt'
+    requestBody:
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/metadata.yml#/schemaSearchMetadataRequest'
+          examples:
+            search_sample:
+              $ref: '../components/examples/metadata.yml#/metadata_search_sample'
+    responses:
+      '200':
+        description: |-
+          Returns the results of a search for technical metadata as an array.
+          <ul>
+            <li>Note that if the actor is a platformer, all information will be output.</li>
+            <li>If the target resource does not exist, or if authorization function returns NG as an authorization decision result for all resources, an empty array is returned.</li>
+          </ul>
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: |-
+                  This schema defines the case where the actor is not a platformer.<br>
+                  If the actor is a platformer, all parameters are returned.
+                $ref: '../components/schemas/metadata.yml#/schemaMetadata'
+            example:
+              $ref: '../components/examples/metadata.yml#/metadata_list_sample'
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: The target resource does not exist.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.
+
+  get:
+    tags:
+      - metadata
+    operationId: getMetadataBySearch
+    summary: Search technical metadata
+    description: |-
+      Search technical metadata.(Same as the search request with POST.)
+      <ul>
+        <li>If the actor is a platformer, all acquired technical metadata information is returned.</li>
+        <li>If the actor is not a platformer, only the information necessary to utilize the data is returned from the technical metadata got.</li>
+      </ul>
+      Only resources authorized by authorization function are returned.<br>
+      Supports filtering query.
+      <ul>
+        <li>If no query is specified, no refinement is performed.</li>
+        <li>If multiple query conditions are specified, they are combined as logical product (AND) conditions.</li>
+        <li>OR conditional filtering is not provided.</li>
+        <li>If file size is specified as a search condition, the search results do not include directories.</li>
+      </ul>
+      Request example: GET /api/v1/metadata/search/coopX/s3/dir?path_regex=%2FcoopX%2Fs3%2Fdir%5B0-5%5D%7B1%7D&last_modified_dt_ge=1690538788000&size_ge=100&recursive=true
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathVdlPath'
+      - $ref: '../components/parameters/param.yml#/queryPath_regex'
+      - $ref: '../components/parameters/param.yml#/queryLast_modified_dt_ge'
+      - $ref: '../components/parameters/param.yml#/queryLast_modified_dt_lt'
+      - $ref: '../components/parameters/param.yml#/querySize_ge'
+      - $ref: '../components/parameters/param.yml#/querySize_lt'
+      - $ref: '../components/parameters/param.yml#/queryRecursive'
+      - $ref: '../components/parameters/param.yml#/queryLoad_metadata_type'
+      - $ref: '../components/parameters/param.yml#/querySyncInterval_ms'
+    responses:
+      '200':
+        description: |-
+          Returns the results of a search for technical metadata as an array.
+          <ul>
+            <li>Note that if the actor is a platformer, all information will be output.</li>
+            <li>If the target resource does not exist, or if authorization function returns NG as an authorization decision result for all resources, an empty array is returned.</li>
+          </ul>
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: |-
+                  This schema defines the case where the actor is not a platformer.<br>
+                  If the actor is a platformer, all parameters are returned.
+                $ref: '../components/schemas/metadata.yml#/schemaMetadata'
+            example:
+              $ref: '../components/examples/metadata.yml#/metadata_list_sample'
+      '403':
+        description: |-
+          When an operation is attempted on a resource whose data source status is not Bound.<br>
+          Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '404':
+        description: The target resource does not exist.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found.
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid.
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '500':
+        description: An error occurred in the server's internal processing.

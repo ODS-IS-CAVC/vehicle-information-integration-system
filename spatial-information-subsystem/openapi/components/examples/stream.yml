@@ -1,0 +1,19 @@
+stream_create_sample: 
+  summary: simple stream create request
+  value:
+    id: a9138f3e-3f95-4bc5-ba54-affa32080d26
+    providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    name: datasourceA
+
+stream_get_sample: 
+  id: a9138f3e-3f95-4bc5-ba54-affa32080d26
+  providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+  name: datasourceA
+
+stream_list_sample: 
+  - id: a9138f3e-3f95-4bc5-ba54-affa32080d26
+    providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    name: datasourceA
+  - id: 49f9aacb-51ee-4f30-bdf3-8ccd41c2a327
+    providerId: d2e7a308-4ff7-4d23-9e88-92ba86030a05
+    name: datasourceB

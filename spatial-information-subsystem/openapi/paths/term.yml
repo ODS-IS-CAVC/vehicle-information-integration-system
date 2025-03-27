@@ -1,0 +1,259 @@
+admin_terms: 
+  summary: This API group is related to term management function
+  post:
+    tags:
+      - term
+    operationId: termCreate
+    summary: Create the term
+    description: |-
+      Create the term
+      Request example: POST /api/v1/admin/terms
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/term.yml#/schemaCreateTermRequest'
+          examples: 
+            create_sample: 
+              $ref: '../components/examples/term.yml#/term_create_sample'
+    responses:
+      '201':
+        description: Returns the created term
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/term.yml#/schemaTerm'
+            example: 
+              $ref: '../components/examples/term.yml#/term_get_sample'
+      '403':
+        description: Authorization function returned NG as an authorization decision result
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Operation not permitted
+      '409':
+        description: Requested resource already exists
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Conflicts with current resources
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Request is invalid
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Failed to authenticate
+      '500':
+        description: An error occurred in the server's internal processing
+
+terms_search:
+  summary: This group of API is a search function for term
+  get:
+    tags:
+      - term
+    operationId: termSearch
+    summary: Search the term
+    description: |-
+      Search the term
+      <ul>
+        <li>Supports filtering query</li>
+        <li>If no query is specified, no refinement is performed</li>
+        <li>If multiple query conditions are specified, they are combined as logical product (AND) conditions</li>
+        <li>OR/NOT conditional filtering is not provided</li>
+      </ul>
+      Request example: GET /api/v1/terms/search?name_eq=sensitive
+    parameters:
+      - $ref: '../components/parameters/param.yml#/queryName_eq'
+      - $ref: '../components/parameters/param.yml#/queryName_contain'
+      - $ref: '../components/parameters/param.yml#/queryDescription_contain'
+    responses:
+      '200':
+        description: |-
+          Returns the results of a search for term as an array
+          <ul>
+            <li>If the target resource does not exist an empty array is returned</li>
+          </ul>
+        content:
+          application/json:
+            schema:
+              type: array
+              description: List of terms
+              items:
+                $ref: '../components/schemas/term.yml#/schemaTerm'
+            example: 
+              $ref: '../components/examples/term.yml#/term_list_sample'
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Request is invalid
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: Operation not permitted
+      '500':
+        description: An error occurred in the server's internal processing
+
+terms_{termName}: 
+  summary: This is a group of API that require term name to be specified as a request parameter among the term management functions
+  get:
+    tags:
+      - term
+    operationId: termRead
+    summary: Get the term
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathTermName'
+    responses:
+      '200':
+        description: Return the retrieved term
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/term.yml#/schemaTerm'
+            example: 
+              $ref: '../components/examples/term.yml#/term_get_sample'
+      '404':
+        description: |-
+          The target resource does not exist<br>
+          Authorization function returned NG as an authorization decision result
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted
+      '500':
+        description: Internal Server Error
+
+admin_terms_{termName}: 
+  patch:
+    tags:
+      - term
+    operationId: termUpdate
+    summary: Update the term
+    description: |-
+      Update the term with the data specified in the body parameter.<br>
+      <ul>
+        <li>Specified objects are replaced. Objects that description can be specified</li>
+      </ul>
+      Request example: PATCH /api/v1/admin/terms/{termName}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathTermName'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '../components/schemas/term.yml#/schemaUpdateTermRequest'
+          examples: 
+            update_sample: 
+              $ref: '../components/examples/term.yml#/term_update_sample'
+    responses:
+      '204':
+        description: Responds that the resource is successfully updated
+      '404':
+        description: |-
+          The target resource does not exist<br>
+          Authorization function returned NG as an authorization decision result
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found
+      '400':
+        description: The required parameters for the request do not exist, or the input format is invalid
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Request is invalid
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '403':
+        description: Authorization function returned NG as an authorization decision result
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted
+      '500':
+        description: An error occurred in the server's internal processing
+  delete:
+    tags:
+      - term
+    operationId: termDelete
+    summary: Delete the term
+    description: |-
+      Delete the term<br>
+      Request example: DELETE /api/v1/admin/terms/{termName}
+    parameters:
+      - $ref: '../components/parameters/param.yml#/pathTermName'
+    responses:
+      '204':
+        description: Responds that the resource has been successfully deleted
+      '404':
+        description: The target resource does not exist
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Requested resource not found
+      '403':
+        description: |-
+          If the target resource cannot be deleted (for example, refered from some datesets)<br>
+          Authorization function returned NG as an authorization decision result
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate
+      '500':
+        description: An error occurred in the server's internal processing

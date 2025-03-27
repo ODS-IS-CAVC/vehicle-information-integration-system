@@ -1,0 +1,19 @@
+{
+  "dataModelType": "test1",
+  "attribute": {
+    "serviceLocationID": 4294967295,
+    "roadsideUnitID": 4294967295,
+    "formatVersion": 1,
+    "updateTimeInfo": "2018-01-24T01:25:26.678Z",
+    "deviceNum": 4,
+    "deviceIndividualInfo": [
+      {
+        "deviceID": 1111111,
+        "targetNum": 2,
+        "targetIndividualInfo": [
+        ]
+      }
+    ]
+  }
+}
+

@@ -1,0 +1,171 @@
+- name: create user digiline
+  user:
+    name: digiline
+    create_home: false
+    shell: /sbin/nologin
+  become: yes
+
+- name: remove com-collection-app
+  file:
+    path: /tmp/com-collection-app
+    state: absent
+
+- name: git clone com-collection-app
+  command:
+    cmd: 'git clone https://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/com-collection-app'
+    chdir: /tmp/
+
+- name: build for com-collection-app
+  command:
+    cmd: './gradlew clean bootJar -x test'
+    chdir: /tmp/com-collection-app/
+
+- name: mkdir /opt/vehicle-information-collector directory
+  file:
+    path: /opt/vehicle-information-collector
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: mkdir /opt/vehicle-information-collector/bin directory
+  file:
+    path: /opt/vehicle-information-collector/bin
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: copy bootstrap.sh
+  copy: 
+    src: /tmp/com-collection-app/vehicle-information-collector/config/bin/bootstrap.sh
+    dest: /opt/vehicle-information-collector/bin/bootstrap.sh
+    owner: digiline
+    group: digiline
+    mode: '0755'
+    remote_src: yes
+  become: yes
+
+- name: replace bootstrap.sh
+  replace:
+    path: /opt/vehicle-information-collector/bin/bootstrap.sh
+    regexp: "poc"
+    replace: "{{ env }}"
+  become: yes
+
+- name: mkdir /opt/vehicle-information-collector/config directory
+  file:
+    path: /opt/vehicle-information-collector/config
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: find application.yaml
+  find:
+    paths: "/tmp/com-collection-app/vehicle-information-collector/build/resources/main"
+    patterns: "application*.yaml"
+    recurse: yes
+  register: vehicle_application_setting
+
+- name: copy application.yaml
+  copy:
+    src: "{{ item.path }}"
+    dest: /opt/vehicle-information-collector/config/
+    owner: digiline
+    group: digiline
+    mode: '0644'
+    remote_src: yes
+  with_items: "{{ vehicle_application_setting.files }}"
+  become: yes
+
+- name: mkdir /opt/vehicle-information-collector/lib directory
+  file:
+    path: /opt/vehicle-information-collector/lib
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: copy vehicle-information-collector-0.0.1-SNAPSHOT.jar
+  copy:
+    src: /tmp/com-collection-app/vehicle-information-collector/build/libs/vehicle-information-collector-0.0.1-SNAPSHOT.jar
+    dest: /opt/vehicle-information-collector/lib/
+    owner: digiline
+    group: digiline
+    remote_src: yes
+  become: yes
+
+- name: mkdir axispot directory
+  file:
+    path: /opt/vehicle-information-collector/config/axispot
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: find geotempConfig.properties
+  find:
+    paths: "/tmp/com-collection-app/vehicle-information-collector/config/axispot"
+    patterns: "geotempConfig-*.properties"
+    recurse: yes
+  register: axispot_setting
+
+- name: copy geotempConfig.properties
+  copy: 
+    src: "{{ item.path }}"
+    dest: /opt/vehicle-information-collector/config/axispot/
+    owner: digiline
+    group: digiline
+    mode: '0644'
+    remote_src: yes
+  with_items: "{{ axispot_setting.files }}"
+  become: yes
+
+- name: mkdir /opt/vehicle-information-collector/data directory
+  file:
+    path: /opt/vehicle-information-collector/data
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: mkdir /opt/vehicle-information-collector/logs directory
+  file:
+    path: /opt/vehicle-information-collector/logs
+    state: directory
+    owner: digiline
+    group: digiline
+    mode: '0755'
+  become: yes
+
+- name: copy vehicle-information-collector.service
+  copy:
+    src: /tmp/com-collection-app/vehicle-information-collector/config/systemd/vehicle-information-collector.service
+    dest: /etc/systemd/system/vehicle-information-collector.service
+    remote_src: yes
+  become: yes
+
+- name: systemctl daemon-reload
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: systemctl stop vehicle-information-collector
+  systemd:
+    name: vehicle-information-collector
+    state: stopped
+  become: yes
+
+- name: systemctl systemctl start vehicle-information-collector
+  systemd:
+    name: vehicle-information-collector
+    state: started
+    enabled: yes
+  become: yes

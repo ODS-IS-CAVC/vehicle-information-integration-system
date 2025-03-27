@@ -1,0 +1,39 @@
+services:
+  app:
+    container_name: dmp-digi-line-app
+    image: boilerplate/app
+    hostname: dmp-digi-line-app
+    build:
+      context: ./app
+      target: local
+    tty: true
+    volumes:
+      - ../:/workspace:cached
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - 4210:4200
+      - 3010:3000
+    stdin_open: true
+    env_file:
+      - ../env/.env.development.local
+
+  database:
+    container_name: dmp-digi-line-database
+    image: boilerplate/database
+    tty: true
+    build:
+      context: ./postgres
+    env_file:
+      - ../env/.env.development.local
+    environment:
+      POSTGRES_DB: DMDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+      LANG: ja_JP.utf8
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/initdb:/docker-entrypoint-initdb.d
+    ports:
+      - 15432:5432
+    hostname: postgres

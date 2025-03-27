@@ -1,0 +1,64 @@
+- name: download aws cli
+  get_url:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: $HOME/awscliv2.zip
+
+- name: unarchive awscliv2
+  unarchive:
+    src: $HOME/awscliv2.zip
+    dest: $HOME/
+    remote_src: yes
+
+- name: install aws cli
+  command:
+    cmd: 'sudo ./aws/install'
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: download get-pip
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: $HOME/get-pip.py
+
+- name: install pip
+  command:
+    cmd: 'python3 get-pip.py --user'
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: install git-remote-codecommit
+  pip: 
+    name: git-remote-codecommit
+  ignore_errors: true
+
+- name: aws configure set aws_access_key_id
+  command:
+    cmd: 'aws configure set aws_access_key_id {{ aws_access_key_id }} --profile digiline'
+    chdir: $HOME/
+
+- name: aws configure set aws_secret_access_key
+  command:
+    cmd: 'aws configure set aws_secret_access_key {{ aws_secret_key }} --profile digiline'
+    chdir: $HOME/
+
+- name: aws configure set aws_secret_access_key
+  command:
+    cmd: 'aws configure set region ap-northeast-1 --profile digiline'
+    chdir: $HOME/
+
+- name: aws configure set output
+  command:
+    cmd: 'aws configure set output json --profile digiline'
+    chdir: $HOME/
+
+- name: git config --global credential.helper
+  shell: |
+    git config --global credential.helper '!aws --profile digiline codecommit credential-helper $@'
+  args:
+    chdir: $HOME/
+
+- name: git config --global credential.UseHttpPath
+  shell: |
+    git config --global credential.UseHttpPath true
+  args:
+    chdir: $HOME/

@@ -1,0 +1,10 @@
+spring:
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: 8081
+
+axispot:
+  storeNodeInfo: "clustercfg.dev-space-redis-tier4.soila4.apne1.cache.amazonaws.com:6379"
+  bitPattern: "tttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:52:ZFXY" 

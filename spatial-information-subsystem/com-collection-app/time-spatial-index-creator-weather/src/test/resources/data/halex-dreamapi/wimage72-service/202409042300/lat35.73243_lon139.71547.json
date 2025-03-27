@@ -1,0 +1,228 @@
+
+  {"ActualInfos":
+    {"202409040100":
+      {"temperature":"23.6"},
+     "202409040200":
+      {"temperature":"23.4"},
+     "202409040300":
+      {"temperature":"23.2"},
+     "202409040400":
+      {"temperature":"22.9"},
+     "202409040500":
+      {"temperature":"22.9"},
+     "202409040600":
+      {"temperature":"23.0"},
+     "202409040700":
+      {"temperature":"23.7"},
+     "202409040800":
+      {"temperature":"24.7"},
+     "202409040900":
+      {"temperature":"25.7"},
+     "202409041000":
+      {"temperature":"26.9"},
+     "202409041100":
+      {"temperature":"27.4"},
+     "202409041200":
+      {"temperature":"27.8"},
+     "202409041300":
+      {"temperature":"27.9"},
+     "202409041400":
+      {"temperature":"28.6"},
+     "202409041500":
+      {"temperature":"29.0"},
+     "202409041600":
+      {"temperature":"28.7"},
+     "202409041700":
+      {"temperature":"27.4"},
+     "202409041800":
+      {"temperature":"26.1"},
+     "202409041900":
+      {"temperature":"25.2"},
+     "202409042000":
+      {"temperature":"24.6"},
+     "202409042100":
+      {"temperature":"24.3"},
+     "202409042200":
+      {"temperature":"24.0"},
+     "202409042300":
+      {"temperature":"99.9"}
+    },
+   "ActualPrecipitation":[
+      {"dtf":"202409040000-202409040100", "east":142.0, "fileName":"precipitation/analysis/202409040100-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409040100-202409040200", "east":142.0, "fileName":"precipitation/analysis/202409040200-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.5", "west":136.0},
+      {"dtf":"202409040200-202409040300", "east":142.0, "fileName":"precipitation/analysis/202409040300-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409040300-202409040400", "east":142.0, "fileName":"precipitation/analysis/202409040400-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409040400-202409040500", "east":142.0, "fileName":"precipitation/analysis/202409040500-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409040500-202409040600", "east":142.0, "fileName":"precipitation/analysis/202409040600-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409040600-202409040700", "east":142.0, "fileName":"precipitation/analysis/202409040700-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409040700-202409040800", "east":142.0, "fileName":"precipitation/analysis/202409040800-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409040800-202409040900", "east":142.0, "fileName":"precipitation/analysis/202409040900-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409040900-202409041000", "east":142.0, "fileName":"precipitation/analysis/202409041000-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041000-202409041100", "east":142.0, "fileName":"precipitation/analysis/202409041100-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041100-202409041200", "east":142.0, "fileName":"precipitation/analysis/202409041200-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041200-202409041300", "east":142.0, "fileName":"precipitation/analysis/202409041300-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041300-202409041400", "east":142.0, "fileName":"precipitation/analysis/202409041400-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041400-202409041500", "east":142.0, "fileName":"precipitation/analysis/202409041500-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041500-202409041600", "east":142.0, "fileName":"precipitation/analysis/202409041600-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041600-202409041700", "east":142.0, "fileName":"precipitation/analysis/202409041700-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041700-202409041800", "east":142.0, "fileName":"precipitation/analysis/202409041800-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041800-202409041900", "east":142.0, "fileName":"precipitation/analysis/202409041900-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409041900-202409042000", "east":142.0, "fileName":"precipitation/analysis/202409042000-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409042000-202409042100", "east":142.0, "fileName":"precipitation/analysis/202409042100-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409042100-202409042200", "east":142.0, "fileName":"precipitation/analysis/202409042200-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409042200-202409042300", "east":142.0, "fileName":"precipitation/analysis/202409042300-00000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"99.9", "west":136.0}
+    ],
+   "ForecastInfos":
+    {"202409050000":
+      {"humidity":"86.2", "temperature":"23.4", "temperatureSa":"-0.1", "weatherForecast":"200", "windDirection":"334.8", "windSpeed":"1.4"},
+     "202409050100":
+      {"humidity":"86.6", "temperature":"23.2", "weatherForecast":"200", "windDirection":"338.9", "windSpeed":"1.4"},
+     "202409050200":
+      {"humidity":"86.9", "temperature":"23.0", "weatherForecast":"200", "windDirection":"337.1", "windSpeed":"1.4"},
+     "202409050300":
+      {"humidity":"88.1", "temperature":"22.8", "weatherForecast":"200", "windDirection":"336.0", "windSpeed":"1.5"},
+     "202409050400":
+      {"humidity":"87.9", "temperature":"22.7", "weatherForecast":"200", "windDirection":"340.3", "windSpeed":"1.6"},
+     "202409050500":
+      {"humidity":"87.4", "temperature":"22.7", "weatherForecast":"200", "windDirection":"348.6", "windSpeed":"1.4"},
+     "202409050600":
+      {"humidity":"88.1", "temperature":"22.9", "weatherForecast":"200", "windDirection":"351.6", "windSpeed":"1.2"},
+     "202409050700":
+      {"humidity":"85.4", "temperature":"24.1", "weatherForecast":"200", "windDirection":"347.1", "windSpeed":"1.5"},
+     "202409050800":
+      {"humidity":"81.2", "temperature":"25.6", "weatherForecast":"200", "windDirection":"347.5", "windSpeed":"1.5"},
+     "202409050900":
+      {"humidity":"76.3", "temperature":"26.7", "weatherForecast":"200", "windDirection":"351.6", "windSpeed":"1.4"},
+     "202409051000":
+      {"humidity":"72.4", "temperature":"27.7", "weatherForecast":"100", "windDirection":"9.9", "windSpeed":"1.1"},
+     "202409051100":
+      {"humidity":"69.4", "temperature":"28.3", "weatherForecast":"100", "windDirection":"22.9", "windSpeed":"0.9"},
+     "202409051200":
+      {"humidity":"66.7", "temperature":"29.0", "weatherForecast":"100", "windDirection":"50.0", "windSpeed":"0.7"},
+     "202409051300":
+      {"humidity":"64.7", "temperature":"29.5", "weatherForecast":"100", "windDirection":"78.3", "windSpeed":"0.7"},
+     "202409051400":
+      {"humidity":"63.2", "temperature":"30.2", "weatherForecast":"100", "windDirection":"101.3", "windSpeed":"0.9"},
+     "202409051500":
+      {"humidity":"62.5", "temperature":"30.1", "weatherForecast":"100", "windDirection":"128.7", "windSpeed":"1.2"},
+     "202409051600":
+      {"humidity":"62.7", "temperature":"29.7", "weatherForecast":"100", "windDirection":"141.1", "windSpeed":"1.3"},
+     "202409051700":
+      {"humidity":"67.4", "temperature":"28.5", "weatherForecast":"200", "windDirection":"151.7", "windSpeed":"1.4"},
+     "202409051800":
+      {"humidity":"76.3", "temperature":"27.5", "weatherForecast":"200", "windDirection":"154.5", "windSpeed":"1.3"},
+     "202409051900":
+      {"humidity":"81.4", "temperature":"26.9", "weatherForecast":"100", "windDirection":"154.8", "windSpeed":"1.1"},
+     "202409052000":
+      {"humidity":"83.3", "temperature":"26.6", "weatherForecast":"100", "windDirection":"156.4", "windSpeed":"1.1"},
+     "202409052100":
+      {"humidity":"86.9", "temperature":"26.2", "weatherForecast":"100", "windDirection":"178.1", "windSpeed":"0.9"},
+     "202409052200":
+      {"humidity":"87.6", "temperature":"26.0", "weatherForecast":"100", "windDirection":"180.3", "windSpeed":"0.8"},
+     "202409052300":
+      {"humidity":"88.7", "temperature":"25.7", "weatherForecast":"100", "windDirection":"179.0", "windSpeed":"0.9"},
+     "202409060000":
+      {"humidity":"90.9", "temperature":"25.5", "weatherForecast":"100", "windDirection":"178.2", "windSpeed":"1.0"},
+     "202409060100":
+      {"humidity":"93.0", "temperature":"25.3", "weatherForecast":"100", "windDirection":"178.9", "windSpeed":"0.9"},
+     "202409060200":
+      {"humidity":"94.6", "temperature":"25.2", "weatherForecast":"100", "windDirection":"180.5", "windSpeed":"0.9"},
+     "202409060300":
+      {"humidity":"96.7", "temperature":"25.0", "weatherForecast":"100", "windDirection":"236.2", "windSpeed":"0.8"},
+     "202409060400":
+      {"humidity":"98.5", "temperature":"24.7", "weatherForecast":"100", "windDirection":"249.7", "windSpeed":"0.8"},
+     "202409060500":
+      {"humidity":"98.1", "temperature":"24.2", "weatherForecast":"100", "windDirection":"251.9", "windSpeed":"0.8"},
+     "202409060600":
+      {"humidity":"94.3", "temperature":"24.5", "weatherForecast":"100", "windDirection":"290.0", "windSpeed":"0.8"},
+     "202409060700":
+      {"humidity":"90.2", "temperature":"26.2", "weatherForecast":"100", "windDirection":"309.3", "windSpeed":"0.6"},
+     "202409060800":
+      {"humidity":"85.2", "temperature":"27.8", "weatherForecast":"100", "windDirection":"318.7", "windSpeed":"0.5"},
+     "202409060900":
+      {"humidity":"78.6", "temperature":"29.3", "weatherForecast":"100", "windDirection":"340.4", "windSpeed":"0.4"},
+     "202409061000":
+      {"humidity":"71.0", "temperature":"31.0", "weatherForecast":"100", "windDirection":"61.7", "windSpeed":"0.3"},
+     "202409061100":
+      {"humidity":"63.1", "temperature":"32.7", "weatherForecast":"100", "windDirection":"107.4", "windSpeed":"0.4"},
+     "202409061200":
+      {"humidity":"59.7", "temperature":"34.4", "weatherForecast":"100", "windDirection":"134.8", "windSpeed":"1.0"},
+     "202409061300":
+      {"humidity":"57.1", "temperature":"33.4", "weatherForecast":"100", "windDirection":"144.5", "windSpeed":"2.0"},
+     "202409061400":
+      {"humidity":"55.6", "temperature":"34.1", "weatherForecast":"100", "windDirection":"148.8", "windSpeed":"2.3"},
+     "202409061500":
+      {"humidity":"55.1", "temperature":"33.8", "weatherForecast":"100", "windDirection":"153.1", "windSpeed":"2.8"},
+     "202409061600":
+      {"humidity":"56.8", "temperature":"33.5", "weatherForecast":"100", "windDirection":"159.8", "windSpeed":"3.1"},
+     "202409061700":
+      {"humidity":"59.4", "temperature":"32.9", "weatherForecast":"100", "windDirection":"168.7", "windSpeed":"3.2"},
+     "202409061800":
+      {"humidity":"61.9", "temperature":"32.0", "weatherForecast":"100", "windDirection":"175.9", "windSpeed":"3.0"},
+     "202409061900":
+      {"humidity":"64.0", "temperature":"30.5", "weatherForecast":"100", "windDirection":"174.3", "windSpeed":"2.7"},
+     "202409062000":
+      {"humidity":"67.8", "temperature":"29.4", "weatherForecast":"100", "windDirection":"165.7", "windSpeed":"2.5"},
+     "202409062100":
+      {"humidity":"73.4", "temperature":"28.3", "weatherForecast":"100", "windDirection":"161.0", "windSpeed":"2.4"},
+     "202409062200":
+      {"humidity":"79.2", "temperature":"27.5", "weatherForecast":"100", "windDirection":"161.3", "windSpeed":"2.2"},
+     "202409062300":
+      {"humidity":"84.1", "temperature":"26.9", "weatherForecast":"100", "windDirection":"163.1", "windSpeed":"1.8"},
+     "202409070000":
+      {"humidity":"87.5", "temperature":"26.4", "weatherForecast":"100", "windDirection":"165.3", "windSpeed":"1.4"}
+    },
+   "ForecastPrecipitaiton":[
+      {"dtf":"202409042300-202409050000", "east":142.0, "fileName":"precipitation/shortme/202409042300-00060/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050000-202409050100", "east":142.0, "fileName":"precipitation/shortme/202409042300-00120/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050100-202409050200", "east":142.0, "fileName":"precipitation/shortme/202409042300-00180/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050200-202409050300", "east":142.0, "fileName":"precipitation/shortme/202409042300-00240/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050300-202409050400", "east":142.0, "fileName":"precipitation/shortme/202409042300-00300/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050400-202409050500", "east":142.0, "fileName":"precipitation/shortme/202409042300-00360/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050500-202409050600", "east":142.0, "fileName":"precipitation/msm15/202409042100-00540/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050600-202409050700", "east":142.0, "fileName":"precipitation/msm15/202409042100-00600/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050700-202409050800", "east":142.0, "fileName":"precipitation/msm15/202409042100-00660/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050800-202409050900", "east":142.0, "fileName":"precipitation/msm15/202409042100-00720/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409050900-202409051000", "east":142.0, "fileName":"precipitation/msm15/202409042100-00780/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051000-202409051100", "east":142.0, "fileName":"precipitation/msm15/202409042100-00840/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051100-202409051200", "east":142.0, "fileName":"precipitation/msm15/202409042100-00900/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051200-202409051300", "east":142.0, "fileName":"precipitation/msm33/202409042100-00960/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051300-202409051400", "east":142.0, "fileName":"precipitation/msm33/202409042100-01020/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051400-202409051500", "east":142.0, "fileName":"precipitation/msm33/202409042100-01080/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051500-202409051600", "east":142.0, "fileName":"precipitation/msm33/202409042100-01140/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051600-202409051700", "east":142.0, "fileName":"precipitation/msm33/202409042100-01200/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051700-202409051800", "east":142.0, "fileName":"precipitation/msm33/202409042100-01260/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051800-202409051900", "east":142.0, "fileName":"precipitation/msm33/202409042100-01320/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409051900-202409052000", "east":142.0, "fileName":"precipitation/msm33/202409042100-01380/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409052000-202409052100", "east":142.0, "fileName":"precipitation/msm33/202409042100-01440/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409052100-202409052200", "east":142.0, "fileName":"precipitation/msm33/202409042100-01500/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409052200-202409052300", "east":142.0, "fileName":"precipitation/msm33/202409042100-01560/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409052300-202409060000", "east":142.0, "fileName":"precipitation/msm33/202409042100-01620/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060000-202409060100", "east":142.0, "fileName":"precipitation/msm33/202409042100-01680/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060100-202409060200", "east":142.0, "fileName":"precipitation/msm33/202409042100-01740/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060200-202409060300", "east":142.0, "fileName":"precipitation/msm33/202409042100-01800/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060300-202409060400", "east":142.0, "fileName":"precipitation/msm33/202409042100-01860/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060400-202409060500", "east":142.0, "fileName":"precipitation/msm33/202409042100-01920/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060500-202409060600", "east":142.0, "fileName":"precipitation/msm33/202409042100-01980/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060600-202409060700", "east":142.0, "fileName":"precipitation/msm39/202409042100-02040/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060700-202409060800", "east":142.0, "fileName":"precipitation/msm39/202409042100-02100/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060800-202409060900", "east":142.0, "fileName":"precipitation/msm39/202409042100-02160/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409060900-202409061000", "east":142.0, "fileName":"precipitation/msm39/202409042100-02220/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061000-202409061100", "east":142.0, "fileName":"precipitation/msm39/202409042100-02280/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061100-202409061200", "east":142.0, "fileName":"precipitation/msm39/202409042100-02340/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061200-202409061300", "east":142.0, "fileName":"precipitation/gsm84/202409041500-02760/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061300-202409061400", "east":142.0, "fileName":"precipitation/gsm84/202409041500-02820/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061400-202409061500", "east":142.0, "fileName":"precipitation/gsm84/202409041500-02880/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061500-202409061600", "east":142.0, "fileName":"precipitation/gsm84/202409041500-02940/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061600-202409061700", "east":142.0, "fileName":"precipitation/gsm84/202409041500-03000/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061700-202409061800", "east":142.0, "fileName":"precipitation/gsm84/202409041500-03060/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061800-202409061900", "east":142.0, "fileName":"precipitation/gsm84/202409041500-03120/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409061900-202409062000", "east":142.0, "fileName":"precipitation/gsm84/202409041500-03180/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409062000-202409062100", "east":142.0, "fileName":"precipitation/gsm84/202409041500-03240/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409062100-202409062200", "east":142.0, "fileName":"precipitation/gsm84/202409041500-03300/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409062200-202409062300", "east":142.0, "fileName":"precipitation/gsm84/202409041500-03360/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0},
+      {"dtf":"202409062300-202409070000", "east":142.0, "fileName":"precipitation/gsm84/202409041500-03420/0/0120-0080/480-480/240-000/0003-0003.png", "north":38.0, "south":34.0, "value":"0.0", "west":136.0}
+    ],
+   "lx":297, "ly":272, "param":
+    {"key":"***", "lat":"35.73243", "lon":"139.71547", "rem":"all", "sid":"wimage72-service"},
+   "sessionId":"D50705511CC6CA127CCF690AB005348C", "sid":"wimage72-service", "systemTime":"2024/09/05 00:00:15.687 JST"}

@@ -1,0 +1,27 @@
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: poc-vdl-eks-cluster
+  region: ap-northeast-1
+  version: "1.31" 
+
+iam:
+  withOIDC: true
+  serviceRoleARN: arn:aws:iam::324037315774:role/poc-vdl-iamrole-eksClusterRole
+
+vpc:
+  id: vpc-0649599f98854db5e
+  subnets:
+    private:
+      ap-northeast-1a:
+        id: subnet-0a6c91f5e4312f8fc
+      ap-northeast-1c:
+        id: subnet-0acb95c402c29ad87
+  sharedNodeSecurityGroup: sg-0cdf084b5d9adec29
+  manageSharedNodeSecurityGroupRules: false
+
+privateCluster:
+  enabled: true
+  skipEndpointCreation: true

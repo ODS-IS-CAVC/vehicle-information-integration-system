@@ -1,0 +1,8 @@
+spring:
+  main:
+    web-application-type: none
+
+axispot:
+  storeNodeInfo: "clustercfg.poc-space-redis-tier4.soila4.apne1.cache.amazonaws.com:6379"
+  bitPattern: "tttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:52:ZFXY"
+  cacheTtl: 2592000 # 30day

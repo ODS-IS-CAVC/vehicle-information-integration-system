@@ -1,0 +1,20 @@
+# masking.enabledをtrueにする
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection: DEBUG
+target:
+  tier4:
+    target-info-api:
+      target-info:
+        response:
+          save:
+            masking:
+              enabled: true
+              query: |
+                .attribute.deviceIndividualInfo[] |= (
+                  .deviceID = 0 |
+                  .targetIndividualInfo[] |= (
+                    .targetID = 0
+                  )
+                )

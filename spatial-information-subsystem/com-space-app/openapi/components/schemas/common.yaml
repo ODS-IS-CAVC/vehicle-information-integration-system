@@ -1,0 +1,30 @@
+common:
+  DateAndTime:
+    type: string
+    format: date-time
+    description: "ISO 8601形式の日時"
+    example: "2024-01-02T00:01:02+09:00"
+  Lat:
+    type: number
+    description: "緯度"
+    format: double
+    minimum: -90
+    maximum: 90
+    example: 35.6242681254456
+  Lon:
+    type: number
+    description: "経度"
+    format: double
+    minimum: -180
+    maximum: 180
+    example: 139.74258640456
+  Height:
+    type: number
+    description: "高度[m]"
+    format: double
+    example: 0.01258640981
+  SpatialID:
+    type: string
+    format: string
+    description: "3次元空間において地理空間情報を一意に特定するためのID"
+    example: "22/1/931369/413142"

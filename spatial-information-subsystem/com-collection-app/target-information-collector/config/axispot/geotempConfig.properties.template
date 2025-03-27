@@ -1,0 +1,6 @@
+# Template
+bitPattern=tttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:52:ZFXY
+storeNodeInfo=[REDIS_CLUSTER_HOST]:[REDIS_CLUSTER_PORT]
+enableBulk=false
+# 3days = 259200sec
+cacheTtl=259200

@@ -1,0 +1,5 @@
+bundleRoot:
+  size: 1Gi
+  claimName: api-gw-pvc
+  accessMode: ReadWriteOnce
+  storageClass: gp3

@@ -1,0 +1,173 @@
+schemaJob:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Job ID
+      example: datajob_c0efdd45-e4b5-48c7-b27f-ee676181befc
+    name:
+      type: string
+      description: Job name
+      example: JobNo1
+    description:
+      type: string
+      description: Description of Job
+      example: The Job for Data X
+    customProperties:
+      type: object
+      description: User-specified Key/Values parameter
+      additionalProperties:
+        type: string
+      example: 
+        key1: value1
+    tags:
+      type: array
+      description: List of tags to be associated with the job
+      items:
+        $ref: '../../components/schemas/tag.yml#/schemaTag'
+    terms:
+      type: array
+      description: List of terms to be associated with the job
+      items:
+        $ref: '../../components/schemas/term.yml#/schemaTerm'
+    owner:
+      type: string
+      description: job owner information (Data provider ID)
+      format: uuid
+      example: e13a4776-b39d-f016-1365-a2113a11023f
+    externalUrl:
+      type: string
+      description: external link
+      example: http://externallinkexample.com
+
+schemaCreateJobRequest:
+  type: object
+  required: 
+    - name
+    - owner
+  properties:
+    name:
+      type: string
+      description: Job name
+      example: JobNo1
+    description:
+      type: string
+      description: Description of Job
+      example: The Job for Data X
+    customProperties:
+      type: object
+      description: |-  
+        User-specified Key/Values parameter
+        <ul>
+          <li>The following characters cannot be specified for customProperties keys</li>
+          <ul>
+            <li>String starting with vdlSpec</li>
+          </ul>
+          <li>The following characters cannot be specified for customProperties keys and values</li>
+          <ul>
+            <li>String containing =</li>
+          </ul>
+        </ul>
+      additionalProperties:
+        type: string
+      example: 
+        key1: value1
+    tags:
+      type: array
+      description: List of tags to be associated with the job
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: |-
+              Tag ID
+              <ul>
+                <li>Only existing tag can be specified for tag ID</li>
+                <li>Only tags created by the owner can be specified for the tag ID</li>
+              </ul>
+            pattern: '^.+_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+            example: weather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms:
+      type: array
+      description: List of terms to be associated with the job
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: |-
+              Term name
+              <ul>
+                <li>Only existing term can be specified for term name</li>
+              </ul>
+            example: sensitive
+    owner:
+      type: string
+      description: Job owner information (Data provider ID)
+      pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      example: e13a4776-b39d-f016-1365-a2113a11023f
+    externalUrl:
+      type: string
+      description: External links for the job
+      example: http://externallinkexample.com
+
+schemaUpdateJobRequest: 
+  type: object
+  properties:
+    description:
+      type: string
+      description: Description of Job
+      example: The Job for Data X
+    customProperties:
+      type: object
+      description: |-  
+        User-specified Key/Values parameter
+        <ul>
+          <li>The following characters cannot be specified for customProperties keys</li>
+          <ul>
+            <li>String starting with vdlSpec</li>
+          </ul>
+          <li>The following characters cannot be specified for customProperties keys and values</li>
+          <ul>
+            <li>String containing =</li>
+          </ul>
+        </ul>
+      additionalProperties:
+        type: string
+      example: 
+        key1: value1
+    tags:
+      type: array
+      description: List of tags to be associated with the job
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            description: |-
+              Tag ID
+              <ul>
+                <li>Only existing tag can be specified for tag ID</li>
+                <li>Only tags created by the owner can be specified for the tag ID</li>
+              </ul>
+            pattern: '^.+_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+            example: weather_e13a4776-b39d-f016-1365-a2113a11023f
+    terms:
+      type: array
+      description: List of terms to be associated with the job
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: |-
+              Term name
+              <ul>
+                <li>Only existing term can be specified for term name</li>
+              </ul>
+            example: sensitive
+    externalUrl:
+      type: string
+      description: External links for the job
+      example: http://externallinkexample.com

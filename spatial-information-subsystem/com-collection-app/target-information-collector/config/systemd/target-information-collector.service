@@ -1,0 +1,12 @@
+[Unit]
+Description=target-information-collector
+After=network.target
+
+[Service]
+User=digiline
+ExecStart=/opt/target-information-collector/bin/bootstrap.sh
+SuccessExitStatus=143
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

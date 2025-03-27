@@ -1,0 +1,605 @@
+schemaCustomAttr:
+  description: |-
+    Determine whether the specified key-value combination exists in custom attribute.
+    Multiple kay-value combinations can be specified. If multiple are specified, they will be evaluated as logical product (AND).<br>
+    comparison method: key-value match
+  type: array
+  nullable: true
+  items:
+    type: object
+    properties:
+      key:
+        type: string
+        example: key1
+      value:
+        type: string
+        example: ^value[0-9]+
+
+schemaParentDataset:
+  description: the dataset tied by VDL path. This condition is satisfied when at least one dateset matches.
+  type: object
+  nullable: true
+  properties:
+    datasetId:
+      description: |-
+        compared to datasetId of the dataset tied by VDL path.<br>
+        comparison method: exact match
+      type: string
+      example: dataset_42538c89-a746-44a7-8b88-b390e9fe8517
+    datasetNamePattern:
+      description: |-
+        compared to dataset name of the dataset tied by VDL path.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^dataset[A-Z]
+    customAttr:
+      $ref: '#/schemaCustomAttr'
+    ownerId:
+      description: |-
+        compared to owner ID of the dataset tied by VDL path.<br>
+        comparison method: exact match
+      type: string
+      format: uuid
+      example: d3c88c48-6bf7-47ef-8b21-de67f489ce5c
+    vdlPathPattern:
+      description: |-
+        compared to VDL path of the dataset tied by VDL path.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^/abc
+    tagPattern:
+      description: |-
+        compared to tag of the dataset tied by VDL path.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^tagname[A-Z]
+    termPattern:
+      description: |-
+        compared to business term of the dataset tied by VDL path.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^term[A-Z]
+
+schemaRelatedDataset:
+  description: the dataset tied by topic name. This condition is satisfied when at least one dateset matches.
+  type: object
+  nullable: true
+  properties:
+    datasetId:
+      description: |-
+        compared to datasetId of the dataset tied by topic name.<br>
+        comparison method: exact match
+      type: string
+      example: dataset_42538c89-a746-44a7-8b88-b390e9fe8517
+    datasetNamePattern:
+      description: |-
+        compared to dataset name of the dataset tied by topic name.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^dataset[A-Z]
+    customAttr:
+      $ref: '#/schemaCustomAttr'
+    ownerId:
+      description: |-
+        compared to owner ID of the dataset tied by topic name.<br>
+        comparison method: exact match
+      type: string
+      format: uuid
+      example: d3c88c48-6bf7-47ef-8b21-de67f489ce5c
+    topic:
+      description: |-
+        compared to VDL topic the dataset tied by topic name.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^topicname[A-Z]
+    tagPattern:
+      description: |-
+        compared to tag of the dataset tied by topic name.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^tagname[A-Z]
+    termPattern:
+      description: |-
+        compared to business term of the dataset tied by topic name.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^term[A-Z]
+
+schemaUpstreamDataset:
+  description: the dataset tied upstream in data lineage. This condition is satisfied when at least one dateset matches.
+  type: object
+  nullable: true
+  properties:
+    datasetId:
+      description: |-
+        compared to datasetId of the dataset upstream in data lineage.<br>
+        comparison method: exact match
+      type: string
+      example: dataset_42538c89-a746-44a7-8b88-b390e9fe8517
+    datasetNamePattern:
+      description: |-
+        compared to dataset name of the dataset upstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^dataset[A-Z]
+    customAttr:
+      $ref: '#/schemaCustomAttr'
+    ownerId:
+      description: |-
+        compared to owner ID of the dataset upstream in data lineage.<br>
+        comparison method: exact match
+      type: string
+      format: uuid
+      example: d3c88c48-6bf7-47ef-8b21-de67f489ce5c
+    vdlPathPattern:
+      description: |-
+        compared to VDL path of the dataset upstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^/abc
+    tagPattern:
+      description: |-
+        compared to tag of the dataset upstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^tagname[A-Z]
+    termPattern:
+      description: |-
+        compared to business term of the dataset upstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^term[A-Z]
+
+schemaDownstreamDataset:
+  description: the dataset tied downstream in data lineage. This condition is satisfied when at least one dateset matches.
+  type: object
+  nullable: true
+  properties:
+    datasetId:
+      description: |-
+        compared to datasetId of the dataset downstream in data lineage.<br>
+        comparison method: exact match
+      type: string
+      example: dataset_42538c89-a746-44a7-8b88-b390e9fe8517
+    datasetNamePattern:
+      description: |-
+        compared to dataset name of the dataset downstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^dataset[A-Z]
+    customAttr:
+      $ref: '#/schemaCustomAttr'
+    ownerId:
+      description: |-
+        compared to owner ID of the dataset downstream in data lineage.<br>
+        comparison method: exact match
+      type: string
+      format: uuid
+      example: d3c88c48-6bf7-47ef-8b21-de67f489ce5c
+    vdlPathPattern:
+      description: |-
+        compared to VDL path of the dataset downstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^/abc
+    tagPattern:
+      description: |-
+        compared to tag of the dataset downstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^tagname[A-Z]
+    termPattern:
+      description: |-
+        compared to business term of the dataset downstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^term[A-Z]
+
+schemaUpstreamDatajob:
+  description: the datajob tied upstream in data lineage. This condition is satisfied when at least one datejob matches.
+  type: object
+  nullable: true
+  properties:
+    jobId:
+      description: |-
+        compared to datajob ID of the datajob upstream in data lineage.<br>
+        comparison method: exact match
+      type: string
+      example: datajob_42538c89-a746-44a7-8b88-b390e9fe8517
+    jobNamePattern:
+      description: |-
+        compared to datajob name of the datajob upstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^datajob[A-Z]
+    customAttr:
+      description: custom attribute
+      $ref: '#/schemaCustomAttr'
+    ownerId:
+      description: |-
+        compared to owner ID of the datajob upstream in data lineage.<br>
+        comparison method: exact match
+      type: string
+      format: uuid
+      example: d3c88c48-6bf7-47ef-8b21-de67f489ce5c
+    linkPattern:
+      description: |-
+        compared to link of the datajob upstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^/abc
+    tagPattern:
+      description: |-
+        compared to tag of the datajob upstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^tagname[A-Z]
+    termPattern:
+      description: |-
+        compared to business term of the datajob upstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^term[A-Z]
+
+schemaDownstreamDatajob:
+  description: the datajob tied downstream in data lineage. This condition is satisfied when at least one datejob matches.
+  type: object
+  nullable: true
+  properties:
+    jobId:
+      description: |-
+        compared to datajob ID of the datajob downstream in data lineage.<br>
+        comparison method: exact match
+      type: string
+      example: datajob_42538c89-a746-44a7-8b88-b390e9fe8517
+    jobNamePattern:
+      description: |-
+        compared to datajob name of the datajob downstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^datajob[A-Z]
+    customAttr:
+      description: custom attribute
+      $ref: '#/schemaCustomAttr'
+    ownerId:
+      description: |-
+        compared to owner ID of the datajob downstream in data lineage.<br>
+        comparison method: exact match
+      type: string
+      format: uuid
+      example: d3c88c48-6bf7-47ef-8b21-de67f489ce5c
+    linkPattern:
+      description: |-
+        compared to link of the datajob downstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^/abc
+    tagPattern:
+      description: |-
+        compared to tag of the datajob downstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^tagname[A-Z]
+    termPattern:
+      description: |-
+        compared to business term of the datajob downstream in data lineage.<br>
+        comparison method: regular expression match
+      type: string
+      example: ^term[A-Z]
+
+
+schemaPolicyRule:
+  type: object
+  description: rule information
+  properties:
+    object:
+      description: object information of rule
+      type: object
+      properties:
+        providerId:
+          description: |-
+            compared to data provider ID of target resource.<br>
+            comparison method: exact match
+          type: string
+          format: uuid
+          example: 2492cdb4-e151-4721-a8d4-06ed683f776b
+          nullable: true
+        storageId:
+          description: |-
+            compared to data source ID of target resource.<br>
+            comparison method: exact match
+          type: string
+          format: uuid
+          example: e6cd0d56-2da6-4aea-9c37-46cbaf80b729
+          nullable: true
+        datasetId:
+          description: |-
+            compared to dataset ID of target resource.<br>
+            comparison method: exact match
+          type: string
+          example: dataset_42538c89-a746-44a7-8b88-b390e9fe8517
+          nullable: true
+        datasetNamePattern:
+          description: |-
+            compared to dataset name of target resource.<br>
+            comparison method: regular expression match
+          type: string
+          example: ^dataset[A-Z]
+          nullable: true
+        jobId:
+          description: |-
+            compared to datajob ID of target resource.<br>
+            comparison method: exact match
+          type: string
+          example: datajob_42538c89-a746-44a7-8b88-b390e9fe8517
+          nullable: true
+        jobNamePattern:
+          description: |-
+            compared to datajob name of target resource.<br>
+            comparison method: regular expression match
+          type: string
+          example: ^datajob[A-Z]
+          nullable: true
+        customAttr:
+          description: custom attribute
+          $ref: '#/schemaCustomAttr'
+          nullable: true
+        ownerId:
+          description: |-
+            compared to owner ID of target resource.<br>
+            comparison method: exact match
+          type: string
+          format: uuid
+          example: d3c88c48-6bf7-47ef-8b21-de67f489ce5c
+          nullable: true
+        vdlPathPattern:
+          description: |-
+            compared to VDL path of target resource.<br>
+            comparison method: regular expression match
+          type: string
+          example: ^/abc
+          nullable: true
+        topicNamePattern:
+          description: |-
+            compared to topic of target resource.<br>
+            comparison method: regular expression match
+          type: string
+          example: ^topicName[A-Z]
+          nullable: true          
+        linkPattern:
+          description: |-
+            compared to external link of target resource(datajob).<br>
+            comparison method: regular expression match
+          type: string
+          example: ^/abc
+          nullable: true
+        lastModificationTimeMs:
+          description: |-
+            compared to modification time of target resource.<br>
+            Compare with specified date and time. Multiple dates and times can be specified for comparison.
+            If multiple are specified, they will be evaluated as logical product (AND).
+            comparison method: time comparison
+          type: array
+          example: [{"condition": "lt", "comparison": "now", "unit": "days", "value": "55"}]
+          nullable: true
+          items:
+            type: object
+            properties:
+              condition:
+                type: string
+                enum: [eq,ne,gt,lt,ge,le]
+                example: ge
+              comparison:
+                type: string
+                pattern: ^now$|^((?:([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2}:[0-9]{2}(?:.[0-9]+)?))(Z|[+-][0-9]{2}:[0-9]{2})?)$
+                example: 2023-08-01T00:00:00+09:00
+                description: now or RFC3339 format
+              unit:
+                type: string
+                enum: [days,hours,minutes,seconds]
+                example: days
+                description: applies to value
+              value:
+                type: string
+                pattern: ^[0-9]*$
+                example: "1"
+        length:
+          description: |-
+            compared to data size of target resource.<br>
+            Determine the magnitude of a value specified as a number. Multiple numbercan be specified for comparison.
+            If multiple are specified, they will be evaluated as logical product (AND).
+            comparison method: numerical comparison
+          type: array
+          example: [{"condition": "lt", "value": "100000"}]
+          nullable: true
+          items:
+            type: object
+            properties:
+              condition:
+                type: string
+                enum: [eq,ne,gt,lt,ge,le]
+                example: ge
+              value:
+                type: string
+                pattern: ^[0-9]*$
+                example: "100000"
+        tagPattern:
+          description: |-
+            compared to tag of target resource.<br>
+            comparison method: regular expression match
+          type: string
+          example: ^tagname[A-Z]
+          nullable: true
+        termPattern:
+          description: |-
+            compared to business term of target resource.<br>
+            comparison method: regular expression match
+          type: string
+          example: ^term[A-Z]
+          nullable: true
+        parentDataset:
+          $ref: '#/schemaParentDataset'
+        relatedDataset:
+          $ref: '#/schemaRelatedDataset'
+        upstreamDataset:
+          $ref: '#/schemaUpstreamDataset'
+          nullable: true
+        downstreamDataset:
+          $ref: '#/schemaDownstreamDataset'
+          nullable: true
+        upstreamJob:
+          $ref: '#/schemaUpstreamDatajob'
+          nullable: true
+        downstreamJob:
+          $ref: '#/schemaDownstreamDatajob'
+          nullable: true
+        edcManagementApiPattern:
+          description: |-
+            compared to edcManagement of target resource.<br>
+            comparison method: regular expression match
+          type: string
+          example: ^term[A-Z]
+          nullable: true          
+    subject:
+      description: subject information of rule
+      type: object
+      nullable: true
+      properties:
+        userPattern:
+          description: |-
+            compared to user name of subject.<br>
+            comparison method: regular expression match
+          type: string
+          nullable: true
+        companyPattern:
+          description: |-
+            compared to company name of subject.<br>
+            comparison method: regular expression match
+          type: string
+          nullable: true
+        role:
+          description: |-
+            compared to role name of subject.<br>
+            comparison method: regular expression match
+          type: string
+          nullable: true
+    context:
+      description: context information of rule
+      type: object
+      nullable: true
+      properties:
+        validDate:
+          description: |-
+            compared to current time.<br>
+            Compare with specified date and time. Multiple dates and times can be specified for comparison.
+            If multiple are specified, they will be evaluated as logical product (AND).
+            comparison method: time comparison
+          type: array
+          nullable: true
+          items:
+            type: object
+            nullable: true
+            properties:
+              condition:
+                type: string
+                enum: [eq,ne,gt,lt,ge,le]
+              comparison:
+                type: string
+                format: date-time
+                description: RFC3339 date-time
+              unit:
+                type: string
+                enum: [days,hours,minutes,seconds]
+              value:
+                type: string
+                pattern: ^[0-9]*$
+        customData:
+          description: custom data
+          $ref: '#/schemaCustomAttr'
+          nullable: true
+    method:
+      description: method information of rule
+      type: object
+      nullable: true
+      properties:
+        values:
+          description: |-
+            method list. If it matches anything in the list, the condition is met.
+            In the case of stream data virtual integration platform only.
+            Validation check is as follows:
+            enum [WRITE, ALTER, DESCRIBE, CLUSTER_ACTION, ALTER_CONFIGS, DESCRIBE_CONFIGS, IDEMPOTENT_WRITE, CREATE_TOKENS, DESCRIBE_TOKENS]
+          type: array
+          items:
+            type: string
+            enum: [CREATE, READ, UPDATE, DELETE, PERSIST, CACHE_IN, CACHE_OUT, ALL, WRITE, ALTER, DESCRIBE, CLUSTER_ACTION, ALTER_CONFIGS, DESCRIBE_CONFIGS, IDEMPOTENT_WRITE, CREATE_TOKENS, DESCRIBE_TOKENS]
+schemaCreatePolicyRequest:
+  type: object
+  required:
+    - type
+    - ruleType
+    - rule
+  properties:
+    type:
+      type: string
+      description: resource type
+      enum: [provider, storage, stream, data, metadata, topic, dataset, job, edcConnector, edcManagement]
+      example: data
+    ruleType:
+      type: string
+      description: rule type
+      enum: [allow, deny]
+      example: allow
+    rule:
+      description: rule information
+      $ref: '#/schemaPolicyRule'
+
+schemaUpdatePolicyRequest:
+  type: object
+  properties:
+    type:
+      type: string
+      description: resource type
+      enum: [provider, storage, stream, data, metadata, topic, dataset, job, edcConnector, edcManagement]
+      example: data
+    ruleType:
+      type: string
+      description: rule type
+      enum: [allow, deny]
+      example: allow
+    rule:
+      description: rule information
+      $ref: '#/schemaPolicyRule'
+
+
+schemaPolicyResponse:
+  type: object
+  properties:
+    id:
+      type: string
+      format: uuid
+    type:
+      type: string
+      description: resource type
+      enum: [provider, storage, stream, data, metadata, topic, dataset, job, edcConnector, edcManagement]
+    ruleType:
+      type: string
+      description: rule type
+      enum: [allow, deny]
+    rule:
+      description: rule information
+      $ref: '#/schemaPolicyRule'
+
+schemaDefaultRuleListResponse:
+  type: object
+  properties:
+    providerId:
+      type: string
+      format: uuid
+
+schemaCreateContextRequest:
+  type: object
+  additionalProperties: true
+
+schemaGetContextResponse:
+  type: object
+  additionalProperties: true

@@ -1,0 +1,670 @@
+# 気象情報収集AP
+application:
+  time-zone: "Asia/Tokyo"
+  # spring-scheduler
+  scheduler:
+    # 毎時25分に実行する場合
+    cron: "0 25 * * * ?"
+    # 自動実行しない場合
+    # cron: "-"
+    zone: ${application.time-zone}
+
+# spring-boot
+spring:
+  application:
+    name: weather-information-collector
+
+# spring-web
+server:
+  port: 8181
+
+# logging
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection.timespatialindexcreator: INFO
+    com.nttdata.vehicleinfo.collection.weatherinformationcollector: INFO
+    jp.co.ntt.sic: INFO
+    org.springframework.web: INFO
+  file:
+    name: ${COM_COLLECTION_APP_HOME}/${spring.application.name}/logs/${spring.application.name}.log
+
+# spring-actuator
+# 本番環境では無効化すること
+# http://localhost:8181/actuator/info
+# http://localhost:8181/actuator/env
+# http://localhost:8181/actuator/health
+management:
+  server:
+    port: ${server.port}
+  endpoints:
+    web:
+      exposure:
+        # すべてを無効化する場合
+        include: ""
+        # すべてを許可する場合
+        # include: "*"
+
+# HALEX DreamApi
+halex:
+  dream-api:
+    # halex.dream-api.keyはgit管理しないため、
+    # 環境変数「HALEX_DREAMAPI_KEY」にて設定すること
+    key: ${HALEX_DREAMAPI_KEY:}
+    wimage72:
+      # halex.dream-api.wimage72.time-zoneはハレックス社のAPI仕様に準拠すること
+      # ・レスポンスのタイムゾーンのない日時を解析する際のタイムゾーンに利用する
+      # ・レスポンスの保存ディレクトリの日時のタイムゾーンに利用する
+      # ・レスポンスのsystemTime（タイムゾーンあり）をAxispotの属性updatedAtに変換する際のタイムゾーンに利用する
+      time-zone: "Asia/Tokyo"
+      request:
+        endpoint: https://fspweb01.halex.co.jp/wimage/hpd
+        parameters:
+          sid: wimage72-service
+          rem: all
+          proj: 0
+        coordinates:
+          # JR大甕駅周辺（一般道）zoom15
+          ## 15/29183/12809 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/36.5140511994/140.6195068359375
+          - lat: 36.5140511994
+            lon: 140.6195068359375
+          ## 15/29183/12810 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/36.5052208633/140.6195068359375
+          - lat: 36.5052208633
+            lon: 140.6195068359375
+          ## 15/29184/12809 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/36.5140511994/140.6304931640625
+          - lat: 36.5140511994
+            lon: 140.6304931640625
+          ## 15/29184/12810 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/36.5052208633/140.6304931640625
+          - lat: 36.5052208633
+            lon: 140.6304931640625
+          # 新東名高速道路駿河沼津SA～浜松SA（高速道）zoom15
+          ## 15/28921/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/137.7410888671875
+          - lat: 34.8453669318
+            lon: 137.7410888671875
+          ## 15/28921/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.7410888671875
+          - lat: 34.8363499907
+            lon: 137.7410888671875
+          ## 15/28922/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/137.7520751953125
+          - lat: 34.8453669318
+            lon: 137.7520751953125
+          ## 15/28922/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.7520751953125
+          - lat: 34.8363499907
+            lon: 137.7520751953125
+          ## 15/28923/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/137.7630615234375
+          - lat: 34.8453669318
+            lon: 137.7630615234375
+          ## 15/28923/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.7630615234375
+          - lat: 34.8363499907
+            lon: 137.7630615234375
+          ## 15/28924/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.7740478515625
+          - lat: 34.8363499907
+            lon: 137.7740478515625
+          ## 15/28925/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.7850341796875
+          - lat: 34.8363499907
+            lon: 137.7850341796875
+          ## 15/28926/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.7960205078125
+          - lat: 34.8363499907
+            lon: 137.7960205078125
+          ## 15/28927/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.8070068359375
+          - lat: 34.8363499907
+            lon: 137.8070068359375
+          ## 15/28928/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.8179931640625
+          - lat: 34.8363499907
+            lon: 137.8179931640625
+          ## 15/28929/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.8289794921875
+          - lat: 34.8363499907
+            lon: 137.8289794921875
+          ## 15/28929/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.8289794921875
+          - lat: 34.8273320619
+            lon: 137.8289794921875
+          ## 15/28930/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.8399658203125
+          - lat: 34.8363499907
+            lon: 137.8399658203125
+          ## 15/28930/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.8399658203125
+          - lat: 34.8273320619
+            lon: 137.8399658203125
+          ## 15/28931/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.8509521484375
+          - lat: 34.8273320619
+            lon: 137.8509521484375
+          ## 15/28932/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.8619384765625
+          - lat: 34.8273320619
+            lon: 137.8619384765625
+          ## 15/28933/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.8729248046875
+          - lat: 34.8273320619
+            lon: 137.8729248046875
+          ## 15/28934/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.8839111328125
+          - lat: 34.8273320619
+            lon: 137.8839111328125
+          ## 15/28935/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.8948974609375
+          - lat: 34.8273320619
+            lon: 137.8948974609375
+          ## 15/28936/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.9058837890625
+          - lat: 34.8273320619
+            lon: 137.9058837890625
+          ## 15/28937/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.9168701171875
+          - lat: 34.8273320619
+            lon: 137.9168701171875
+          ## 15/28937/12999 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8183131456/137.9168701171875
+          - lat: 34.8183131456
+            lon: 137.9168701171875
+          ## 15/28938/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.9278564453125
+          - lat: 34.8273320619
+            lon: 137.9278564453125
+          ## 15/28938/12999 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8183131456/137.9278564453125
+          - lat: 34.8183131456
+            lon: 137.9278564453125
+          ## 15/28939/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.9388427734375
+          - lat: 34.8273320619
+            lon: 137.9388427734375
+          ## 15/28939/12999 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8183131456/137.9388427734375
+          - lat: 34.8183131456
+            lon: 137.9388427734375
+          ## 15/28940/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.9498291015625
+          - lat: 34.8273320619
+            lon: 137.9498291015625
+          ## 15/28941/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.9608154296875
+          - lat: 34.8363499907
+            lon: 137.9608154296875
+          ## 15/28941/12998 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8273320619/137.9608154296875
+          - lat: 34.8273320619
+            lon: 137.9608154296875
+          ## 15/28942/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.9718017578125
+          - lat: 34.8363499907
+            lon: 137.9718017578125
+          ## 15/28943/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.9827880859375
+          - lat: 34.8363499907
+            lon: 137.9827880859375
+          ## 15/28944/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/137.9937744140625
+          - lat: 34.8453669318
+            lon: 137.9937744140625
+          ## 15/28944/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/137.9937744140625
+          - lat: 34.8363499907
+            lon: 137.9937744140625
+          ## 15/28945/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0047607421875
+          - lat: 34.8453669318
+            lon: 138.0047607421875
+          ## 15/28946/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0157470703125
+          - lat: 34.8453669318
+            lon: 138.0157470703125
+          ## 15/28947/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0267333984375
+          - lat: 34.8453669318
+            lon: 138.0267333984375
+          ## 15/28947/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/138.0267333984375
+          - lat: 34.8363499907
+            lon: 138.0267333984375
+          ## 15/28948/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0377197265625
+          - lat: 34.8453669318
+            lon: 138.0377197265625
+          ## 15/28948/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/138.0377197265625
+          - lat: 34.8363499907
+            lon: 138.0377197265625
+          ## 15/28949/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0487060546875
+          - lat: 34.8453669318
+            lon: 138.0487060546875
+          ## 15/28949/12997 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8363499907/138.0487060546875
+          - lat: 34.8363499907
+            lon: 138.0487060546875
+          ## 15/28950/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0596923828125
+          - lat: 34.8453669318
+            lon: 138.0596923828125
+          ## 15/28951/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0706787109375
+          - lat: 34.8453669318
+            lon: 138.0706787109375
+          ## 15/28952/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0816650390625
+          - lat: 34.8453669318
+            lon: 138.0816650390625
+          ## 15/28953/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.0926513671875
+          - lat: 34.8453669318
+            lon: 138.0926513671875
+          ## 15/28954/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.1036376953125
+          - lat: 34.8453669318
+            lon: 138.1036376953125
+          ## 15/28955/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.1146240234375
+          - lat: 34.8453669318
+            lon: 138.1146240234375
+          ## 15/28956/12995 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.854382885/138.1256103515625
+          - lat: 34.854382885
+            lon: 138.1256103515625
+          ## 15/28956/12996 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8453669318/138.1256103515625
+          - lat: 34.8453669318
+            lon: 138.1256103515625
+          ## 15/28957/12995 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.854382885/138.1365966796875
+          - lat: 34.854382885
+            lon: 138.1365966796875
+          ## 15/28958/12994 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8633978504/138.1475830078125
+          - lat: 34.8633978504
+            lon: 138.1475830078125
+          ## 15/28958/12995 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.854382885/138.1475830078125
+          - lat: 34.854382885
+            lon: 138.1475830078125
+          ## 15/28959/12993 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8724118276/138.1585693359375
+          - lat: 34.8724118276
+            lon: 138.1585693359375
+          ## 15/28959/12994 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8633978504/138.1585693359375
+          - lat: 34.8633978504
+            lon: 138.1585693359375
+          ## 15/28960/12993 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8724118276/138.1695556640625
+          - lat: 34.8724118276
+            lon: 138.1695556640625
+          ## 15/28961/12992 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8814248167/138.1805419921875
+          - lat: 34.8814248167
+            lon: 138.1805419921875
+          ## 15/28961/12993 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8724118276/138.1805419921875
+          - lat: 34.8724118276
+            lon: 138.1805419921875
+          ## 15/28962/12992 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8814248167/138.1915283203125
+          - lat: 34.8814248167
+            lon: 138.1915283203125
+          ## 15/28963/12992 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8814248167/138.2025146484375
+          - lat: 34.8814248167
+            lon: 138.2025146484375
+          ## 15/28964/12991 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8904368176/138.2135009765625
+          - lat: 34.8904368176
+            lon: 138.2135009765625
+          ## 15/28964/12992 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8814248167/138.2135009765625
+          - lat: 34.8814248167
+            lon: 138.2135009765625
+          ## 15/28965/12991 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8904368176/138.2244873046875
+          - lat: 34.8904368176
+            lon: 138.2244873046875
+          ## 15/28966/12990 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.89944783/138.2354736328125
+          - lat: 34.89944783
+            lon: 138.2354736328125
+          ## 15/28966/12991 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.8904368176/138.2354736328125
+          - lat: 34.8904368176
+            lon: 138.2354736328125
+          ## 15/28967/12989 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9084578539/138.2464599609375
+          - lat: 34.9084578539
+            lon: 138.2464599609375
+          ## 15/28967/12990 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.89944783/138.2464599609375
+          - lat: 34.89944783
+            lon: 138.2464599609375
+          ## 15/28968/12988 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9174668892/138.2574462890625
+          - lat: 34.9174668892
+            lon: 138.2574462890625
+          ## 15/28968/12989 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9084578539/138.2574462890625
+          - lat: 34.9084578539
+            lon: 138.2574462890625
+          ## 15/28969/12987 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9264749358/138.2684326171875
+          - lat: 34.9264749358
+            lon: 138.2684326171875
+          ## 15/28969/12988 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9174668892/138.2684326171875
+          - lat: 34.9174668892
+            lon: 138.2684326171875
+          ## 15/28970/12984 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9534931419/138.2794189453125
+          - lat: 34.9534931419
+            lon: 138.2794189453125
+          ## 15/28970/12985 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9444880623/138.2794189453125
+          - lat: 34.9444880623
+            lon: 138.2794189453125
+          ## 15/28970/12986 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9354819935/138.2794189453125
+          - lat: 34.9354819935
+            lon: 138.2794189453125
+          ## 15/28970/12987 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9264749358/138.2794189453125
+          - lat: 34.9264749358
+            lon: 138.2794189453125
+          ## 15/28971/12980 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9895035675/138.2904052734375
+          - lat: 34.9895035675
+            lon: 138.2904052734375
+          ## 15/28971/12981 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9805024453/138.2904052734375
+          - lat: 34.9805024453
+            lon: 138.2904052734375
+          ## 15/28971/12982 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9715003336/138.2904052734375
+          - lat: 34.9715003336
+            lon: 138.2904052734375
+          ## 15/28971/12983 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9624972324/138.2904052734375
+          - lat: 34.9624972324
+            lon: 138.2904052734375
+          ## 15/28971/12984 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9534931419/138.2904052734375
+          - lat: 34.9534931419
+            lon: 138.2904052734375
+          ## 15/28972/12979 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9985037001/138.3013916015625
+          - lat: 34.9985037001
+            lon: 138.3013916015625
+          ## 15/28972/12980 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9895035675/138.3013916015625
+          - lat: 34.9895035675
+            lon: 138.3013916015625
+          ## 15/28972/12981 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9805024453/138.3013916015625
+          - lat: 34.9805024453
+            lon: 138.3013916015625
+          ## 15/28973/12978 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0075028429/138.3123779296875
+          - lat: 35.0075028429
+            lon: 138.3123779296875
+          ## 15/28973/12979 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/34.9985037001/138.3123779296875
+          - lat: 34.9985037001
+            lon: 138.3123779296875
+          ## 15/28974/12977 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0165009958/138.3233642578125
+          - lat: 35.0165009958
+            lon: 138.3233642578125
+          ## 15/28974/12978 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0075028429/138.3233642578125
+          - lat: 35.0075028429
+            lon: 138.3233642578125
+          ## 15/28975/12977 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0165009958/138.3343505859375
+          - lat: 35.0165009958
+            lon: 138.3343505859375
+          ## 15/28976/12976 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0254981588/138.3453369140625
+          - lat: 35.0254981588
+            lon: 138.3453369140625
+          ## 15/28976/12977 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0165009958/138.3453369140625
+          - lat: 35.0165009958
+            lon: 138.3453369140625
+          ## 15/28977/12975 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0344943316/138.3563232421875
+          - lat: 35.0344943316
+            lon: 138.3563232421875
+          ## 15/28977/12976 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0254981588/138.3563232421875
+          - lat: 35.0254981588
+            lon: 138.3563232421875
+          ## 15/28978/12974 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0434895143/138.3673095703125
+          - lat: 35.0434895143
+            lon: 138.3673095703125
+          ## 15/28978/12975 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0344943316/138.3673095703125
+          - lat: 35.0344943316
+            lon: 138.3673095703125
+          ## 15/28979/12974 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0434895143/138.3782958984375
+          - lat: 35.0434895143
+            lon: 138.3782958984375
+          ## 15/28980/12974 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0434895143/138.3892822265625
+          - lat: 35.0434895143
+            lon: 138.3892822265625
+          ## 15/28981/12974 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0434895143/138.4002685546875
+          - lat: 35.0434895143
+            lon: 138.4002685546875
+          ## 15/28982/12973 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0524837066/138.4112548828125
+          - lat: 35.0524837066
+            lon: 138.4112548828125
+          ## 15/28982/12974 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0434895143/138.4112548828125
+          - lat: 35.0434895143
+            lon: 138.4112548828125
+          ## 15/28983/12972 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0614769084/138.4222412109375
+          - lat: 35.0614769084
+            lon: 138.4222412109375
+          ## 15/28983/12973 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0524837066/138.4222412109375
+          - lat: 35.0524837066
+            lon: 138.4222412109375
+          ## 15/28984/12972 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0614769084/138.4332275390625
+          - lat: 35.0614769084
+            lon: 138.4332275390625
+          ## 15/28984/12973 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0524837066/138.4332275390625
+          - lat: 35.0524837066
+            lon: 138.4332275390625
+          ## 15/28985/12971 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0704691198/138.4442138671875
+          - lat: 35.0704691198
+            lon: 138.4442138671875
+          ## 15/28985/12972 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0614769084/138.4442138671875
+          - lat: 35.0614769084
+            lon: 138.4442138671875
+          ## 15/28986/12970 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0794603404/138.4552001953125
+          - lat: 35.0794603404
+            lon: 138.4552001953125
+          ## 15/28986/12971 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0704691198/138.4552001953125
+          - lat: 35.0704691198
+            lon: 138.4552001953125
+          ## 15/28986/12972 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0614769084/138.4552001953125
+          - lat: 35.0614769084
+            lon: 138.4552001953125
+          ## 15/28987/12969 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0884505703/138.4661865234375
+          - lat: 35.0884505703
+            lon: 138.4661865234375
+          ## 15/28987/12970 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0794603404/138.4661865234375
+          - lat: 35.0794603404
+            lon: 138.4661865234375
+          ## 15/28988/12967 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1064280573/138.4771728515625
+          - lat: 35.1064280573
+            lon: 138.4771728515625
+          ## 15/28988/12968 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0974398093/138.4771728515625
+          - lat: 35.0974398093
+            lon: 138.4771728515625
+          ## 15/28988/12969 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.0884505703/138.4771728515625
+          - lat: 35.0884505703
+            lon: 138.4771728515625
+          ## 15/28989/12965 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1244015799/138.4881591796875
+          - lat: 35.1244015799
+            lon: 138.4881591796875
+          ## 15/28989/12966 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1154153142/138.4881591796875
+          - lat: 35.1154153142
+            lon: 138.4881591796875
+          ## 15/28989/12967 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1064280573/138.4881591796875
+          - lat: 35.1064280573
+            lon: 138.4881591796875
+          ## 15/28990/12965 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1244015799/138.4991455078125
+          - lat: 35.1244015799
+            lon: 138.4991455078125
+          ## 15/28991/12963 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1423711371/138.5101318359375
+          - lat: 35.1423711371
+            lon: 138.5101318359375
+          ## 15/28991/12964 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1333868542/138.5101318359375
+          - lat: 35.1333868542
+            lon: 138.5101318359375
+          ## 15/28991/12965 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1244015799/138.5101318359375
+          - lat: 35.1244015799
+            lon: 138.5101318359375
+          ## 15/28992/12962 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1513544284/138.5211181640625
+          - lat: 35.1513544284
+            lon: 138.5211181640625
+          ## 15/28992/12963 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1423711371/138.5211181640625
+          - lat: 35.1423711371
+            lon: 138.5211181640625
+          ## 15/28993/12962 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1513544284/138.5321044921875
+          - lat: 35.1513544284
+            lon: 138.5321044921875
+          ## 15/28994/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.5430908203125
+          - lat: 35.1603367281
+            lon: 138.5430908203125
+          ## 15/28994/12962 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1513544284/138.5430908203125
+          - lat: 35.1513544284
+            lon: 138.5430908203125
+          ## 15/28995/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.5540771484375
+          - lat: 35.1603367281
+            lon: 138.5540771484375
+          ## 15/28996/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.5650634765625
+          - lat: 35.1603367281
+            lon: 138.5650634765625
+          ## 15/28997/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.5760498046875
+          - lat: 35.1603367281
+            lon: 138.5760498046875
+          ## 15/28998/12960 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.169318036/138.5870361328125
+          - lat: 35.169318036
+            lon: 138.5870361328125
+          ## 15/28998/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.5870361328125
+          - lat: 35.1603367281
+            lon: 138.5870361328125
+          ## 15/28999/12960 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.169318036/138.5980224609375
+          - lat: 35.169318036
+            lon: 138.5980224609375
+          ## 15/29000/12958 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1872776759/138.6090087890625
+          - lat: 35.1872776759
+            lon: 138.6090087890625
+          ## 15/29000/12959 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.178298352/138.6090087890625
+          - lat: 35.178298352
+            lon: 138.6090087890625
+          ## 15/29000/12960 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.169318036/138.6090087890625
+          - lat: 35.169318036
+            lon: 138.6090087890625
+          ## 15/29001/12958 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1872776759/138.6199951171875
+          - lat: 35.1872776759
+            lon: 138.6199951171875
+          ## 15/29002/12957 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1962560078/138.6309814453125
+          - lat: 35.1962560078
+            lon: 138.6309814453125
+          ## 15/29002/12958 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1872776759/138.6309814453125
+          - lat: 35.1872776759
+            lon: 138.6309814453125
+          ## 15/29003/12957 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1962560078/138.6419677734375
+          - lat: 35.1962560078
+            lon: 138.6419677734375
+          ## 15/29004/12956 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.2052333475/138.6529541015625
+          - lat: 35.2052333475
+            lon: 138.6529541015625
+          ## 15/29004/12957 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1962560078/138.6529541015625
+          - lat: 35.1962560078
+            lon: 138.6529541015625
+          ## 15/29005/12956 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.2052333475/138.6639404296875
+          - lat: 35.2052333475
+            lon: 138.6639404296875
+          ## 15/29006/12956 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.2052333475/138.6749267578125
+          - lat: 35.2052333475
+            lon: 138.6749267578125
+          ## 15/29007/12956 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.2052333475/138.6859130859375
+          - lat: 35.2052333475
+            lon: 138.6859130859375
+          ## 15/29007/12957 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1962560078/138.6859130859375
+          - lat: 35.1962560078
+            lon: 138.6859130859375
+          ## 15/29008/12957 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1962560078/138.6968994140625
+          - lat: 35.1962560078
+            lon: 138.6968994140625
+          ## 15/29009/12957 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1962560078/138.7078857421875
+          - lat: 35.1962560078
+            lon: 138.7078857421875
+          ## 15/29009/12958 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1872776759/138.7078857421875
+          - lat: 35.1872776759
+            lon: 138.7078857421875
+          ## 15/29010/12957 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1962560078/138.7188720703125
+          - lat: 35.1962560078
+            lon: 138.7188720703125
+          ## 15/29010/12958 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1872776759/138.7188720703125
+          - lat: 35.1872776759
+            lon: 138.7188720703125
+          ## 15/29011/12958 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1872776759/138.7298583984375
+          - lat: 35.1872776759
+            lon: 138.7298583984375
+          ## 15/29011/12959 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.178298352/138.7298583984375
+          - lat: 35.178298352
+            lon: 138.7298583984375
+          ## 15/29012/12959 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.178298352/138.7408447265625
+          - lat: 35.178298352
+            lon: 138.7408447265625
+          ## 15/29012/12960 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.169318036/138.7408447265625
+          - lat: 35.169318036
+            lon: 138.7408447265625
+          ## 15/29013/12960 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.169318036/138.7518310546875
+          - lat: 35.169318036
+            lon: 138.7518310546875
+          ## 15/29013/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.7518310546875
+          - lat: 35.1603367281
+            lon: 138.7518310546875
+          ## 15/29014/12960 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.169318036/138.7628173828125
+          - lat: 35.169318036
+            lon: 138.7628173828125
+          ## 15/29014/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.7628173828125
+          - lat: 35.1603367281
+            lon: 138.7628173828125
+          ## 15/29015/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.7738037109375
+          - lat: 35.1603367281
+            lon: 138.7738037109375
+          ## 15/29016/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.7847900390625
+          - lat: 35.1603367281
+            lon: 138.7847900390625
+          ## 15/29016/12962 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1513544284/138.7847900390625
+          - lat: 35.1513544284
+            lon: 138.7847900390625
+          ## 15/29017/12961 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1603367281/138.7957763671875
+          - lat: 35.1603367281
+            lon: 138.7957763671875
+          ## 15/29017/12962 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1513544284/138.7957763671875
+          - lat: 35.1513544284
+            lon: 138.7957763671875
+          ## 15/29018/12962 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1513544284/138.8067626953125
+          - lat: 35.1513544284
+            lon: 138.8067626953125
+          ## 15/29019/12962 https://maps.gsi.go.jp/development/tileCoordCheck.html#15/35.1513544284/138.8177490234375
+          - lat: 35.1513544284
+            lon: 138.8177490234375
+        # 1秒間のリクエスト数
+        # ハレックス社のAPI仕様に準拠すること（5件/秒)
+        per-second: 5
+        # HTTPリクエストのタイムアウト（ミリ秒）
+        # 想定は1秒以内のため余裕をもって10秒(10000）
+        timeout: 10000
+        retry:
+          # 気象情報収集タスクのタイムアウト（ミリ秒）
+          # 毎時25分に開始を想定して30分（1800000）以内に終わらなければタイムアウト
+          timeout: 1800000
+          # 失敗した後の待機時間（ミリ秒）
+          # 負荷を考慮して1分(60000ms)
+          fixed-backoff: 60000
+      response:
+        save:
+          directory: ${COM_COLLECTION_APP_HOME}/${spring.application.name}/data/halex-dreamapi/wimage72-service
+          masking:
+            # マスク処理
+            # false(無効）
+            enabled: false
+            # マスク処理として実行するjqクエリ
+            # マスク対象の条件と上書きする値を指定すること
+            # jqクエリについてはjqを参考にすること
+            #  https://jqlang.github.io/jq/
+            # 利用可能な機能についてはjackson-jqのImplementationStatusを参照すること
+            #  https://github.com/eiiches/jackson-jq/tree/1.2.0?tab=readme-ov-file#implementation-status
+            # 例) 以下の値にマスクする場合
+            #     ActualInfosのtemperatureを"11.1"
+            #     ActualPrecipitationのvalueを"22.2"
+            #     ForecastInfosのtemperatureを"33.3"
+            # query: >
+            #  .ActualInfos |= with_entries(.value.temperature = "11.1") |
+            #  .ActualPrecipitation[] |= (.value="22.2") |
+            #  .ForecastInfos |= with_entries(.value.temperature = "33.3")
+            query: ""
+      copy-forecast:
+        # コピーの予報を作成する日数
+        # 合計で15日分の気象情報が必要な場合はハレックス社から3日分を除いた12を設定する
+        days: 12
+
+# Axispot
+axispot:
+  geotemp:
+    # Axispotのタイムゾーン
+    # AxispotのMovingObjectStoreData.getMovingObjectId()のISO8601形式を設定する際に利用する
+    # NOTE:
+    # updatedAtのタイムゾーンとして利用していたが現在は使っていない（Axispotが付与する情報のためAxispotのタイムゾーンを利用していたがレスポンスのsystemTimeを使うように変更（DreamApiのタイムゾーンを利用するように変更）したため）
+    # AxispotのMovingObjectStoreData.getMovingObjectId()は必須項目のため時間のISO8601形式を設定している（理由はデータ確認時に時間がわかりやすいため）
+    time-zone: "UTC"
+    config: ${COM_COLLECTION_APP_HOME}/${spring.application.name}/config/axispot/geotempConfig-${spring.profiles.active}.properties
+    save:
+      retry:
+        # Axispot格納処理のタイムアウト（ミリ秒）
+        # 内部連携のため5分(300000)
+        timeout: 300000
+        # 失敗した後の待機時間（ミリ秒）
+        # 内部連携のため10秒（10000）
+        fixed-backoff: 10000
+
+# VDL
+vdl:
+  api:
+    token:
+      request:
+        endpoint: https://172.18.176.11:31444/realms/vdl/protocol/openid-connect/token
+        parameters:
+          client-id: vdl_client
+          # vdl.api.token.request.parameters.client-secretはgit管理しないため、
+          # 環境変数「VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET」にて設定すること
+          client-secret: ${VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET:}
+          username: halex-admin
+          # vdl.api.token.request.parameters.passwordはgit管理しないため、
+          # 環境変数「VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD」にて設定すること
+          password: ${VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD:}
+          grant-type: password
+          scope: openid
+        # HTTPリクエストのタイムアウト（ミリ秒）
+        # 10秒(10000）
+        timeout: 10000
+        # 自己署名証明書を利用する場合は検証処理をスキップする必要があるためfalseとする
+        verify-ssl: false
+    data:
+      request:
+        endpoint: https://172.18.176.11:31090/api/v1/data
+        vdl-path-prefix: /provider-halex/weather/weather-information-collector/data/halex-dreamapi/wimage72-service
+        # HTTPリクエストのタイムアウト（ミリ秒）
+        # 10秒(10000）
+        timeout: 10000
+        # 自己署名証明書を利用する場合は検証処理をスキップする必要があるためfalseとする
+        verify-ssl: false
+        retry:
+          # VDL格納処理のタイムアウト（ミリ秒）
+          # 内部連携のため5分(300000)
+          timeout: 300000
+          # 失敗した後の待機時間（ミリ秒）
+          # 内部連携のため10秒（10000）
+          fixed-backoff: 10000
+

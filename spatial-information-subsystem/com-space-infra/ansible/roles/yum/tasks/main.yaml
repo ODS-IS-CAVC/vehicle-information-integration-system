@@ -1,0 +1,21 @@
+- name: Update yum packages
+  yum:
+    name: '*'
+    state: latest
+  become: yes
+
+- name: Install package "unzip"
+  yum:
+    name: unzip
+  become: true
+
+- name: Install package "git"
+  yum:
+    name: git
+  become: true
+
+- name: install package "jq"
+  dnf:
+    name: jq
+    state: latest
+  become: yes

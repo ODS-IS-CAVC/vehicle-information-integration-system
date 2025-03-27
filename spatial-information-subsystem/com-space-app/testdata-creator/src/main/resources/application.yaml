@@ -1,0 +1,16 @@
+spring:
+  main:
+    web-application-type: none
+
+axispot:
+  storeNodeInfo: "localhost:16379"
+  bitPattern: "tttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:52:ZFXY"
+  cacheTtl: 259200 # 3day
+
+testdata:
+  flushData: false
+  data: []
+  randomDataOutputDir: "./data/"
+  randomDataBaseTime: "2024-11-12T10:00:00+09:00"
+  randomDataDuration: 1h
+  randomData: []

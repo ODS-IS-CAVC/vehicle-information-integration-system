@@ -1,0 +1,48 @@
+# 2025/02/28にリクエストされるデータ群
+testdata:
+  flushData: false
+  data: []
+  randomDataOutputDir: "./data/"
+  # 個別設定で上書きするため以下の2つは使われない
+  randomDataBaseTime: "2025-01-28T10:00:00+09:00"
+  randomDataDuration: 1h
+  randomData:
+    # 6:00, 7:00, 8:00, 9:00のリクエストデータ
+    - id: "C4_202502280600"
+      name: "気象情報:（2/28(金) 09:00-12:00のデータ）"
+      templateType: Weather
+      interval: 1h
+      baseTime: "2025-02-28T09:00:00+09:00"
+      duration: 4h
+      updatedAtOffset: 1h
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 藤枝岡部ICを含む空間IDの中央座標
+            longitude: 138.2574462890625
+            latitude: 34.9174668892
+            altitude: 0.0
+      staticAttributes:
+        weatherForecast: "100"
+        windSpeed: "0.0"
+        precipitation: "0.0"
+    # 11:00, 12:00, 13:00のリクエストデータ
+    - id: "C4_202502281100"
+      name: "気象情報:（2/28(金) 14:00-16:00のデータ）"
+      templateType: Weather
+      interval: 1h
+      baseTime: "2025-02-28T14:00:00+09:00"
+      duration: 3h
+      updatedAtOffset: 1h
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 藤枝岡部ICを含む空間IDの中央座標
+            longitude: 138.2574462890625
+            latitude: 34.9174668892
+            altitude: 0.0
+      staticAttributes:
+        weatherForecast: "100"
+        windSpeed: "0.0"
+        precipitation: "0.0"
+

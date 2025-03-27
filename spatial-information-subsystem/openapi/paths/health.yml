@@ -1,0 +1,69 @@
+admin_health:
+  summary: This API group is related to the health check function.
+  get:
+    tags:
+      - health
+    operationId: healthReadEntireSystem
+    summary: Health check the VDL components (Entire System)
+    description: |- 
+      Health check the VDL components.
+      <ul>
+        <li>If even one false value exists in the details item of the returned health check information (json), the health check result is false and the HTTP status code:503 is returned.</li>
+      </ul>
+      Request example: GET /api/v1/admin/health
+    responses:
+      '200':
+        description: The health check completes successfully and health check information is returned.
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/health.yml#/schemaHealth'
+            example:
+              $ref: '../components/examples/health.yml#/health_get_sample'
+      '503':
+        description: One or more NGs were returned as a result of the health checks.
+        content:
+          application/json:
+            schema:
+              allOf: 
+                - $ref: '../components/schemas/health.yml#/schemaHealth'
+                - properties:
+                    health:
+                      example: false
+                    details:
+                      properties:
+                        database:
+                          example: false
+      '401':
+        description: No ID token or access token specified or If the discovery endpoint specified by "iss" in the token is not present in the configuration file.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Failed to authenticate.
+      '403':
+        description: Authorization function returned NG as an authorization decision result.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: Operation not permitted.
+      '500':
+        description: An error occurred in the server's internal processing.
+
+health:
+  summary: Unified Access Gateway health check (for Readiness Probe)
+  get:
+    tags:
+      - health
+    operationId: healthReadUnifiedAccessGateway
+    summary: Health check the VDL components(Unified Access Gateway)
+    description: |- 
+      Return the health Check information of the Unified Access Gateway.
+      <ul>
+        <li>Parameter: No body.</li>
+      </ul>
+      Request example: GET /api/v1/health
+    responses:
+      '204':
+        description: No Content

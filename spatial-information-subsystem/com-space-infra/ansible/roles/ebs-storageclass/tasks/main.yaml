@@ -1,0 +1,64 @@
+- name: create oidc-provider
+  command:
+    cmd: 'eksctl utils associate-iam-oidc-provider --cluster {{ env }}-vdl-eks-cluster-v2 --approve'
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: template eks-policy.j2
+  template:
+    src: ../files/eks-policy.j2
+    dest: $HOME/eks-policy.yaml
+    mode: 0644
+
+- name: create policy
+  command:
+    cmd: 'eksctl create iamserviceaccount -f eks-policy.yaml --approve'
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: template eks-addon.j2
+  template:
+    src: ../files/eks-addon.j2
+    dest: $HOME/eks-addon.yaml
+    mode: 0644
+
+- name: create addon
+  command:
+    cmd: 'eksctl create addon -f eks-addon.yaml'
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: get addon
+  command:
+    cmd: 'eksctl get addon --name aws-ebs-csi-driver --cluster {{ env }}-vdl-eks-cluster-v2'
+    chdir: $HOME/
+  register: eks_addon
+
+- debug: msg="{{ eks_addon.stdout }}"
+
+- name: template eks-storageclass.j2
+  template:
+    src: ../files/eks-storageclass.j2
+    dest: $HOME/eks-storageclass.yaml
+    mode: 0644
+
+- name: apply k8s storageclass
+  shell: |
+    kubectl apply -f ./eks-storageclass.yaml
+  args:
+    chdir: $HOME/
+
+- name: patch storageclass gp3
+  shell: |
+    kubectl patch storageclass gp3 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  args:
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: get storageclass
+  command:
+    cmd: 'kubectl get sc'
+    chdir: $HOME/
+  register: eks_storageclass
+
+- debug: msg="{{ eks_storageclass.stdout }}"

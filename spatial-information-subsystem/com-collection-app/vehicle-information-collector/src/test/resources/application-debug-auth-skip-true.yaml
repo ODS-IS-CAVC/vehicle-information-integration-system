@@ -1,0 +1,2 @@
+# debug-auth-skipをtrueにする
+vehicle.tier4.digital-zenso-api.debug-auth-skip: true

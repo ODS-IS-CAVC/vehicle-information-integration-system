@@ -1,0 +1,65 @@
+# 開発環境(dev)
+# 172.16.0.0/16
+# 実際に開発を進める環境、検証や実証中の追加開発やトラシューとしても利用する。
+
+# 気象情報収集AP
+application:
+  # spring-scheduler
+  scheduler:
+    # 毎時25分に実行する場合
+    cron: "0 25 * * * ?"
+    # 自動実行しない場合
+    # cron: "-"
+
+# logging
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection.timespatialindexcreator: INFO
+    com.nttdata.vehicleinfo.collection.weatherinformationcollector: INFO
+    jp.co.ntt.sic: INFO
+    org.springframework.web: INFO
+  file:
+    name: ./logs/${spring.application.name}.log
+
+# spring-web
+server:
+  port: 8081
+
+# spring-actuator
+management:
+  server:
+    port: ${server.port}
+  endpoints:
+    web:
+      exposure:
+        # すべてを無効化する場合
+        #include: ""
+        # すべてを許可する場合
+        include: "*"
+        # 本番環境では設定を見直すこと
+        # http://localhost:${management.server.port}/actuator/info
+        # http://localhost:${management.server.port}/actuator/env
+        # http://localhost:${management.server.port}/actuator/health
+        # include: "info,env,health"
+
+halex:
+  dream-api:
+    wimage72:
+      response:
+        save:
+          directory: ./data/halex-dreamapi/wimage72-service
+
+axispot:
+  geotemp:
+    config: ./config/axispot/geotempConfig-${spring.profiles.active}.properties
+
+vdl:
+  api:
+    token:
+      request:
+        endpoint: https://172.16.182.39:31444/realms/vdl/protocol/openid-connect/token
+    data:
+      request:
+        endpoint: https://172.16.182.39:30090/api/v1/data
+        vdl-path-prefix: /provider-halex/weather/weather-information-collector/data/halex-dreamapi/wimage72-service

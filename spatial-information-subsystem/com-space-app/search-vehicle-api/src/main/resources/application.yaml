@@ -1,0 +1,10 @@
+spring:
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: 8080
+
+axispot:
+  storeNodeInfo: "localhost:16379"
+  bitPattern: "tttttttffxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxytfxyt:52:ZFXY"

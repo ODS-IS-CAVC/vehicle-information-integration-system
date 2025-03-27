@@ -1,0 +1,26 @@
+tag_create_sample:
+  summary: simple tag create request
+  value:
+    name: weather
+    description: The Tag for Data X
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+tag_update_sample:
+  summary: simple tag update request
+  value:
+    description: changeddescription
+
+tag_get_sample: 
+  id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+  name: weather
+  description: The Tag for Data X
+  owner: e13a4776-b39d-f016-1365-a2113a11023f
+tag_list_sample: 
+  - id: weather_e13a4776-b39d-f016-1365-a2113a11023f
+    name: weather
+    description: The Tag for Data X
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+  - id: traffic_e13a4776-b39d-f016-1365-a2113a11023f
+    name: traffic
+    description: The Tag for Data Y
+    owner: e13a4776-b39d-f016-1365-a2113a11023f
+

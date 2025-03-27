@@ -1,0 +1,27 @@
+{
+  "dataModelType": "dataModelType",
+  "attribute": [
+    {
+      "vehicleId": "vehicleId1",
+      "vehicleName": "vehicleName1",
+      "status": "status1",
+      "location": {
+        "lat": 0.0,
+        "lng": 1.1,
+        "height": 2.2
+      },
+      "updatedAt": "2024-11-20T09:00:00.000000+00:00"
+    },
+    {
+      "vehicleId": "vehicleId2",
+      "vehicleName": "vehicleName2",
+      "status": "status2",
+      "location": {
+        "lat": 3.3,
+        "lng": 4.4,
+        "height": 5.5
+      },
+      "updatedAt": "2024-11-20T09:00:00.000000+00:00"
+    }
+  ]
+}

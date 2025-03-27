@@ -1,0 +1,607 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/spatialid/latlon2spatialid": {
+      "get": {
+        "tags": [
+          "spatialid"
+        ],
+        "summary": "Get Latlon Spatialid",
+        "operationId": "get_latlon_spatialid_spatialid_latlon2spatialid_get",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 85.0511287797,
+              "minimum": -85.0511287797,
+              "title": "Lat"
+            }
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "maximum": 180,
+              "minimum": -180,
+              "title": "Lon"
+            }
+          },
+          {
+            "name": "alt",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "title": "Alt"
+            }
+          },
+          {
+            "name": "h_zoom",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 25,
+              "minimum": 0,
+              "title": "H Zoom"
+            }
+          },
+          {
+            "name": "v_zoom",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 25,
+              "minimum": 0,
+              "title": "V Zoom"
+            }
+          },
+          {
+            "name": "crs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                }
+              ],
+              "default": 4326,
+              "title": "Crs"
+            }
+          },
+          {
+            "name": "timeid_flg",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 1,
+                  "minimum": 0
+                }
+              ],
+              "default": 0,
+              "title": "Timeid Flg"
+            }
+          },
+          {
+            "name": "interval",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                }
+              ],
+              "default": 0,
+              "title": "Interval"
+            }
+          },
+          {
+            "name": "start_datetime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              ],
+              "title": "Start Datetime"
+            }
+          },
+          {
+            "name": "end_datetime",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              ],
+              "title": "End Datetime"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                }
+              ],
+              "default": "default",
+              "title": "Sort"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSpatialidResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spatialid/multi_latlon2spatialid": {
+      "post": {
+        "tags": [
+          "spatialid"
+        ],
+        "summary": "Get Multi Latlon Spatialid",
+        "operationId": "get_multi_latlon_spatialid_spatialid_multi_latlon2spatialid_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultiLatolon2spatialidRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostSpatialidResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spatialid/spatialid2latlon": {
+      "get": {
+        "tags": [
+          "spatialid"
+        ],
+        "summary": "Get Coord By Spatialid",
+        "operationId": "get_coord_by_spatialid_spatialid_spatialid2latlon_get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "flg",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "maximum": 1,
+              "minimum": 0,
+              "title": "Flg"
+            }
+          },
+          {
+            "name": "crs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                }
+              ],
+              "default": 4326,
+              "title": "Crs"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCoordinatesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spatialid/multi_spatialid2latlon": {
+      "post": {
+        "tags": [
+          "spatialid"
+        ],
+        "summary": "Get Multi Spatialid Latlon",
+        "operationId": "get_multi_spatialid_latlon_spatialid_multi_spatialid2latlon_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultiSpatialid2latlonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostCoordinatesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GetCoordinatesResponse": {
+        "properties": {
+          "coordinates": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Coordinates"
+          }
+        },
+        "type": "object",
+        "required": [
+          "coordinates"
+        ],
+        "title": "GetCoordinatesResponse"
+      },
+      "GetSpatialidResponse": {
+        "properties": {
+          "spatialid": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spatialid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "spatialid"
+        ],
+        "title": "GetSpatialidResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MultiLatolon2spatialidRequest": {
+        "properties": {
+          "lat": {
+            "type": "number",
+            "maximum": 85.0511287797,
+            "minimum": -85.0511287797,
+            "title": "Lat"
+          },
+          "lon": {
+            "type": "number",
+            "maximum": 180,
+            "minimum": -180,
+            "title": "Lon"
+          },
+          "alt": {
+            "type": "number",
+            "title": "Alt"
+          },
+          "h_zoom": {
+            "type": "integer",
+            "maximum": 25,
+            "minimum": 0,
+            "title": "H Zoom"
+          },
+          "v_zoom": {
+            "type": "integer",
+            "maximum": 25,
+            "minimum": 0,
+            "title": "V Zoom"
+          },
+          "crs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Crs",
+            "default": 4326
+          },
+          "timeid_flg": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 1,
+                "minimum": 0
+              }
+            ],
+            "title": "Timeid Flg",
+            "default": 0
+          },
+          "sequence": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              }
+            ],
+            "title": "Sequence",
+            "default": false
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 60,
+                "minimum": 0
+              }
+            ],
+            "title": "Limit",
+            "default": 6
+          },
+          "interval": {
+            "anyOf": [
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Interval",
+            "default": 0
+          },
+          "start_datetime": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Start Datetime",
+            "default": []
+          },
+          "end_datetime": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "End Datetime",
+            "default": []
+          },
+          "sort": {
+            "anyOf": [
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Sort",
+            "default": "default"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lat",
+          "lon",
+          "alt",
+          "h_zoom",
+          "v_zoom"
+        ],
+        "title": "MultiLatolon2spatialidRequest"
+      },
+      "MultiSpatialid2latlonRequest": {
+        "properties": {
+          "id": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Id"
+          },
+          "flg": {
+            "type": "integer",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Flg"
+          },
+          "crs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Crs",
+            "default": 4326
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "flg"
+        ],
+        "title": "MultiSpatialid2latlonRequest"
+      },
+      "PostCoordinatesResponse": {
+        "properties": {
+          "coordinates": {
+            "items": {
+              "items": {
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Coordinates"
+          }
+        },
+        "type": "object",
+        "required": [
+          "coordinates"
+        ],
+        "title": "PostCoordinatesResponse"
+      },
+      "PostSpatialidResponse": {
+        "properties": {
+          "spatialid": {
+            "items": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Spatialid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "spatialid"
+        ],
+        "title": "PostSpatialidResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

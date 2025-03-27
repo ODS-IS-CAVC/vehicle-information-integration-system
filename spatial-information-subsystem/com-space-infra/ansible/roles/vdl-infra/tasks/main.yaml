@@ -1,0 +1,93 @@
+- name: install nfs-utils
+  dnf:
+    name: nfs-utils
+    state: latest
+  become: yes
+
+- name: install git
+  dnf:
+    name: git
+    state: latest
+  become: yes
+
+- name: mkdir /mnt/nfs_share directory
+  file:
+    path: /mnt/nfs_share
+    state: directory
+    mode: '0777'
+  become: yes
+
+- name: copy /etc/exports
+  template:
+    src: ../templates/exports
+    dest: /etc/exports
+  become: yes
+
+- name: systemctl start nfs-server
+  systemd:
+    name: nfs-server
+    state: started
+    enabled: yes
+  become: yes
+
+- name: download helm
+  get_url:
+    url: https://get.helm.sh/helm-v3.16.3-linux-amd64.tar.gz
+    dest: $HOME/
+
+- name: unarchive helm
+  unarchive:
+    src: $HOME/helm-v3.16.3-linux-amd64.tar.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: copy helm
+  copy:
+    src: /tmp/linux-amd64/helm
+    dest: /usr/local/bin/helm
+    remote_src: yes
+    mode: 0755
+  become: yes
+
+- name: helm plugin install
+  command:
+    cmd: 'helm plugin install https://github.com/databus23/helm-diff'
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: helm repo add nfs-subdir-external-provisioner
+  command:
+    cmd: 'helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/'
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: helm install nfs-client-provisioner
+  command:
+    cmd: 'helm install nfs-client-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server={{ eks_work_ip }} --set nfs.path=/mnt/nfs_share --set storageClass.name=nfs-client'
+    chdir: $HOME/
+  ignore_errors: true
+
+- name: download helmfile
+  get_url:
+    url: https://github.com/roboll/helmfile/releases/download/v0.144.0/helmfile_linux_amd64
+    dest: /tmp
+
+- name: copy helmfile
+  copy:
+    src: /tmp/helmfile_linux_amd64
+    dest: /usr/local/bin/helmfile
+    remote_src: yes
+    mode: 0755
+  become: yes
+
+- name: kubectl patch storageclass nfs-client
+  shell: |
+    kubectl patch storageclass nfs-client -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  args:
+    chdir: $HOME/
+
+- name: kubectl patch storageclass gp3
+  shell: |
+    kubectl patch storageclass gp3 -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class":"false"}}}'
+  args:
+    chdir: $HOME/

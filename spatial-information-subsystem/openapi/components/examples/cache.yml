@@ -1,0 +1,2 @@
+cache_create_sample:
+  result: /coopX/s3/dir/file1 already in Alluxio fully\\n/coopX/s3/dir/file2 loaded\\n/coopX/s3/dir/file3 already in Alluxio fully

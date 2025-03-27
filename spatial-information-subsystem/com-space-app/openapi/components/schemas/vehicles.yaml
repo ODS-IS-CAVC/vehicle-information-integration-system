@@ -1,0 +1,75 @@
+vehicles:
+  VehicleID:
+    type: string
+    format: uuid 
+    description: "自度運転車両を一意に識別するID"
+    minLength: 36
+    maxLength: 36
+    example: "78aa302c-1600-44b3-a331-e4659c0b28a1"
+  VehicleName:
+    type: string
+    minLength: 1
+    maxLength: 20
+    description: "自動運転車両名"
+    example: "vehicle1"
+  VehicleStatus:
+    type: string
+    description: "自動運転車両のステータス"
+    enum:
+      - disconnected
+      - connected
+      - initializing
+      - task_acceptable
+      - ready
+      - driving
+      - task_completed
+      - pausing
+      - abnormal
+      - shutdown
+    example: "driving"
+
+  VehicleProbeInfo:
+    type: object
+    required:
+      - targetStartDateTime
+      - targetEndDateTime
+      - spaces
+    properties:
+      targetStartDateTime:
+        "$ref": "./common.yaml#/common/DateAndTime"
+      targetEndDateTime:
+        "$ref": "./common.yaml#/common/DateAndTime"
+      spaces:
+        type: array
+        items:
+          "$ref": "#/vehicles/VehicleSpaceDetail"
+  VehicleSpaceDetail:
+    type: object
+    required:
+      - spatialID
+      - vehicles
+    properties:
+      spatialID:
+        "$ref": "./common.yaml#/common/SpatialID"
+      vehicles:
+        type: array
+        "$ref": "#/vehicles/VehicleProbeDetail"
+  VehicleProbeDetail:
+    type: object
+    properties:
+      vehicleID:
+        "$ref": "#/vehicles/VehicleID"
+      vehicleName:
+        "$ref": "#/vehicles/VehicleName"
+      status:
+        "$ref": "#/vehicles/VehicleStatus"
+      spatialID:
+        "$ref": "./common.yaml#/common/SpatialID"
+      lat:
+        "$ref": "./common.yaml#/common/Lat"
+      lon:
+        "$ref": "./common.yaml#/common/Lon"
+      height:
+        "$ref": "./common.yaml#/common/Height"
+      updatedAt:
+        "$ref": "./common.yaml#/common/DateAndTime"

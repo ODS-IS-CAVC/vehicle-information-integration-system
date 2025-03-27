@@ -1,0 +1,25 @@
+# 2025/02/21の物標ダミーデータ
+testdata:
+  flushData: false
+  data: []
+  randomDataOutputDir: "./data/"
+  randomDataBaseTime: "2025-02-21T08:00:00+09:00"
+  randomDataDuration: 14h # 22時まで
+  randomData:
+    - id: "C1_20250221"
+      name: "物標情報:（2/21(金) 08:00-22:00のデータ）"
+      templateType: Target
+      interval: 60m
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 指定された値から分解能を考慮した座標
+            longitude: 140.62823
+            latitude: 36.511718
+            altitude: 0
+      staticAttributes:
+        targetID: "1234567890"
+        speed: "0"
+        sizeClassification: "2"
+        roleClassification: "0"
+        restingState: "300"

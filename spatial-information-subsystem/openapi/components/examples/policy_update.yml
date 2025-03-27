@@ -1,0 +1,9 @@
+policy_update_sample:
+  summary: policy update request
+  value:
+    rule:
+      method:
+        values:
+          - CREATE
+          - READ
+          - DELETE

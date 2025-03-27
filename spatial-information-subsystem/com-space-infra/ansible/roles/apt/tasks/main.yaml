@@ -1,0 +1,15 @@
+- name: Update and upgrade apt packages
+  apt:
+    update_cache: yes
+    upgrade: yes
+  become: true
+
+- name: Install package "openjdk-21-jdk"
+  apt:
+    name: openjdk-21-jdk
+  become: true
+
+- name: Install package "unzip"
+  apt:
+    name: unzip
+  become: true

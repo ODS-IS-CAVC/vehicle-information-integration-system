@@ -1,0 +1,81 @@
+weathers:
+  Humidity:
+    type: number
+    description: "湿度。単位=% 0.1刻み"
+    format: double
+    example: 65.0
+  Temperature:
+    type: number
+    description: "気温。単位=℃ 0.1刻み"
+    format: double
+    example: 28.6
+  WeatherForecast:
+    type: string
+    description: "天気。100=晴、200=曇、300=雨、400=雪、500=みぞれ、65535.0=不明"
+    enum:
+      - "100"
+      - "200"
+      - "300"
+      - "400"
+      - "500"
+      - "65535.0"
+    example: "100"
+  WindDirection:
+    type: number
+    description: "風向。単位=度 0.1刻み"
+    format: double
+    example: 21.1
+  WindSpeed:
+    type: number
+    description: "風速。単位=m/s 0.1刻み"
+    format: double
+    example: 2.7
+  Precipitation:
+    type: number
+    description: "時間降水量。単位=mm/h 0.1刻み"
+    format: double
+    example: 0.5
+
+  WeatherInfo:
+    type: object
+    required:
+      - datetimes
+    properties:
+      datetimes:
+        type: array
+        items:
+          "$ref": "#/weathers/WeatherDateTimeDetail"
+  WeatherDateTimeDetail:
+    type: object
+    required:
+      - dateTime
+      - weathers
+    properties:
+      dateTime:
+        "$ref": "./common.yaml#/common/DateAndTime"
+      weathers:
+        type: array
+        "$ref": "#/weathers/WeatherSpaceDetail"
+  WeatherSpaceDetail:
+    type: object
+    properties:
+      spatialID:
+        "$ref": "./common.yaml#/common/SpatialID"
+      lat:
+        "$ref": "./common.yaml#/common/Lat"
+      lon:
+        "$ref": "./common.yaml#/common/Lon"
+      humidity:
+        "$ref": "#/weathers/Humidity"
+      temperature:
+        "$ref": "#/weathers/Temperature"
+      weatherForecast:
+        "$ref": "#/weathers/WeatherForecast"
+      windDirection:
+        "$ref": "#/weathers/WindDirection"
+      windSpeed:
+        "$ref": "#/weathers/WindSpeed"
+      precipitation:
+        "$ref": "#/weathers/Precipitation"
+      updatedAt:
+        "$ref": "./common.yaml#/common/DateAndTime"

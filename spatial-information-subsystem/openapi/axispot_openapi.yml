@@ -1,0 +1,367 @@
+---
+openapi: 3.0.2
+info:
+  title: Axispot OpenAPI Definition
+  version: 0.0.1
+servers:
+- url: http://localhost:8081/gen/api/axispot/v1
+  description: REST API for Axispot
+tags:
+- name: geotemp
+  description: geotemp operations
+paths:
+  /moving-objects:
+    post:
+      tags:
+      - geotemp
+      summary: "移動体データをKVSに格納する"
+      operationId: setGeotemp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeotempSetRequest"
+      responses:
+        "201":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: "[Axispot]不正な構文、無効なリクエストメッセージのため、送信されたリクエストをサーバーが処理できませんでした。"
+        "404":
+          description: "[Axispot]クライアントが要求するリソースに対して、サーバーは該当するコンテンツを見つけることができませんでした。"
+        '500':
+          description: "[Axispot]サーバーで予期しない状態が発生したため、サーバーは要求を実行できません。"
+  /moving-objects/point:
+    get:
+      tags:
+      - geotemp
+      summary: "KVSにXYZ形式で格納された移動体データを検索する"
+      operationId: searchGeotemp
+      parameters:
+      - name: time
+        in: query
+        required: true
+        schema: { type: integer, format: int64 }
+        example: 1563375600
+        description: "時刻情報(unixtime秒)"
+      - name: longitude
+        in: query
+        required: true
+        schema: { type: number, format: double }
+        example: 1.0
+        description: "位置情報(経度)"
+      - name: latitude
+        in: query
+        required: true
+        schema: { type: number, format: double }
+        example: 1.0
+        description: "位置情報(緯度)"
+      - name: altitude
+        in: query
+        required: true
+        schema: { type: number, format: double }
+        example: 1.0
+        description: "位置情報(高度)"
+      - name: searchPrecision
+        in: query
+        schema: { type: integer }
+        example: 85
+        description: "検索精度"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MovingObject"
+        "400":
+          description: "[Axispot]不正な構文、無効なリクエストメッセージのため、送信されたリクエストをサーバーが処理できませんでした。"
+        "404":
+          description: "[Axispot]クライアントが要求するリソースに対して、サーバーは該当するコンテンツを見つけることができませんでした。"
+        '500':
+          description: "[Axispot]サーバーで予期しない状態が発生したため、サーバーは要求を実行できません。"
+  /moving-objects/spatial-id:
+    get:
+      tags:
+      - geotemp
+      summary: "KVSにZFXY形式で格納された移動体データを検索する"
+      operationId: zfxySearchGeotemp
+      parameters:
+      - name: time
+        in: query
+        required: true
+        schema: { type: integer, format: int64 }
+        example: 1563375600
+        description: "時刻情報(unixtime秒)"
+      - name: zoom
+        in: query
+        required: true
+        schema: { type: integer }
+        example: 15
+        description: "ズームレベル"
+      - name: longitudeIdx
+        in: query
+        required: true
+        schema: { type: integer }
+        example: 16475
+        description: "経度インデックス"
+      - name: latitudeIdx
+        in: query
+        required: true
+        schema: { type: integer }
+        example: 16292
+        description: "緯度インデックス"
+      - name: altitudeIdx
+        in: query
+        required: true
+        schema: { type: integer }
+        example: 0
+        description: "高度インデックス"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MovingObject"
+        "400":
+          description: "[Axispot]不正な構文、無効なリクエストメッセージのため、送信されたリクエストをサーバーが処理できませんでした。"
+        "404":
+          description: "[Axispot]クライアントが要求するリソースに対して、サーバーは該当するコンテンツを見つけることができませんでした。"
+        '500':
+          description: "[Axispot]サーバーで予期しない状態が発生したため、サーバーは要求を実行できません。"
+  /moving-objects-in-polygon:
+    get:
+      tags:
+      - search-polygon
+      summary: "任意ポリゴン内の移動体データを検索する"
+      operationId: searchPolygonList
+      parameters:
+      - name: polygonList
+        in: query
+        required: true
+        schema: { type: string }
+        example: "POLYHEDRALSURFACE Z (((139.833 36.003 1,139.833 36.006 1,139.834 36.006 1,139.834 36.003 1,139.833 36.003 1)),((139.833 36.003 10,139.834 36.003 10,139.834 36.006 10,139.833 36.006 10,139.833 36.003 10)),((139.833 36.003 1,139.833 36.003 10,139.833 36.006 10,139.833 36.006 1,139.833 36.003 1)),((139.833 36.006 1,139.833 36.006 10,139.834 36.006 10,139.834 36.006 1,139.833 36.006 1)),((139.834 36.006 1,139.834 36.006 10,139.834 36.003 10,139.834 36.003 1,139.834 36.006 1)),((139.834 36.003 1,139.834 36.003 10,139.833 36.003 10,139.833 36.003 1,139.834 36.003 1)))"
+        description: "任意ポリゴンのポリゴン形状(WKT形式)のリスト ※ポリゴンを複数記載する場合は、';'区切りで指定"
+      - name: time
+        in: query
+        required: true
+        schema: { type: integer, format: int64 }
+        example: 1563375600
+        description: "時刻情報(unixtime秒)"
+      - name: searchPrecision
+        in: query
+        schema: { type: integer }
+        example: 81
+        description: "検索精度"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PolygonSearchResponseList"
+        "400":
+          description: "[Axispot]不正な構文、無効なリクエストメッセージのため、送信されたリクエストをサーバーが処理できませんでした。"
+        "404":
+          description: "[Axispot]クライアントが要求するリソースに対して、サーバーは該当するコンテンツを見つけることができませんでした。"
+        '500':
+          description: "[Axispot]サーバーで予期しない状態が発生したため、サーバーは要求を実行できません。" 
+  /polygon-and-mesh-objects:
+    get:
+      tags:
+      - search-polygon
+      summary: "ポリゴンDBに登録されているポリゴンIDを指定し、交差するメッシュポリゴン情報を検索する"
+      operationId: searchPolygonId
+      parameters:
+      - name: polygonId
+        in: query
+        required: true
+        schema: { type: string }
+        example: "333"
+        description: "ポリゴンDBのポリゴンID"
+      - name: searchPrecision
+        in: query
+        schema: { type: integer }
+        example: 81
+        description: "検索精度"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PolygonAndMeshObject"
+        "400":
+          description: "[Axispot]不正な構文、無効なリクエストメッセージのため、送信されたリクエストをサーバーが処理できませんでした。"
+        "404":
+          description: "[Axispot]クライアントが要求するリソースに対して、サーバーは該当するコンテンツを見つけることができませんでした。"
+        '500':
+          description: "[Axispot]サーバーで予期しない状態が発生したため、サーバーは要求を実行できません。" 
+components:
+  schemas:
+    MovingObject:
+      type: object
+      properties:
+        movingObjectId:
+          type: string
+          example: "vin1"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2019-07-18T00:00:00.000"
+        attributes:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            laneIdV: "LANEID001"
+            roadIdV: "ROADID001"
+            speed: "1.0"
+            direction: "1.0"
+          description: "属性情報(Map<String, String>)"
+        locCoord:
+          $ref: "#/components/schemas/locCoord"
+    PolygonAndMeshObject:
+      type: object
+      properties:
+        meshId:
+          type: string
+          example: "531"
+        polygonId:
+          type: string
+          example: "333"
+        polygonWkt:
+          type: string
+          example: "POLYHEDRALSURFACE Z (((139.833 36.003 0,139.833 36.006 0,139.834 36.006 0,139.834 36.003 0,139.833 36.003 0)),((139.833 36.003 10,139.834 36.003 10,139.834 36.006 10,139.833 36.006 10,139.833 36.003 10)),((139.833 36.003 0,139.833 36.003 10,139.833 36.006 10,139.833 36.006 0,139.833 36.003 0)),((139.833 36.006 0,139.833 36.006 10,139.834 36.006 10,139.834 36.006 0,139.833 36.006 0)),((139.834 36.006 0,139.834 36.006 10,139.834 36.003 10,139.834 36.003 0,139.834 36.006 0)),((139.834 36.003 0,139.834 36.003 10,139.833 36.003 10,139.833 36.003 0,139.834 36.003 0)))"
+        meshLon:
+          type: number
+          format: double
+          example: 139.8332977294922
+        meshLat:
+          type: number
+          format: double
+          example: 36.00300704224856
+        meshAlt:
+          type: number
+          format: double
+          example: 0.0
+    PolygonSearchResponseList:
+      type: array
+      items:
+        $ref: "#/components/schemas/MovingObject"
+      description: "ポリゴンのリストの順番に、移動体データのリストを返却　例：[[1番目のポリゴンの移動体データのリスト], [2番目のポリゴンの移動体データのリスト],...]"
+    PolygonSearchRequest:
+      type: object
+      required:
+      - MovingObjectStoreData
+      properties:
+        MovingObjectStoreData:
+          type: object
+          properties:
+            movingObjectId:
+              type: string
+              example: "zfxy-11-front"
+              description: "車両ID"
+            locCoord:
+              $ref: "#/components/schemas/locCoord"
+            createdAt:
+              type: string
+              format: date-time
+              example: "2019-07-18T09:00:00.0+09:00"
+              description: "作成時刻"
+            attributes:
+              type: object
+              additionalProperties:
+                type: string
+              example:
+                laneIdV: "ZFXY_LANEID001"
+                roadIdV: "ZFXY_ROADID001"
+                speed: "10.0"
+                direction: "1.0"
+              description: "属性情報(Map<String, String>)"
+    GeotempSetRequest:
+      type: object
+      required:
+      - MovingObjectRawData
+      properties:
+        MovingObjectRawData:
+          type: object
+          properties:
+            MovingObjectKey:
+              type: object
+              properties:
+                movingObjectId:
+                  type: string
+                  example: "vin1"
+                  description: "車両ID"
+                time:
+                  type: integer
+                  format: int64
+                  example: 1563375600
+                  description: "時刻情報(unixtime秒)"
+                longitude:
+                  type: number
+                  format: double
+                  example: 1.0
+                  description: "位置情報(経度)"
+                latitude:
+                  type: number
+                  format: double
+                  example: 1.0
+                  description: "位置情報(緯度)"
+                altitude:
+                  type: number
+                  format: double
+                  example: 1.0
+                  description: "位置情報(高度)"
+            MovingObjectValue:
+              type: object
+              properties:
+                locCoord:
+                  $ref: "#/components/schemas/locCoord"
+                createdAt:
+                  type: string
+                  format: date-time
+                  example: "2019-07-18T09:00:00.0+09:00"
+                  description: "作成時刻"
+                attributes:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  example:
+                    laneIdV: "LANEID001"
+                    roadIdV: "ROADID001"
+                    speed: "1.0"
+                    direction: "1.0"
+                  description: "属性情報(Map<String, String>)"
+    locCoord:
+      type: object
+      properties:
+        x:
+          type: number
+          format: double
+          example: 1.0
+          description: "位置情報(経度)"
+        y:
+          type: number
+          format: double
+          example: 1.0
+          description: "位置情報(緯度)"
+        z:
+          type: number
+          format: double
+          example: 1.0
+          description: "位置情報(高度)"
+      description: "座標(coordinate)"

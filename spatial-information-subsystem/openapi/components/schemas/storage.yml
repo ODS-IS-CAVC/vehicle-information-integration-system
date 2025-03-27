@@ -1,0 +1,119 @@
+schemaStorage:
+  type: object
+  properties:
+    id:
+      type: string
+      description: Data source ID
+      format: uuid
+      example: a9138f3e-3f95-4bc5-ba54-affa32080d26
+    providerId:
+      type: string
+      description: Data provider ID
+      format: uuid
+      example: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    name:
+      type: string
+      description: Data source name
+      example: s3
+    ufs:
+      type: string
+      description: URL for connecting to the data source
+      example: s3://bucket/dir
+    options:
+      type: object
+      nullable: true
+      description: |- 
+        List of bind options.<br>
+        Option item to specify when performing the mount process in VDL.
+        <ul>
+          <li>Specify them by key/value.</li>
+          <li>The key and value string lengths are each 1024 characters or less.</li>
+        </ul>
+      additionalProperties:
+        type: string
+      example:
+        s3a.accessKeyId: testaccesskey
+        s3a.secretKey: testsecretkey
+    status:
+      type: string
+      description: |-
+        Bind status.<br>
+        Bound: Data source is available to VDL.<br>
+        NotBound: Data source is not available to VDL.
+      enum: [Bound, NotBound]
+      example: NotBound
+
+schemaStorageCreateRequest:
+  type: object
+  required: 
+    - providerId
+    - name
+    - ufs
+  properties:
+    providerId:
+      type: string
+      description: Data provider ID
+      format: uuid
+      pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+      example: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    name:
+      type: string
+      description: |-
+        Data source name.
+        <ul>
+          <li>The data source name should be unique for each data provider.</li>
+          <li>The bind point and data source name are used as part of the VDL path.
+          (for example, If bind point=com and data source name=src, the VDL path starts with /com/src/.)</li>
+          <li>Acceptable strings = POSIX compliant + string length between 2 and 32 characters</li>
+        </ul>                    
+      pattern: '^[a-zA-Z0-9][a-zA-Z0-9._-]{1,31}$'
+      example: s3
+    ufs:
+      type: string
+      description: |-
+        URL for connecting to the data source.
+        <ul>
+          <li>String length is 1024 characters or less</li>
+        </ul>
+      pattern: '^.{0,1024}$'
+      example: s3://bucket/dir
+    options:
+      type: object
+      nullable: true
+      description: |- 
+        List of bind options.<br>
+        Option item to specify when performing the mount process in VDL.
+        <ul>
+          <li>Specify them by key/value.</li>
+          <li>The key and value string lengths are each 1024 characters or less.</li>
+        </ul>
+      default: NULL
+      additionalProperties:
+        type: string
+      example:
+        s3a.accessKeyId: testaccesskey
+        s3a.secretKey: testsecretkey
+
+schemaStorageUpdateRequest: 
+  type: object
+  properties:
+    options:
+      type: object
+      nullable: true
+      description: |-
+        List of bind options.
+        <ul>
+          <li>Specify them by key/value.</li>
+          <li>Empty objects ({}) can be specified.(When specified, all bind options are removed)</li>
+          <li>If a key with a non-null value is specified: The value of the key is overwritten.</li>
+          <li>If a key with a value of null is specified: The value of the key is deleted.</li>
+          <li>If key is not specified: The value of the key is not updated.</li>
+          <li>If a key that does not exist previously is specified: New registration of bind option is processed.</li>
+          <li>The key and value string lengths are each 1024 characters or less.</li>
+        </ul>
+      default: NULL
+      additionalProperties: 
+        type: string
+      example:
+        s3a.accessKeyId: new
+        s3a.secretKey: new

@@ -1,0 +1,19 @@
+term_create_sample:
+  summary: simple Term create request
+  value:
+    name: sensitive
+    description: The Term for Data X
+term_update_sample:
+  summary: simple Term update request
+  value:
+    description: changeddescription
+
+term_get_sample: 
+  name: sensitive
+  description: The Term for Data X
+term_list_sample: 
+  - name: sensitive
+    description: The Term for Data X
+  - name: traffic
+    description: The Term for Data Y
+

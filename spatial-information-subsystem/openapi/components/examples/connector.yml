@@ -1,0 +1,132 @@
+connector_create_sample:
+  summary: simple connector create request
+  value:
+    participantId: alice
+    providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    endpoints:
+      connector:
+        management: http://example.com:31100/api/v1/management
+        protocol: http://example.com:31101/api/v1/dsp
+        public: http://example.com:31102/api/v1/public
+        control: http://example.com:31103/api/v1/control
+        web: http://example.com:31104/api
+      federatedCatalog:
+        management: http://example.com:31200/api/v1/management
+      identityHub:
+        management: http://example.com:31300/api/v1/management
+        resolution: http://example.com:31301/api/v1/resolution
+        didweb: http://example.com:31302
+    edr:
+      callbackUrl: http://example.com:4000/receiver
+      authKey: authKeySample
+      authCode: authCodeSample
+    vault:
+      type: hashicorp
+      url: http://example.com:30200
+      token: s.nDj4BB2tK8NaFffwBZBxyIa1
+    trustedIssuers:
+      foreign-issuer: did:web:example.com%3A27083:foreign-issuer
+
+connector_get_sample:
+  participantId: alice
+  providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+  endpoints:
+    connector:
+      management: http://example.com:31100/api/v1/management
+      protocol: http://example.com:31101/api/v1/dsp
+      public: http://example.com:31102/api/v1/public
+      control: http://example.com:31103/api/v1/control
+      web: http://example.com:31104/api
+    federatedCatalog:
+      management: http://example.com:31200/api/v1/management
+    identityHub:
+      management: http://example.com:31300/api/v1/management
+      resolution: http://example.com:31301/api/v1/resolution
+      didweb: http://example.com:31302
+  edr:
+    callbackUrl: http://example.com:4000/receiver
+    authKey: authKeySample
+    authCode: authCodeSample
+  vault:
+    type: hashicorp
+    url: http://example.com:30200
+    token: s.nDj4BB2tK8NaFffwBZBxyIa1
+  trustedIssuers:
+    foreign-issuer: did:web:example.com%3A27083:foreign-issuer
+
+connector_list_sample:
+  - participantId: alice
+    providerId: d6f2c41d-126d-4838-8be1-010d937fc9bf
+    endpoints:
+      connector:
+        management: http://example.com:31100/api/v1/management
+        protocol: http://example.com:31101/api/v1/dsp
+        public: http://example.com:31102/api/v1/public
+        control: http://example.com:31103/api/v1/control
+        web: http://example.com:31104/api
+      federatedCatalog:
+        management: http://example.com:31200/api/v1/management
+      identityHub:
+        management: http://example.com:31300/api/v1/management
+        resolution: http://example.com:31301/api/v1/resolution
+        didweb: http://example.com:31302
+    edr:
+      callbackUrl: http://example.com:4000/receiver
+      authKey: authKeySample
+      authCode: authCodeSample
+    vault:
+      type: hashicorp
+      url: http://example.com:30200
+      token: s.nDj4BB2tK8NaFffwBZBxyIa1
+    trustedIssuers:
+      foreign-issuer: did:web:example.com%3A27083:foreign-issuer
+  - participantId: 6ebb5403-9864-455f-8b3f-48c36246c151
+    providerId: adbc4171-1a37-4268-911f-5b98d1d23523
+    endpoints:
+      connector:
+        management: http://example.com:21100/api/v1/management
+        protocol: http://example.com:21101/api/v1/dsp
+        public: http://example.com:21102/api/v1/public
+        control: http://example.com:21103/api/v1/control
+        web: http://example.com:31104/api
+      federatedCatalog:
+        management: http://example.com:21200/api/v1/management
+      identityHub:
+        management: http://example.com:21300/api/v1/management
+        resolution: http://example.com:21301/api/v1/resolution
+        didweb: http://example.com:21302
+    edr:
+      callbackUrl: http://example.com:3000/receiver
+      authKey: authKeySample
+      authCode: authCodeSample
+    vault:
+      type: hashicorp
+      url: http://example.com:20200
+      token: s.abaslKRb56NMZPRdf12GGRTz
+    trustedIssuers:
+      foreign-issuer: did:web:example.com%3A17083:foreign-issuer
+
+connector_update_sample:
+  summary: simple connector update request
+  value:
+    edr:
+      authKey: authKeySample
+      authCode: authCodeSample
+    vault:
+      token: s.nDj4BB2tK8NaFffwBZBxyIa1
+    trustedIssuers:
+      foreign-issuer: did:web:example.com%3A27083:foreign-issuer
+
+connector_fc_update_sample:
+  summary: simple fc update request
+  value:
+    fcn:
+    - name: bob
+      id: did:web:example.com%3A27083:bob
+      url: http://example.com:28082/api/dsp
+      supportedProtocols:
+      - dataspace-protocol-http
+    crawler:
+      periodSeconds: 5
+      num: 2
+      delaySeconds: 0

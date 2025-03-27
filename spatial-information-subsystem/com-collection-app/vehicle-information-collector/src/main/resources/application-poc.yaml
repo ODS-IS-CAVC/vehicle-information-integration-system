@@ -1,0 +1,70 @@
+# 実証環境(poc)
+# 172.17.0.0/16
+# 検証や実証時に開発環境をコピーして利用する環境
+# イノ技-MSEの検証
+# DMP API, C-1, C-4と連携検証
+
+# 車両情報収集AP
+application:
+  # spring-scheduler
+  scheduler:
+    # 5秒ごとに実行する場合
+    cron: "*/5 * * * * ?"
+    # 自動実行しない場合
+    # cron: "-"
+
+# spring-web
+server:
+  port: 8082
+
+# logging
+logging:
+  level:
+    root: INFO
+    com.nttdata.vehicleinfo.collection.timespatialindexcreator: INFO
+    jp.co.ntt.sic: INFO
+    org.springframework.web: INFO
+  file:
+    name: ./logs/${spring.application.name}.log
+
+# spring-actuator
+management:
+  server:
+    port: ${server.port}
+  endpoints:
+    web:
+      exposure:
+        # すべてを無効化する場合
+        # include: ""
+        # すべてを許可する場合
+        # include: "*"
+        # 本番環境では設定を見直すこと
+        # http://localhost:${management.server.port}/actuator/info
+        # http://localhost:${management.server.port}/actuator/env
+        # http://localhost:${management.server.port}/actuator/health
+        include: "info,env,health"
+
+vehicle:
+  axispot:
+    geotemp:
+      config: ./config/axispot/geotempConfig-${spring.profiles.active}.properties
+
+  auth-api:
+    login:
+      request:
+        endpoint: https://auth-autonomous-dx.dts-digiline.com/auth/login
+
+  tier4:
+    digital-zenso-api:
+      vehicles:
+        request:
+          endpoint: https://con-admng-autonomous-dx.dts-digiline.com/vehicles
+
+  vdl:
+    api:
+      token:
+        request:
+          endpoint: https://172.17.178.34:31444/realms/vdl/protocol/openid-connect/token
+      data:
+        request:
+          endpoint: https://172.17.178.34:30090/api/v1/data

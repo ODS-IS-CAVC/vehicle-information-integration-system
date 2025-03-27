@@ -1,0 +1,28 @@
+# VDL
+vdl:
+  api:
+    token:
+      request:
+        endpoint: https://localhost:31444/realms/vdl/protocol/openid-connect/token
+        parameters:
+          client-id: vdl_client
+          # vdl.api.token.request.parameters.client-secretはgit管理しないため、
+          # 環境変数「VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET」にて設定すること
+          client-secret: ${VDL_API_TOKEN_REQUEST_PARAMETERS_CLIENT_SECRET:}
+          username: test-admin
+          # vdl.api.token.request.parameters.passwordはgit管理しないため、
+          # 環境変数「VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD」にて設定すること
+          password: ${VDL_API_TOKEN_REQUEST_PARAMETERS_PASSWORD:}
+          grant-type: password
+          scope: openid
+        timeout: 10000
+        verify-ssl: false
+    data:
+      request:
+        endpoint: https://localhost:30090/api/v1/data
+        vdl-path-prefix: /vdl-path-prefix/test
+        timeout: 10000
+        verify-ssl: false
+        retry:
+          timeout: 3100
+          fixed-backoff: 1000

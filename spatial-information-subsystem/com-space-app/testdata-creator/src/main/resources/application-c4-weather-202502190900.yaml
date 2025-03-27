@@ -1,0 +1,84 @@
+# 2025/02/19にリクエストされるデータ群
+testdata:
+  flushData: false
+  data: []
+  randomDataOutputDir: "./data/"
+  # 個別設定で上書きするため以下の2つは使われない
+  randomDataBaseTime: "2025-01-28T10:00:00+09:00"
+  randomDataDuration: 1h
+  # 2502190700で投入したデータを上書きするためupdatedAtOffsetは2hを指定
+  randomData:
+    - id: "C4_202502190900_1"
+      name: "気象情報:（2/19(水) 10:00-12:00のデータ）"
+      templateType: Weather
+      interval: 1h
+      baseTime: "2025-02-19T10:00:00+09:00"
+      duration: 3h
+      updatedAtOffset: 2h
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 藤枝岡部ICを含む空間IDの中央座標
+            longitude: 138.2574462890625
+            latitude: 34.9174668892
+            altitude: 0.0
+      staticAttributes:
+        weatherForecast: "100"
+        windSpeed: "0.0"
+        precipitation: "0.0"
+    - id: "C4_202502190900_2"
+      name: "気象情報:（2/26(水) 10:00-12:00のデータ）"
+      templateType: Weather
+      interval: 1h
+      baseTime: "2025-02-26T10:00:00+09:00"
+      duration: 3h
+      updatedAtOffset: 2h
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 藤枝岡部ICを含む空間IDの中央座標
+            longitude: 138.2574462890625
+            latitude: 34.9174668892
+            altitude: 0.0
+      staticAttributes:
+        weatherForecast: "100"
+        windSpeed: "0.0"
+        precipitation: "0.0"
+    # 11:00, 12:00, 13:00のリクエスト向けデータ
+    - id: "C4_202502191100_1"
+      name: "気象情報:（2/19(水) 14:00-16:00のデータ）"
+      templateType: Weather
+      interval: 1h
+      baseTime: "2025-02-19T14:00:00+09:00"
+      duration: 3h
+      updatedAtOffset: 2h
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 藤枝岡部ICを含む空間IDの中央座標
+            longitude: 138.2574462890625
+            latitude: 34.9174668892
+            altitude: 0.0
+      staticAttributes:
+        weatherForecast: "100"
+        windSpeed: "0.0"
+        precipitation: "0.0"
+    # 11:00, 12:00, 13:00のリクエスト向けデータ
+    - id: "C4_202502191100_2"
+      name: "気象情報:（2/26(水) 14:00-16:00のデータ）"
+      templateType: Weather
+      interval: 1h
+      baseTime: "2025-02-26T14:00:00+09:00"
+      duration: 3h
+      updatedAtOffset: 2h
+      areas:
+        - boundingBoxes: []
+          coordinate:
+            # 藤枝岡部ICを含む空間IDの中央座標
+            longitude: 138.2574462890625
+            latitude: 34.9174668892
+            altitude: 0.0
+      staticAttributes:
+        weatherForecast: "100"
+        windSpeed: "0.0"
+        precipitation: "0.0"
